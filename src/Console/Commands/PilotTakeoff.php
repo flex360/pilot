@@ -2,10 +2,7 @@
 
 namespace Flex360\Pilot\Console\Commands;
 
-use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class PilotTakeoff extends Command
 {
@@ -44,6 +41,9 @@ class PilotTakeoff extends Command
         $this->call('vendor:publish', [
             '--provider' => 'Flex360\Pilot\Providers\PilotServiceProvider'
         ]);
+
+        // link up storage
+        $this->call('storage:link');
 
         // migrate the database
         $this->call('migrate');
