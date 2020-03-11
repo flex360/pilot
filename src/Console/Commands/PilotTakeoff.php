@@ -45,6 +45,11 @@ class PilotTakeoff extends Command
         // link up storage
         $this->call('storage:link');
 
+        // update APP_URL in .env
+        $envContent = file_get_contents(base_path('.env'));
+        $appUrl = 'APP_URL=' . $this->ask('App url (ie http://pilot.test)?');
+        file_put_contents(base_path('.env'), str_replace('APP_URL=http://localhost', $appUrl, $envContent));
+
         // migrate the database
         $this->call('migrate');
 
@@ -53,14 +58,20 @@ class PilotTakeoff extends Command
         file_put_contents(base_path('config/auth.php'), str_replace('App\User::class', 'PilotUser::class', $authContent));
 
         // create a new user
-        $this->call('pilot:user');
+        $confirm = $this->confirm('Would you like to create a user?');
+        if ($confirm) {
+            $this->call('pilot:user');
+        }
 
         // add Ignition variables to .env
-        $remoteSitesPath = $this->anticipate('Remote sites path?', ['/home/vagrant/code']);
-        $localSitesPath = $this->anticipate('Local sites path?', ['/Users/{user}/Code']);
-        $envContent = file_get_contents(base_path('.env'));
-        $envContent = $envContent
-            . "\r\n\r\nIGNITION_REMOTE_SITES_PATH=$remoteSitesPath\r\nIGNITION_LOCAL_SITES_PATH=$localSitesPath\r\n";
-        file_put_contents(base_path('.env'), $envContent);
+        $confirm = $this->confirm('Would you like to provide Ignition paths?');
+        if ($confirm) {
+            $remoteSitesPath = $this->anticipate('Remote sites path?', ['/home/vagrant/code']);
+            $localSitesPath = $this->anticipate('Local sites path?', ['/Users/{user}/Code']);
+            $envContent = file_get_contents(base_path('.env'));
+            $envContent = $envContent
+                . "\r\n\r\nIGNITION_REMOTE_SITES_PATH=$remoteSitesPath\r\nIGNITION_LOCAL_SITES_PATH=$localSitesPath\r\n";
+            file_put_contents(base_path('.env'), $envContent);
+        }
     }
 }
