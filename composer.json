@@ -1,7 +1,6 @@
 {
     "name": "flex360/pilot",
     "description": "Client focused, developer friendly, Laravel based CMS",
-    "type": "project",
     "license": "MIT",
     "authors": [
         {

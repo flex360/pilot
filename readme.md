@@ -7,7 +7,7 @@ When starting from a fresh Laravel install:
 
 	* Make sure you have run `npm install && npm run dev`
 
-Install: `composer require jzpeepz/pilot`
+Install: `composer require flex360/pilot`
 
 Database: Update the .env file with database credentials.
 
