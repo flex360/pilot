@@ -37,23 +37,23 @@ class PilotTakeoff extends Command
      */
     public function handle()
     {
-        // $this->vendorPublish();
+        $this->vendorPublish();
 
-        // // link up storage
-        // $this->call('storage:link');
+        // link up storage
+        $this->call('storage:link');
 
-        // $this->updateAppUrl();
+        $this->updateAppUrl();
 
         $this->updateDatabaseCredentials();
 
-        // // migrate the database
-        // $this->call('migrate');
+        // migrate the database
+        $this->call('migrate');
 
-        // $this->updateAuthConfig();
+        $this->updateAuthConfig();
 
-        // $this->createUser();
+        $this->createUser();
 
-        // $this->addIgnitionVariablesToEnv();
+        $this->addIgnitionVariablesToEnv();
     }
 
     private function vendorPublish()
