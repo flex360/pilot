@@ -1,0 +1,184 @@
+//Fixes Wysiwyg Editor
+#dynamo-index-body td form {
+	margin-bottom: 0;
+}
+//Alernate Row Color For Dynamo Index Views
+.table tbody tr:nth-of-type(odd) {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.modal.fade.in {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+//gets rid of the default margin-bottom that comes with paragraph tags
+.dynamo-index-row p {
+	margin-bottom: 0px !important;
+}
+
+//Fixes styling bugs with Dynamo tables
+#dynamo-index.table th,
+#dynamo-index.table td {
+    padding: 0.3rem;
+    vertical-align: middle;
+}
+
+#dynamo-index.table thead tr {
+	height: 50px;
+}
+
+//fixes problem on mobile where form view of Dynamo module is slightly scrollable on x-axis:
+.container-fluid.pt-4 {
+	overflow-x: hidden;
+}
+
+//sets the background color of groups in dynamo
+.dynamo-group-card {
+	background-color: #f9f9f9;
+}
+
+//Round badge we use to display number of drafts
+.round-badge {
+  display: inline-block;
+  background: Tomato;
+  border-radius: 50%;
+  padding: 3px 7px;
+  font-size: 10px;
+  color: #fff;
+}
+
+//Styling for dynamo search label, panel-bodys, tables, and nav
+.panel-body .table {
+    margin-bottom: 0;
+}
+.dynamo-search label {
+    display: block;
+}
+.dynamo-search label.search-label {
+    visibility: hidden;
+}
+.nav { padding-left: 7px;}
+
+//adding some margin below a Dynamo Group because the edge of the card is too close to the next field outside the group
+.dynamo-group-card {
+    margin-bottom: 15px;
+}
+
+//This fixes the white extra white space above and below the Dynamo Search Bar
+.dynamo-input-group {
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+
+//Styling for index nav tabs
+#dynamo-index-nav-tabs {
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+//Puts a little margin on the tabs to make black line disappear
+#dynamo-index-tab-margin-bottom {
+    margin-bottom: -2px;
+}
+
+//Styling Rules or dynamo tooltips
+.dynamo-tooltip {
+    font-size: 16px;
+    padding-left: 2px;
+    color: black;
+}
+
+//Styling rules for if the index table of items is empty
+.dynamo-index-table-empty {
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+//Styling rule for table responsive class that makes black line disappaer
+.dynamo-table-responsive {
+    margin-top: -1px;
+}
+
+//Styling rule for the width of the Action column that has the Edit button on Dynamo index view
+.dynamo-width-of-action-column {
+    width: 110px;
+}
+
+//Styling rule for the width of the Action row
+.dynamo-width-of-action-row {
+    width: 150px;
+}
+
+.dynamo-danger-zone-modal-body {
+    border-style: solid;
+    border-color: #cc0000;
+    padding: 20px;
+
+    h1 {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+}
+
+#perma-delete-btn {
+    width: 100%;
+}
+
+//These styles were copied from the <style> tag that was at the bottom of the Dynamo index view, not sure what they do
+.dynamo-search .form-group {
+    flex-flow: column wrap;
+    align-items: start;
+}
+.dynamo-search .form-group label {
+    align-items: start;
+}
+.dynamo-search .form-group .search-label {
+    /* visibility: hidden; */
+}
+
+// .dynamo-delete-btn {
+//     position: relative;
+//     bottom: 38px;
+// }
+
+.dynamo-delete-form {
+    margin-top: -38px;
+}
+
+//Control how dynamo ->file method renders
+.dynamo-file {
+ border: none;
+}
+
+
+//Mobile responsive work goes here
+@media only screen and (max-width: 600px) {
+
+    .nav-tabs .nav-link {
+        white-space: nowrap;
+        flex-wrap: nowrap;
+    }
+
+    #dynamo-index-nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x:scroll;
+    }
+
+    #dont-show-on-mobile-tooltip {
+        display: none;
+    }
+
+    #dynamo-index-body td {
+	vertical-align: middle;
+    }
+
+	.dynamo-modal-body {
+		padding-top: 50px;
+	}
+
+	.dynamo-modal-footer {
+		border-top: none;
+		margin-bottom: 18px;
+	}
+
+}

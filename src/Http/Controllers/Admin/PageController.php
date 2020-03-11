@@ -1,0 +1,218 @@
+<?php
+
+namespace Flex360\Pilot\Http\Controllers\Admin;
+
+use Flex360\Pilot\Pilot\Page;
+use Request as RequestFacade;
+use Flex360\Pilot\Pilot\Block;
+use Illuminate\Support\Facades\Auth;
+use Flex360\Pilot\Pilot\MediaHandler;
+
+class PageController extends AdminController
+{
+    public static $namespace = '\Flex36\Pilot\Pilot\\';
+    public static $model = 'Page';
+    public static $viewFolder = 'pages';
+
+    public function __construct(MediaHandler $mediaHandler)
+    {
+        $this->fileHandler = $mediaHandler->get();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $root = Page::getAdminRoot();
+
+        // $pages = Page::where('parent_id', '=', $root->id)->where('site_id', '=', $this->site->id)->get();
+
+        return view('pilot::admin.pages.index', compact('root', 'pages'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $action = 'create';
+
+        $page = new Page;
+
+        // set parent
+        $page->parent_id = request()->input('parent_id', Page::getRoot()->id);
+
+        // set default layout
+        $page->layout = $page->getLayout();
+
+        $formOptions = ['route' => 'admin.page.store'];
+
+        $parent_id = request()->input('parent_id');
+
+        return view('pilot::admin.pages.form', compact('action', 'page', 'formOptions', 'parent_id'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        $this->validate(request(), [
+            'title' => 'required|max:255'
+        ]);
+
+        $data = request()->except('blocks', 'block_settings', 'featured_image');
+
+        $page = Page::create($data);
+
+        // call media manager file handler
+        call_user_func_array($this->fileHandler, [&$page, &$data, 'featured_image']);
+
+        // change page type
+        $result = $page->changeType(request()->input('type_id'));
+
+        // set success message
+        session()->flash('alert-success', self::$model . ' saved successfully!');
+
+        return redirect()->route('admin.page.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $page = Page::find($id);
+
+        // set default layout
+        $page->layout = $page->getLayout();
+
+        $formOptions = [
+            'route' => ['admin.page.update', $id],
+            'method' => 'put',
+        ];
+
+        return view('pilot::admin.pages.form', compact('page', 'formOptions'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        $page = Page::find($id);
+
+        $this->validate(request(), [
+            'title' => 'required|max:255'
+        ]);
+
+        // change page type
+        $result = $page->changeType(request()->input('type_id'));
+
+        // update blocks
+        $data = request()->except('blocks', 'block_order', 'block_settings');
+
+        $page->updateBlocks(
+            request()->input('blocks', []),
+            request()->input('block_order', []),
+            request()->input('block_settings', [])
+        );
+
+        $page->fill($data);
+
+        $page->save();
+
+        // set success message
+        session()->flash('alert-success', self::$model . ' saved successfully!');
+
+        return redirect()->route('admin.page.edit', [$id]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        Page::destroy($id);
+
+        // set success message
+        session()->flash('alert-success', self::$model . ' deleted successfully!');
+
+        return redirect()->route('admin.page.index');
+    }
+
+    /**
+     *  Facilitate reordering of pages
+     *
+     *  @return View
+     */
+    public function reorder()
+    {
+        Page::reorder(request()->input('ids'));
+
+        return response()->json(request()->input('ids'));
+    }
+
+    public function syncType($id)
+    {
+        $page = Page::find($id);
+
+        $typePage = Page::find($page->type->page_id);
+
+        // $data = $order = $settings = [];
+
+        foreach ($typePage->blocks as $block) {
+            if (!$page->hasBlock($block->slug)) {
+                Block::create([
+                    'title' => $block->title,
+                    'slug' => $block->slug,
+                    'body' => '',
+                    'page_id' => $page->id,
+                    'type' => $block->type,
+                    'position' => $block->position,
+                    'settings' => $block->settings
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.page.edit', [$id]);
+    }
+
+    public function selectList()
+    {
+        return Page::selectList();
+    }
+
+    public function updateParent(Page $page, $newParentPageId)
+    {
+        $page->parent_id = $newParentPageId;
+        $page->update();
+    }
+}

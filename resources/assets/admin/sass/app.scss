@@ -1,0 +1,483 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "resources/assets/admin/sass/bootstrap_custom";
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+@import "dynamo";
+
+//Fixes Wysiwyg Editor Icons ( first rule included here and in Dynamo scss)
+#dynamo-index-body td form {
+  margin-bottom: 0;
+}
+.fa-video-camera:before {
+  content: "\f03d";
+}
+.fa-file-o:before {
+  content: "\f15b";
+}
+.fa-rotate-left:before {
+  content: "\f0e2";
+}
+.fa-rotate-right:before {
+  content: "\f01e";
+}
+
+a.fr-command {
+  color: #fff !important;
+}
+
+.fr-video {
+  display: block !important;
+  position: relative !important;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+}
+.fr-video iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+//END OF: Fixes Wysiwyg Editor Icons
+
+//can't remember what this stuff is or where it is used at -- Colton
+#importer-container {
+  h4 {
+    font-size: 1.05em;
+    margin-bottom: 25px;
+  }
+
+  p {
+    font-size: 0.9em;
+  }
+
+  .important-notes {
+    font-weight: 400;
+  }
+
+  li {
+    font-size: 0.9em;
+    margin-bottom: 20px;
+  }
+
+  button {
+    margin-top: 20px;
+    border-radius: 4px;
+  }
+}
+
+//Round badge we use to display number of drafts ( included here and in Dynamo scss )
+.round-badge {
+  display: inline-block;
+  background: Tomato;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 10px;
+  color: #fff;
+}
+
+//Styling rules for the table of events in the index view of Events module
+#event-manager-container {
+  margin-top: -1px;
+
+  .nav-tabs > li {
+    margin-bottom: -2px;
+  }
+}
+
+//Styling rules for panel-body and table class and nav ( included here and in Dynamo scss )
+.panel-body .table {
+  margin-bottom: 0;
+}
+.dynamo-search label {
+  display: block;
+}
+.dynamo-search label.search-label {
+  visibility: hidden;
+}
+.nav {
+  padding-left: 7px;
+}
+
+//Can't remember what this is or where it is used.
+#search-posts-form {
+  margin-top: 22px;
+
+  .search-label {
+    display: none;
+  }
+}
+
+#search-events-form {
+  margin-left: 5px;
+  .search-label {
+    display: none;
+  }
+}
+
+//*************************************
+//*     	STYLING FOR PAGES   	  *
+//*	  	   MODULE STARTS HERE         *
+//*************************************
+
+//This changes the color of the House icon on the Pages module
+.fa-home {
+  color: rgb(98, 98, 98);
+}
+
+//Changes size of House icon and padding to the right of it in Pages module
+.home-style {
+  font-size: 32px;
+  padding-right: 20px;
+}
+
+//Changes the background color of the conainer holding all the Pages
+.page-list .page.page-home {
+  background-color: #e7e7e7;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .page-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+  }
+}
+
+//Styling rules for the entire Page list and each individual Page in the list
+.page-list .page {
+  padding: 15px;
+  background-color: #fdfdfd;
+  border-bottom: 1px solid #ccc;
+  /* border-bottom: none; */
+  width: 100%;
+  overflow: hidden;
+  font-size: 20px;
+}
+
+//Styling to links within Page classes
+.page .page-home {
+  a {
+    color: #008cba;
+    text-decoration: none;
+    background: transparent;
+    padding: none;
+  }
+}
+
+//Styling to classes with page-link and link tags within them
+.page-link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #e3e3e3;
+  background-color: transparent;
+  border: none;
+
+  a {
+    color: #0081b1;
+  }
+}
+
+.pull-left:hover {
+  background-color: transparent;
+}
+
+.pull-left a {
+  color: #0081b1;
+}
+
+//Styling for the little badge that says "Page" on each Page in the Pages module
+span.badge-page {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 300;
+  color: #777777;
+  line-height: 1;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-align: center;
+  background-color: #e7e7e7;
+  border-radius: 10px;
+}
+
+//styling for Icons within the Page container
+.big-icon {
+  font-size: 24px;
+  padding-right: 0px;
+  position: relative;
+  display: inline-table;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+//The following Styles make the fancy animation effect when you click the + button to collaspe a parent page and see its child pages
+.accordion .card-header:hover .page-buttons {
+  visibility: visible;
+}
+.page-child .accordion .card-header {
+  padding: 0.25rem 1.25rem !important;
+}
+.page-list .page-sort {
+  padding: 7px 10px 8px 10px;
+}
+
+.accordion .card-header .page-link a {
+  font-size: 1.4em;
+  position: relative;
+  display: inline-table;
+  vertical-align: middle;
+}
+.page-child ul .accordion .card-header .page-link a {
+  font-size: 1em;
+}
+.accordion .card-header .page-link .btn-link:before {
+  content: "";
+  position: relative;
+  top: 1px;
+  display: inline-table;
+  vertical-align: middle;
+  font-family: "Glyphicons Halflings";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: -webkit-transform 0.25s linear;
+  transition: transform 0.25s linear;
+  transition: transform 0.25s linear, -webkit-transform 0.25s linear;
+  -webkit-transition: -webkit-transform 0.25s linear;
+}
+.accordion .card-header .page-link .btn-link[aria-expanded="true"]:before {
+  content: "\2212";
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.accordion .card-header .page-link .btn-link[aria-expanded="false"]:before {
+  content: "\002b";
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.accordion .card-header .page-link .btn-link:disabled,
+.accordion .card-header .page-link .btn-link.disabled {
+  padding-left: 6px;
+}
+
+.page-link:hover {
+  background-color: transparent;
+}
+
+#tooltip-modal {
+  cursor: pointer !important;
+}
+
+//Page Drag-N-Drop styles
+.accordion {
+  min-height: 80px;
+}
+
+.pages-card-header {
+  min-height: 80px;
+}
+
+.pageParentSelect {
+  position: relative;
+  margin-right: 9px;
+  width: 119px;
+  margin-top: 6px;
+  height: 31px;
+  font-size: 12px;
+}
+
+.handle {
+  font-size: 30px;
+  margin-top: 3px;
+  color: #868686;
+  cursor: grab;
+}
+
+.myParentSelectLabel {
+  position: relative;
+  width: 150px;
+  font-size: 11px;
+  top: -13px;
+  left: 110px;
+}
+
+.add-child-page-btn {
+  min-width: 135px;
+}
+
+@media only screen and (max-width: 600px) {
+  .myParentSelectLabel {
+    // min-width: 150px;
+    // left: 87px;
+    // top: -15px;
+    display: none;
+  }
+
+  .pageParentSelect {
+    // margin-right: 8px;
+    // width: 80px;
+    display: none;
+  }
+
+  .add-child-page-btn {
+    // min-width: 74px;
+  }
+}
+
+//*************************************
+//*     	STYLING FOR PAGES   	  *
+//*	  	   MODULE ENDS HERE           *
+//*************************************
+
+//Styling for dropdown items in the main black nav bar of modules
+.dropdown-item {
+  color: #ffffff;
+}
+
+.dropdown-item:hover {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.dropdown-menu {
+  background-color: rgb(33, 37, 41);
+}
+
+.dropdown-divider {
+  border-color: black;
+}
+
+//SETS THE MAX WIDTH OF TOOLTIPS IN THE CMS
+.tooltip-inner {
+  max-width: 300px;
+}
+
+//Google preview CSS block on Metadata tab of Pages module
+#google-preview {
+  #google_title {
+    min-height: 21px;
+    font-size: 18px;
+    color: #1a0dab;
+    line-height: 21px;
+    margin-bottom: 2px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  #google_url {
+    word-wrap: break-word;
+    color: #006621;
+    font-size: 13px;
+    line-height: 16px;
+    margin-bottom: 2px;
+  }
+
+  #google_description {
+    color: #545454;
+    line-height: 18px;
+    font-size: 13px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}
+
+//Fixes what the pagination looks like on the backend for modules
+.pagination .page-link {
+  color: black;
+}
+
+.pagination .page-item:hover:not(.active) {
+  background-color: #d3d3d3;
+  text-decoration: none;
+}
+.pagination .page-item.disabled {
+  background-color: #fff !important;
+}
+
+.modal-content {
+  max-height: calc(100vh - 212px);
+  overflow: auto;
+}
+
+//fixing spacing of events modal header
+#modal-events-heading {
+  margin-left: 70px;
+  margin-top: 50px;
+}
+
+//Mobile responsive work for the backend goes here
+@media only screen and (max-width: 600px) {
+  //Makes it where nav tabs are scrollable on mobile
+  .nav-tabs .nav-link {
+    white-space: nowrap;
+    flex-wrap: nowrap;
+  }
+
+  //Makes it where navigation tabs will not wrap to the next line
+  //and all the overflow on that div is scrollable by the x-axis
+  #index-nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+  }
+
+  //tooltips that don't behave correctly on mobile when clicked can
+  //be given this class to disable it
+  #dont-show-on-mobile-tooltip {
+    display: none;
+  }
+
+  //This changes the text size of the buttons on the action bar of a module card
+  //Makeing the font size smaller, makes the button smaller. So this fixes the
+  //buttons being too big and wrapping to the next line on mobile.
+  #action-btn-container button,
+  #action-btn-container a {
+    font-size: 59.5%;
+  }
+
+  //This was put in here to make sure items in the table data cells where in the middle
+  #dynamo-index-body td {
+    vertical-align: middle;
+  }
+
+  //The div with this class makes the events modal explaining
+  //Start/End times fixes a bug with the way it was rendering on mobile phones
+  .spacer-for-mobile-events-modal {
+    margin-top: 60px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 10px;
+  }
+
+  //The div with this class makes the pages modal explaining
+  //Pages module fixes a bug with the way it was rendering on mobile phones
+  .spacer-for-mobile-pages-modal {
+    margin-bottom: 10px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 10px;
+  }
+
+  //Fixes the heading of the events modal on mobile
+  #modal-events-heading {
+    font-size: 15px;
+    margin-left: 0px;
+    padding-top: 50px;
+  }
+
+  //Takes away the modal header border that is buggin out on all modals on mobile
+  .modal-header {
+    border-bottom: none;
+  }
+}

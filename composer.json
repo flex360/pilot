@@ -1,0 +1,41 @@
+{
+    "name": "flex360/pilot",
+    "description": "Client focused, developer friendly, Laravel based CMS",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonathan Peoples",
+            "email": "jonathan@flex360.com"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^6.2",
+        "spatie/laravel-medialibrary": "^7.0.0",
+        "doctrine/dbal": "^2.10",
+        "laravelcollective/html": "^6.0",
+        "jzpeepz/dynamo": "^1.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flex360\\Pilot\\": "src/"
+        },
+        "files": ["src/helpers.php"]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Flex360\\Pilot\\Providers\\PilotServiceProvider"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../dynamo",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
+}

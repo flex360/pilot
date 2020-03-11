@@ -1,0 +1,330 @@
+<?php
+
+namespace Flex360\Pilot\Http\Controllers\Admin;
+
+use Flex360\Pilot\Pilot\Tag;
+use Illuminate\Support\Facades\Auth;
+use Flex360\Pilot\Pilot\MediaHandler;
+use Illuminate\Support\Facades\Validator;
+use Flex360\Pilot\Pilot\Event as PilotEvent;
+
+class EventController extends AdminController
+{
+    public static $namespace = '\Flex360\Pilot\Pilot\Event\\';
+    public static $model = 'Event';
+    public static $viewFolder = 'events';
+
+    public function __construct(MediaHandler $mediaHandler)
+    {
+        $this->fileHandler = $mediaHandler->get();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+         $draftedEvents = PilotEvent::withoutGlobalScopes()
+                             ->draft()
+                             ->where('deleted_at', null)
+                             ->orderBy('start', 'desc')
+                             ->get();
+         //To dynamically set notification of how many drafts there are.
+         $draftsCount = $draftedEvents->count();
+
+         $scheduled = PilotEvent::withoutGlobalScopes()->scheduled()->get();
+
+         $query = PilotEvent::withoutGlobalScopes()
+                     //->whereRaw('end >= NOW()')
+                     ->whereNotIn('id', $draftedEvents->pluck('id'))
+                     ->whereNotIn('id', $scheduled->pluck('id'))
+                     ->where('deleted_at', null)
+                     ->orderBy('start', 'desc');
+
+        $query = PilotEvent::filter($query);
+
+        $events =  $query->paginate(20);
+
+        $view = 'published';
+
+        $tags = Tag::orderBy('name', 'asc')->get();
+
+        return view('pilot::admin.events.index', compact('events', 'tags', 'draftsCount', 'view'));
+    }
+
+    public function indexOfScheduled()
+    {
+         $draftedEvents = PilotEvent::withoutGlobalScopes()
+                             ->draft()
+                             ->where('deleted_at', null)
+                             ->orderBy('start', 'desc')
+                             ->get();
+         //To dynamically set notification of how many drafts there are.
+         $draftsCount = $draftedEvents->count();
+
+         $query = PilotEvent::withoutGlobalScopes()
+                                 ->scheduled()
+                                 ->where('deleted_at', null)
+                                 ->orderBy('start', 'desc');
+
+        $query = PilotEvent::filter($query);
+
+        $events = $query->paginate(20);
+
+        $tags = Tag::orderBy('name', 'asc')->get();
+
+        $view = 'scheduled';
+
+        return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+    }
+
+    public function indexOfDrafts()
+    {
+         $draftedEvents = PilotEvent::withoutGlobalScopes()
+                             ->draft()
+                             ->where('deleted_at', null)
+                             ->orderBy('start', 'desc')
+                             ->get();
+
+         //To dynamically set notification of how many drafts there are.
+         $draftsCount = $draftedEvents->count();
+
+         $query = PilotEvent::withoutGlobalScopes()
+                             ->draft()
+                             ->where('deleted_at', null)
+                             ->orderBy('start', 'desc');
+
+        $query = PilotEvent::filter($query);
+
+        $events = $query->paginate(20);
+
+        $tags = Tag::orderBy('name', 'asc')->get();
+
+        $view = 'drafts';
+
+        return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+    }
+
+    public function indexOfAll()
+    {
+           $draftedEvents = PilotEvent::withoutGlobalScopes()
+                               ->draft()
+                               ->where('deleted_at', null)
+                               ->orderBy('start', 'desc')
+                              ->get();
+
+           //To dynamically set notification of how many drafts there are.
+           $draftsCount = $draftedEvents->count();
+
+           $query = PilotEvent::withoutGlobalScopes()
+                               ->where('deleted_at', null)
+                               ->orderBy('start', 'desc');
+
+
+          $query = PilotEvent::filter($query);
+
+          $events = $query->paginate(20);
+
+          $tags = Tag::orderBy('name', 'asc')->get();
+
+          $view = 'all';
+
+          return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+    }
+
+    public function indexOfPast()
+    {
+          $draftedEvents = PilotEvent::withoutGlobalScopes()
+                              ->draft()
+                              ->where('deleted_at', null)
+                              ->orderBy('start', 'desc')
+                              ->get();
+
+          //To dynamically set notification of how many drafts there are.
+          $draftsCount = $draftedEvents->count();
+
+          $query = PilotEvent::withoutGlobalScopes()
+                              ->past()
+                              ->where('deleted_at', null)
+                              ->orderBy('start', 'desc');
+
+
+         $query = PilotEvent::filter($query);
+
+         $events = $query->paginate(20);
+
+         $tags = Tag::orderBy('name', 'asc')->get();
+
+         $view = 'past';
+
+         return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        $item = new PilotEvent;
+
+        // set default start and end date
+        $item->start = \Carbon\Carbon::parse(date('n/j/Y g:i a'));
+        $item->end = \Carbon\Carbon::parse(date('n/j/Y g:i a'));
+
+        // set default publish on date
+        $item->published_at = \Carbon\Carbon::parse(date('n/j/Y g:i a'));
+
+        $tags = Tag::orderBy('name', 'asc')->pluck('name', 'id');
+
+        $formOptions = array('route' => 'admin.event.store');
+
+        return view('pilot::admin.events.form', compact('item', 'tags', 'formOptions'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
+    {
+        $request  = request();
+
+        //make sure the end date is in the future or equal to the start date,
+        //but don't allow for an end date to be less than the start date.
+        $validator = Validator::make($request->all(), [
+            'end' => 'required|date|after_or_equal:start'
+        ]);
+
+        if ($validator->fails()) {
+            // set error message
+            session()->flash('alert-danger', 'You can not make an event that has an end date before the start date!');
+
+            return redirect()->back()->withInput();
+        }
+
+        $item = PilotEvent::create($request->except('tags', 'image', 'gallery'));
+
+        // deal with event tags
+        if ($request->has('tags')) {
+            $tags = $request->input('tags');
+            $item->addTags($tags);
+        }
+
+        $data = $request->only('image', 'gallery');
+
+        // call media manager file handler
+        call_user_func_array($this->fileHandler, [&$item, &$data, 'image']);
+        call_user_func_array($this->fileHandler, [&$item, &$data, 'gallery', false]);
+
+        // set success message
+        session()->flash('alert-success', 'Event saved successfully!');
+
+        return redirect()->route('admin.event.index');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $item = PilotEvent::withoutGlobalScopes()->find($id);
+
+        $tags = Tag::orderBy('name', 'asc')->pluck('name', 'id');
+
+        $formOptions = [
+            'route' => ['admin.event.update', $id],
+            'method' => 'put',
+            'files' => true,
+        ];
+
+        return view('pilot::admin.events.form', compact('item', 'tags', 'formOptions'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id)
+    {
+        $request  = request();
+
+        //make sure the end date is in the future or equal to the start date,
+        //but don't allow for an end date to be less than the start date.
+        $validator = Validator::make($request->all(), [
+            'end' => 'required|date|after_or_equal:start'
+        ]);
+
+        if ($validator->fails()) {
+            // set error message
+            session()->flash('alert-danger', 'You can not make an event that has an end date before the start date!');
+
+            return redirect()->back()->withInput();
+        }
+
+        $item = PilotEvent::withoutGlobalScopes()->find($id);
+
+        $data = $request->except('image', 'gallery', 'tags');
+
+        // deal with post tags
+        if ($request->has('tags')) {
+            $tags = $request->input('tags');
+            $item->addTags($tags);
+        }
+
+        $item->fill($data);
+
+        $item->save();
+
+        // set success message
+        session()->flash('alert-success', 'Event saved successfully!');
+
+        return redirect()->route('admin.event.edit', array($id));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        // make sure the current user is an admin
+        if (! Auth::user()->hasRole('admin')) {
+            return redirect()->route('admin.auth.denied');
+        }
+
+        $event = PilotEvent::withoutGlobalScopes()->find($id);
+
+        $event->tags()->detach();
+
+        $event->delete();
+
+        // set success message
+        session()->flash('alert-success', 'Event deleted successfully!');
+
+        return redirect()->route('admin.event.index');
+    }
+
+    public function copy($id)
+    {
+        $event = PilotEvent::withoutGlobalScopes()->find($id);
+
+        $newEvent = $event->duplicate();
+
+        // set success message
+        session()->flash('alert-success', 'Event copied successfully!');
+
+        return redirect()->route('admin.event.edit', array($newEvent->id));
+    }
+}
