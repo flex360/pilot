@@ -2,7 +2,9 @@
 
 namespace Flex360\Pilot\Console\Commands;
 
+use Dotenv\Dotenv;
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 
 class PilotTakeoff extends Command
 {
@@ -88,6 +90,20 @@ class PilotTakeoff extends Command
             $envContent = str_replace('DB_USERNAME=root', 'DB_USERNAME=' . $username, $envContent);
             $envContent = str_replace('DB_PASSWORD=', 'DB_PASSWORD=' . $password, $envContent);
             file_put_contents(base_path('.env'), $envContent);
+
+            // set config to avoid issues
+            config([
+                'database.connections.sqlite.database' => $database,
+                'database.connections.mysql.database' => $database,
+                'database.connections.mysql.username' => $username,
+                'database.connections.mysql.password' => $password,
+                'database.connections.pgsql.database' => $database,
+                'database.connections.pgsql.username' => $username,
+                'database.connections.pgsql.password' => $password,
+                'database.connections.sqlsrv.database' => $database,
+                'database.connections.sqlsrv.username' => $username,
+                'database.connections.sqlsrv.password' => $password,
+            ]);
         }
     }
 
