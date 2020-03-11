@@ -37,8 +37,6 @@ class PilotTakeoff extends Command
      */
     public function handle()
     {
-        $this->vendorPublish();
-
         // link up storage
         $this->call('storage:link');
 
@@ -46,22 +44,26 @@ class PilotTakeoff extends Command
 
         $this->updateDatabaseCredentials();
 
-        // migrate the database
-        $this->call('migrate');
-
         $this->updateAuthConfig();
 
         $this->createUser();
 
         $this->addIgnitionVariablesToEnv();
+
+        $this->vendorPublish();
+
+        // migrate the database
+        $this->call('migrate');
     }
 
     private function vendorPublish()
     {
         // publish all the files needed to make Pilot work
-        $this->call('vendor:publish', [
+        $this->line('Copying support files...');
+        $this->callSlient('vendor:publish', [
             '--provider' => 'Flex360\Pilot\Providers\PilotServiceProvider'
         ]);
+        $this->line('Support files copied!');
     }
 
     private function updateAppUrl()
