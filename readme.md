@@ -9,6 +9,4 @@ When starting from a fresh Laravel install:
 
 Install: `composer require flex360/pilot`
 
-Database: Update the .env file with database credentials.
-
 `php artisan pilot:takeoff`

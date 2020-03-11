@@ -37,32 +37,76 @@ class PilotTakeoff extends Command
      */
     public function handle()
     {
+        // $this->vendorPublish();
+
+        // // link up storage
+        // $this->call('storage:link');
+
+        // $this->updateAppUrl();
+
+        $this->updateDatabaseCredentials();
+
+        // // migrate the database
+        // $this->call('migrate');
+
+        // $this->updateAuthConfig();
+
+        // $this->createUser();
+
+        // $this->addIgnitionVariablesToEnv();
+    }
+
+    private function vendorPublish()
+    {
         // publish all the files needed to make Pilot work
         $this->call('vendor:publish', [
             '--provider' => 'Flex360\Pilot\Providers\PilotServiceProvider'
         ]);
+    }
 
-        // link up storage
-        $this->call('storage:link');
-
+    private function updateAppUrl()
+    {
         // update APP_URL in .env
-        $envContent = file_get_contents(base_path('.env'));
         $appUrl = 'APP_URL=' . $this->ask('App url (ie http://pilot.test)?');
+        $envContent = file_get_contents(base_path('.env'));
         file_put_contents(base_path('.env'), str_replace('APP_URL=http://localhost', $appUrl, $envContent));
+    }
 
-        // migrate the database
-        $this->call('migrate');
+    private function updateDatabaseCredentials()
+    {
+        $confirm = $this->confirm('Update database credenitals in .env?');
+        
+        if ($confirm) {
+            $database = $this->ask('Database name?');
+            $username = $this->ask('Database username?');
+            $password = $this->ask('Database password?');
 
+            $envContent = file_get_contents(base_path('.env'));
+            $envContent = str_replace('DB_DATABASE=laravel', 'DB_DATABASE=' . $database, $envContent);
+            $envContent = str_replace('DB_USERNAME=root', 'DB_USERNAME=' . $username, $envContent);
+            $envContent = str_replace('DB_PASSWORD=', 'DB_PASSWORD=' . $password, $envContent);
+            file_put_contents(base_path('.env'), $envContent);
+        }
+    }
+
+    private function updateAuthConfig()
+    {
         // update config/auth.php
         $authContent = file_get_contents(base_path('config/auth.php'));
         file_put_contents(base_path('config/auth.php'), str_replace('App\User::class', 'PilotUser::class', $authContent));
+    }
 
+    private function createUser()
+    {
         // create a new user
         $confirm = $this->confirm('Would you like to create a user?');
         if ($confirm) {
             $this->call('pilot:user');
         }
+    }
 
+    private function addIgnitionVariablesToEnv()
+    {
         // add Ignition variables to .env
         $confirm = $this->confirm('Would you like to provide Ignition paths?');
         if ($confirm) {
