@@ -6,7 +6,7 @@
         </svg>
     </div>
     <div class="get-started">
-        <a href="https://github.com/flex360/pilot/blob/master/readme.md" target="_blank" class="btn">Get Started</a>
+        {{-- <a href="https://github.com/flex360/pilot/blob/master/readme.md" target="_blank" class="btn">Get Started</a> --}}
         <a href="/pilot" target="_blank" class="btn">Login</a>
     </div>
 </div>
