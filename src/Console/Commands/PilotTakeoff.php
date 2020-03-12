@@ -2,8 +2,10 @@
 
 namespace Flex360\Pilot\Console\Commands;
 
+use Exception;
 use Dotenv\Dotenv;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 
 class PilotTakeoff extends Command
@@ -39,6 +41,8 @@ class PilotTakeoff extends Command
      */
     public function handle()
     {
+        $this->removeInitialLaravelFiles();
+
         // link up storage
         $this->call('storage:link');
 
@@ -56,6 +60,26 @@ class PilotTakeoff extends Command
         $this->addIgnitionVariablesToEnv();
 
         $this->vendorPublish();
+    }
+
+    private function removeInitialLaravelFiles()
+    {
+        $confirm = $this->confirm('Is this a new Laravel install?');
+
+        if ($confirm) {
+            // remove default users table migration
+            try {
+                unlink(base_path('database/migrations/2014_10_12_000000_create_users_table.php'));
+            } catch (Exception $e) {
+                $this->info('Default users table migration not found.');
+            }
+
+            // remove default welcome route
+            $webRoutes = file_get_contents(base_path('routes/web.php'));
+            $welcomeRouteCode = "\n\nRoute::get('/', function () {\n    return view('welcome');\n});";
+            $webRoutes = str_replace($welcomeRouteCode, '', $webRoutes);
+            file_put_contents(base_path('routes/web.php'), $webRoutes);
+        }
     }
 
     private function vendorPublish()
