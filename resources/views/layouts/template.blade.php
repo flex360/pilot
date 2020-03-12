@@ -12,7 +12,7 @@
 
         <title>{{ $page->getMetaTitle() . ' - ' . PilotSite::getCurrent()->name }}</title>
 
-        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <link href="{{ pmix('css/app.css') }}" rel="stylesheet">
 
         {!! PilotAsset::link('css') !!}
 
@@ -30,7 +30,7 @@
 
         @include(PilotView::locate('partials.footer'))
 
-        <script src="{{ mix('js/app.js') }}"></script>
+        <script src="{{ pmix('js/app.js') }}"></script>
 
         {!! PilotAsset::link('js') !!}
 

@@ -23,3 +23,12 @@ function setting($key, $default = null)
 {
     return \Flex360\Pilot\Pilot\Setting::get($key, $default);
 }
+
+function pmix($path, $manifestDirectory = '')
+{
+    try {
+        return mix($path, $manifestDirectory);
+    } catch (\Exception $e) {
+        return '/' . $path;
+    }
+}
