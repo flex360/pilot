@@ -10,6 +10,7 @@ use Flex360\Pilot\Pilot\User;
 use Flex360\Pilot\Pilot\View;
 use Flex360\Pilot\Pilot\Asset;
 use Flex360\Pilot\Pilot\Event;
+use Flex360\Pilot\Pilot\Pilot;
 use Flex360\Pilot\Pilot\Setting;
 use Flex360\Pilot\Pilot\PageType;
 use Flex360\Pilot\Pilot\UrlHelper;
@@ -44,10 +45,11 @@ class PilotServiceProvider extends ServiceProvider
     {
         // publish configurations
         $this->publishes([
+            __DIR__ . '/../../config/dynamo.php' => config_path('dynamo.php'),
+            __DIR__ . '/../../config/ignition.php' => config_path('ignition.php'),
+            __DIR__ . '/../../config/medialibrary.php' => config_path('medialibrary.php'),
             __DIR__ . '/../../config/pilot.php' => config_path('pilot.php'),
             __DIR__ . '/../../config/settings.php' => config_path('settings.php'),
-            __DIR__ . '/../../config/medialibrary.php' => config_path('medialibrary.php'),
-            __DIR__ . '/../../config/ignition.php' => config_path('ignition.php'),
         ], 'pilot-config');
 
         // publish assets
@@ -65,7 +67,7 @@ class PilotServiceProvider extends ServiceProvider
             __DIR__.'/../../resources/views/page.blade.php' => base_path('resources/views/vendor/pilot/page.blade.php'),
         ], 'pilot-templates');
 
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        // $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'pilot');
 
@@ -96,5 +98,6 @@ class PilotServiceProvider extends ServiceProvider
         class_alias(View::class, 'PilotView');
         class_alias(User::class, 'PilotUser');
         class_alias(Tag::class, 'PilotTag');
+        class_alias(Pilot::class, 'Pilot');
     }
 }

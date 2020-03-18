@@ -58,6 +58,8 @@
                             <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">Forms</a></li>
                         @endif
 
+                        @include('pilot::admin.partials.modules')
+
                     </ul>
 
                     <hr> <!-- This line forces the right side to float right -->

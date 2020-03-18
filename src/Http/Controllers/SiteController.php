@@ -51,7 +51,8 @@ class SiteController extends Controller
                 'layout' => 'layouts.internal'
             ]);
 
-            return view('page', [], 404);
+            return response()
+                ->view('pilot::page', [], 404);
         }
 
         // populate the page with outside data
@@ -88,12 +89,12 @@ class SiteController extends Controller
         $article = Article::find($id);
         $presenter = $article->present();
 
-        return view('post', compact('article', 'presenter'));
+        return view('pilot::post', compact('article', 'presenter'));
     }
 
     public function mergeTags()
     {
-        return view('admin.mergeTags');
+        return view('pilot::admin.mergeTags');
     }
 
     public function mergeTagsExecute()
