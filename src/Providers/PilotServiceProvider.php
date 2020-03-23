@@ -57,6 +57,11 @@ class PilotServiceProvider extends ServiceProvider
             __DIR__.'/../../dist' => public_path('pilot-assets'),
         ], 'pilot-public');
 
+        // publish asset sources
+        $this->publishes([
+            __DIR__.'/../../resources/assets/admin' => base_path('resources/pilot'),
+        ], 'pilot-sources');
+
         // publish template files
         $this->publishes([
             __DIR__.'/../../resources/views/layouts/template.blade.php' => base_path('resources/views/layouts/template.blade.php'),

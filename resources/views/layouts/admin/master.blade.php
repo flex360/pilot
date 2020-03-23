@@ -20,7 +20,7 @@
 
     <!-- main admin css -->
     <link href="{{ '/pilot-assets/legacy/css/main.css' }}" rel="stylesheet">
-    <link href="{{ '/pilot-assets/admin/css/app.css' }}" rel="stylesheet">
+    <link href="{{ pmix('/pilot-assets/admin/css/app.css') }}" rel="stylesheet">
 
     @yield('head')
 
@@ -119,7 +119,7 @@
     </div>
 
 
-    <script type="text/javascript" src="{{ '/pilot-assets/admin/js/app.js' }}"></script>
+    <script type="text/javascript" src="{{ pmix('/pilot-assets/admin/js/app.js') }}"></script>
 
     {!! PilotAsset::link('js') !!}
 

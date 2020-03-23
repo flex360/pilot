@@ -27,8 +27,12 @@ function setting($key, $default = null)
 function pmix($path, $manifestDirectory = '')
 {
     try {
-        return mix($path, $manifestDirectory);
+        return mix('/custom'.$path, $manifestDirectory);
     } catch (\Exception $e) {
-        return '/' . $path;
+        try {
+            return mix($path, $manifestDirectory);
+        } catch (\Exception $e) {
+            return $path;
+        }
     }
 }
