@@ -27,14 +27,5 @@
                 "Flex360\\Pilot\\Providers\\PilotServiceProvider"
             ]
         }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../dynamo",
-            "options": {
-                "symlink": true
-            }
-        }
-    ]
+    }
 }
