@@ -77,7 +77,7 @@ class PilotTakeoff extends Command
             // remove default welcome route
             $webRoutes = file_get_contents(base_path('routes/web.php'));
             $welcomeRouteCode = "\n\nRoute::get('/', function () {\n    return view('welcome');\n});";
-            $pilotRoutes = "\n\nPilot::routesBefore();\n\n// your routes go here\n\n/* ---- Dynamo Routes ---- */\n\nPilot::routesAfter();\n";
+            $pilotRoutes = "\n\nPilot::routesBefore();\n\n// your routes go here\n\nRoute::group(['as' => 'admin.', 'prefix' => 'pilot', 'middleware' => ['auth.admin', 'backend']], function () {\n\n/* ---- Dynamo Routes ---- */\n\n});\n\nPilot::routesAfter();\n";
             $webRoutes = str_replace($welcomeRouteCode, $pilotRoutes, $webRoutes);
             file_put_contents(base_path('routes/web.php'), $webRoutes);
         }
