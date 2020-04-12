@@ -50,6 +50,7 @@ class SettingController extends AdminController
         $setting = Setting::withoutGlobalScopes()
             ->firstOrCreate([
                 'key' => $key,
+                'value' => '',
                 'name' => $configSetting['label'],
                 'site_id' => $site->id,
             ]);
