@@ -29,6 +29,14 @@ class BeforeBackendMiddleware
 
         $site = Site::getCurrent();
 
+        // redirect if wrong domain or protocol is used
+        if ($site->needsRedirect()) {
+            return $site->getRedirect();
+        }
+
+        // share site across views
+        view()->share('currentSite', $site);
+
         // only executed in the admin
         // get the root page (homepage)
         $root = Page::getRoot();

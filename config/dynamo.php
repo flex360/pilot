@@ -50,7 +50,7 @@ return [
     |
     */
     'model_implements' => [
-        'HasMediaConversions',
+        'HasMedia',
     ],
 
     /*

@@ -13,7 +13,7 @@
         "spatie/laravel-medialibrary": "^7.0.0",
         "doctrine/dbal": "^2.10",
         "laravelcollective/html": "^6.0",
-        "jzpeepz/dynamo": "^1.4.0"
+        "jzpeepz/dynamo": "^1.4.4"
     },
     "autoload": {
         "psr-4": {
