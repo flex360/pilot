@@ -38,6 +38,7 @@ return [
         Spatie\MediaLibrary\HasMedia\HasMedia::class,
         Spatie\Image\Manipulations::class,
         Illuminate\Database\Eloquent\SoftDeletes::class,
+        Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes::class,
     ],
 
     /*
@@ -65,5 +66,6 @@ return [
     'model_traits' => [
         'HasMediaTrait',
         'SoftDeletes',
+        'HasEmptyStringAttributes',
     ],
 ];
