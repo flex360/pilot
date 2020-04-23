@@ -2,12 +2,13 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Jzpeepz\Dynamo\Dynamo;
+
 class MediaHandler
 {
     public function get()
     {
         return function (&$item, &$data, $key, $clearMedia = true) {
-
             $files = isset($data[$key]) ? $data[$key] : [];
 
             // check to see if this field has media items that need to be moved
@@ -40,7 +41,7 @@ class MediaHandler
             }
 
             // convert data to an array if not already
-            if (! is_array($files)) {
+            if (!is_array($files)) {
                 $files = [$files];
             }
 
@@ -63,5 +64,31 @@ class MediaHandler
 
             return $addedMedia;
         };
+    }
+
+    public static function register()
+    {
+        app()->bind('App\Pilot\MediaHandler', function ($app) {
+            return new MediaHandler;
+        });
+
+        $fileHandler = (new MediaHandler)->get();
+
+        Dynamo::addGlobalHandler('singleImage', $fileHandler);
+
+        Dynamo::addGlobalHandler('singleFile', $fileHandler);
+
+        Dynamo::addGlobalHandler('singleFileOrUrl', function (&$item, &$data, $key) use ($fileHandler) {
+            if (is_string($data[$key])) {
+                // do nothing
+            } else {
+                call_user_func_array($fileHandler, [&$item, &$data, $key]);
+                $data[$key] = null;
+            }
+        });
+
+        Dynamo::addGlobalHandler('gallery', function (&$item, &$data, $key) use ($fileHandler) {
+            call_user_func_array($fileHandler, [&$item, &$data, $key, false]);
+        });
     }
 }

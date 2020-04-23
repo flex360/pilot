@@ -23,6 +23,7 @@ use Flex360\Pilot\Console\Commands\SyncNewsFeeds;
 use Flex360\Pilot\Http\Middleware\BeforeMiddleware;
 use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
 use Flex360\Pilot\Http\Middleware\BeforeBackendMiddleware;
+use Flex360\Pilot\Pilot\MediaHandler;
 
 class PilotServiceProvider extends ServiceProvider
 {
@@ -54,22 +55,22 @@ class PilotServiceProvider extends ServiceProvider
 
         // publish assets
         $this->publishes([
-            __DIR__.'/../../dist' => public_path('pilot-assets'),
+            __DIR__ . '/../../dist' => public_path('pilot-assets'),
         ], 'pilot-public');
 
         // publish asset sources
         $this->publishes([
-            __DIR__.'/../../resources/assets/admin' => base_path('resources/pilot'),
+            __DIR__ . '/../../resources/assets/admin' => base_path('resources/pilot'),
         ], 'pilot-sources');
 
         // publish template files
         $this->publishes([
-            __DIR__.'/../../resources/views/layouts/template.blade.php' => base_path('resources/views/layouts/template.blade.php'),
-            __DIR__.'/../../resources/views/layouts/home.blade.php' => base_path('resources/views/layouts/home.blade.php'),
-            __DIR__.'/../../resources/views/layouts/internal.blade.php' => base_path('resources/views/layouts/internal.blade.php'),
-            __DIR__.'/../../resources/views/partials/header.blade.php' => base_path('resources/views/partials/header.blade.php'),
-            __DIR__.'/../../resources/views/partials/footer.blade.php' => base_path('resources/views/partials/footer.blade.php'),
-            __DIR__.'/../../resources/views/page.blade.php' => base_path('resources/views/vendor/pilot/page.blade.php'),
+            __DIR__ . '/../../resources/views/layouts/template.blade.php' => base_path('resources/views/layouts/template.blade.php'),
+            __DIR__ . '/../../resources/views/layouts/home.blade.php' => base_path('resources/views/layouts/home.blade.php'),
+            __DIR__ . '/../../resources/views/layouts/internal.blade.php' => base_path('resources/views/layouts/internal.blade.php'),
+            __DIR__ . '/../../resources/views/partials/header.blade.php' => base_path('resources/views/partials/header.blade.php'),
+            __DIR__ . '/../../resources/views/partials/footer.blade.php' => base_path('resources/views/partials/footer.blade.php'),
+            __DIR__ . '/../../resources/views/page.blade.php' => base_path('resources/views/vendor/pilot/page.blade.php'),
         ], 'pilot-templates');
 
         // $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
@@ -104,5 +105,7 @@ class PilotServiceProvider extends ServiceProvider
         class_alias(User::class, 'PilotUser');
         class_alias(Tag::class, 'PilotTag');
         class_alias(Pilot::class, 'Pilot');
+
+        MediaHandler::register();
     }
 }
