@@ -3,9 +3,7 @@
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
 use Flex360\Pilot\Pilot\Page;
-use Request as RequestFacade;
 use Flex360\Pilot\Pilot\Block;
-use Illuminate\Support\Facades\Auth;
 use Flex360\Pilot\Pilot\MediaHandler;
 
 class PageController extends AdminController
@@ -28,9 +26,7 @@ class PageController extends AdminController
     {
         $root = Page::getAdminRoot();
 
-        // $pages = Page::where('parent_id', '=', $root->id)->where('site_id', '=', $this->site->id)->get();
-
-        return view('pilot::admin.pages.index', compact('root', 'pages'));
+        return view('pilot::admin.pages.index', compact('root'));
     }
 
     /**
