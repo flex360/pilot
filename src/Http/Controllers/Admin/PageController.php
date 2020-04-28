@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
+use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Block;
 use Flex360\Pilot\Pilot\MediaHandler;
