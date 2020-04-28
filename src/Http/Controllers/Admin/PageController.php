@@ -66,6 +66,10 @@ class PageController extends AdminController
 
         $data = request()->except('blocks', 'block_settings', 'featured_image');
 
+        if(isset($data['slug'])) {
+            $data['slug'] = Str::slug($data['slug']);
+        }
+
         $page = Page::create($data);
 
         // call media manager file handler
@@ -131,6 +135,10 @@ class PageController extends AdminController
 
         // update blocks
         $data = request()->except('blocks', 'block_order', 'block_settings');
+
+        if(isset($data['slug'])) {
+            $data['slug'] = Str::slug($data['slug']);
+        }
 
         $page->updateBlocks(
             request()->input('blocks', []),
