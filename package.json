@@ -21,7 +21,7 @@
         "node-sass": "^4.0.0",
         "fibers": "^3.1.0",
         "bootstrap": "^4.3.1",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "jquery-sortablejs": "^1.0.1",
         "popper.js": "^1.15.0",
         "vue": "^2.6.10"
