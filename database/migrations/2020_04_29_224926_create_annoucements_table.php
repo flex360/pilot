@@ -26,7 +26,7 @@ class CreateAnnoucementsTable extends Migration
         });
 
         // create the Standard exmaple Annoucement
-        DB::table('users')->insert(
+        DB::table('annoucements')->insert(
             ['headline' => 'Testing Alert Module',
              'short_description' => 'We\'re testing out our new alert module!',
              'button_text' => 'Did it work?',
