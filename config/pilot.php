@@ -22,6 +22,10 @@ return [
             'name' => 'News',
             'enabled' => true,
         ],
+        'annoucements' => [
+            'name' => 'Annoucements',
+            'enabled' => false,
+        ],
         'forms' => [
             'name' => 'Forms',
             'enabled' => false,

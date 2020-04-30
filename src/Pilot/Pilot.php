@@ -88,6 +88,13 @@ class Pilot
                 Route::get('/event/{id}/copy', 'Admin\EventController@copy')->name('event.copy');
                 Route::resource('event', 'Admin\EventController');
 
+                // Standard Annoucement module
+                Route::get('activate-annoucement/{id}', ['as' => 'annoucement.activate', 'uses' => 'Admin\AnnoucementController@activate']);
+                Route::get('annoucement/{id}/copy', 'Admin\AnnoucementController@copy')->name('annoucement.copy');
+                Route::get('annoucement/{id}/delete', 'Admin\AnnoucementController@destroy')->name('annoucement.destroy');
+                Route::get('annoucement/deactivate', 'Admin\AnnoucementController@deactivate')->name('annoucement.deactivate');
+                Route::resource('annoucement', 'Admin\AnnoucementController');
+
                 // Routes for Settings module
                 Route::resource('setting', 'Admin\SettingController');
                 Route::get('setting/{setting}', 'Admin\SettingController@settings')->name('setting.default');
