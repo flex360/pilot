@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateAnnoucementsTable extends Migration
 {
@@ -23,6 +24,16 @@ class CreateAnnoucementsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // create the Standard exmaple Annoucement
+        DB::table('users')->insert(
+            ['headline' => 'Testing Alert Module',
+             'short_description' => 'We\'re testing out our new alert module!',
+             'button_text' => 'Did it work?',
+             'button_link' => '/learn/alert-module-test',
+             'status' => 1,
+            ]
+        );
     }
 
     /**

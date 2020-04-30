@@ -17,31 +17,31 @@ class AnnoucementController extends DynamoController
     {
         return Dynamo::make(Annoucement::class)
                     ->auto()
-                    ->addIndexButton(function () {
-                        return '<a href="/pilot/annoucement/deactivate" class="btn btn-danger btn-sm">Deactivate</a>';
-                    })
-                    ->clearIndexes()
-                    ->removeBoth('deleted_at')
 
-                    //form
+                    // form
                     ->text('headline', [
-                        'tooltip' => 'Suggest keeping to 5 words or less'
+                        'help' => '<strong>Note: </strong> Suggest keeping to 5 words or less'
                     ])
                     ->text('short_description', [
-                        'tooltip' => 'Not required. Suggest keeping to 10 words or less if used.'
+                        'help' => '<strong>Note: </strong> Not required. Suggest keeping to 10 words or less if used.'
                     ])
                     ->text('button_text', [
-                        'tooltip' => 'If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
+                        'help' => '<strong>Note: </strong> If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
                     ])
                     ->text('button_link', [
-                        'tooltip' => 'If you want the announcement to link somewhere, paste the path (internal links) or entire URL (external links) here.'
+                        'help' => '<strong>Note: </strong> If you want the announcement to link somewhere, paste the path (internal links) or entire URL (external links) here.'
                     ])
                     ->checkbox('status', [
                         "label" => "Check this box to activate this Annoucement!",
                     ])
+                    ->removeBoth('deleted_at')
                     
 
                     //index
+                    ->clearIndexes()
+                    ->addIndexButton(function () {
+                        return '<a href="/pilot/annoucement/deactivate" class="btn btn-danger btn-sm">Deactivate</a>';
+                    })
                     ->addIndex('headline')
                     ->addIndex('short_description')
                     ->addIndex('button_text')
