@@ -173,12 +173,12 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
         if ($this->isRedirect()) {
-            if ($this->link[0] == '/') {
-                $this->link = $site->getDefaultProtocol() . '://' . $site->getFullDomain() . $this->link;
+            $link = $this->link;
+            if ($link[0] == '/') {
+                $link = $site->getDefaultProtocol() . '://' . $site->getFullDomain() . $link;
             }
-            return $this->link;
+            return $link;
         }
-
         return $site->getDefaultProtocol() . '://' . $site->getFullDomain() . $this->path;
     }
 
