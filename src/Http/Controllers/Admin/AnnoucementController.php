@@ -20,16 +20,16 @@ class AnnoucementController extends DynamoController
 
                     // form
                     ->text('headline', [
-                        'help' => '<strong>Note: </strong> Suggest keeping to 5 words or less'
+                        'help' => 'Suggest keeping to 5 words or less'
                     ])
                     ->text('short_description', [
-                        'help' => '<strong>Note: </strong> Not required. Suggest keeping to 10 words or less if used.'
+                        'help' => 'Not required. Suggest keeping to 10 words or less if used.'
                     ])
                     ->text('button_text', [
-                        'help' => '<strong>Note: </strong> If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
+                        'help' => 'If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
                     ])
                     ->text('button_link', [
-                        'help' => '<strong>Note: </strong> If you want the announcement to link somewhere, paste the path (internal links) or entire URL (external links) here.'
+                        'help' => 'If you want the announcement to link somewhere, paste the path (internal links) or entire URL (external links) here.'
                     ])
                     ->checkbox('status', [
                         "label" => "Check this box to activate this Annoucement!",
