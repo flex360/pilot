@@ -16,6 +16,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Username</th>
+                    <th>Email</th>
                     <th>Role</th>
                     <th>Action</th>
                 </tr>
@@ -27,6 +28,7 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->getName() }}</td>
                     <td>{{ $user->username }}</td>
+                    <td>{{ $user->email }}</td>
                     <td>{{ $user->role->name }}</td>
                     <td>{!! link_to_route('admin.user.edit', 'Edit', $user->id) !!}</td>
                 </tr>
