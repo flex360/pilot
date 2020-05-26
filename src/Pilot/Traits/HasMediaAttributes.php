@@ -35,6 +35,20 @@ trait HasMediaAttributes
         return $this->getAttribute($key);
     }
 
+    /**
+     * Determine if an attribute or relation exists on the model.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        if (isset($this->mediaAttributes) && in_array($key, $this->mediaAttributes)) {
+            return true;
+        }
+        return $this->offsetExists($key);
+    }
+
     public function registerMediaConversions(Media $media = null)
     {
         // let's always use standard names like thumb, xsmall, small, medium, large, xlarge
