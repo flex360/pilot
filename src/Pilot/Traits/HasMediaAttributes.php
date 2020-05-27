@@ -43,6 +43,13 @@ trait HasMediaAttributes
      */
     public function __isset($key)
     {
+        // check to see if the key is using media conversion suffix (includes __)
+        if (strpos($key, '__') !== false) {
+            // remove the media conversion suffix
+            $key = substr($key, 0, strpos($key, '__'));
+        }
+
+        // check if the key is a media attribute
         if (isset($this->mediaAttributes) && in_array($key, $this->mediaAttributes)) {
             return true;
         }
