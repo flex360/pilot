@@ -306,7 +306,7 @@
                             title="Published: Page will show up in your navigation.<br>
                                    Draft: Page will be visible only to website admins/editors when they are logged in.<br>
                                    Hidden: Page is &quot;live&quot; but will not show up in navigation."></i>
-                            {!! Form::select('status', PilotPage::getStatusList(), null, array('class' => 'form-control')) !!}
+                            {!! Form::select('status', $page->getStatusSelectList(), null, array('class' => 'form-control')) !!}
                         </div>
 
                         @if (Auth::user()->hasRole('admin'))
