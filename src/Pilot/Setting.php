@@ -120,4 +120,12 @@ class Setting extends \Eloquent
 
         return null;
     }
+
+    public static function getSelectListWYSIWYG()
+    {
+        return [
+            10 => 'Froala',
+            20 => 'Trumbow',
+        ];
+    }
 }

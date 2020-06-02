@@ -2,9 +2,9 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
+use Flex360\Pilot\Pilot\Asset;
+use Illuminate\Support\Facades\Validator;
 use Flex360\Pilot\Http\Controllers\Controller;
-use Image;
-use Asset;
 
 class AssetController extends Controller
 {
@@ -31,14 +31,14 @@ class AssetController extends Controller
 
     public function postUpload()
     {
-        $uploadPath = \Asset::initUploadDirectory();
+        $uploadPath = Asset::initUploadDirectory();
 
         // grab the file
-        $file = \Input::file('file');
+        $file = request()->file('file');
         $output = [];
-        parse_str(\Input::get('params'), $output);
+        parse_str(request()->input('params'), $output);
         // make clean filename
-        $fileName = \Asset::cleanFilename($file->getClientOriginalName(), $file->getClientOriginalExtension());
+        $fileName = Asset::cleanFilename($file->getClientOriginalName(), $file->getClientOriginalExtension());
 
         // check extension
         $validExt = in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx']) ? true : false;
@@ -46,20 +46,24 @@ class AssetController extends Controller
         // validate the file being uploaded
         $rules = ['file' => 'required|mimes:png,gif,jpeg,txt,pdf,doc'];
 
-        $validator = \Validator::make(['file' => $file], $rules);
+        $validator = Validator::make(['file' => $file], $rules);
 
         if ($validator->passes() && $validExt) {
             // move the file to the final directory
             $file->move($uploadPath, $fileName);
 
-            $publicPath = str_replace(public_path(), '', $uploadPath) . '/' . $fileName;
+            $publicPath = str_replace(storage_path('app/public'), '/storage', $uploadPath) . '/' . $fileName;
 
             // if this is an image, try to resize it
             if (in_array(strtolower($file->getClientOriginalExtension()), ['jpg', 'jpeg', 'png'])) {
                 $img = Asset::manipulateImage($uploadPath . '/' . $fileName, $output);
             }
 
-            return \Response::json(['link' => $publicPath]);
+            if (request()->has('type') && request()->input('type') == 'trumbowyg') {
+                return response()->json(['success' => true, 'file' => $publicPath]);
+            }
+
+            return response()->json(['link' => $publicPath]);
         }
     }
 }

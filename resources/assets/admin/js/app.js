@@ -56,32 +56,203 @@ if (window.Element && !Element.prototype.closest) {
     };
 }
 
+//TRUMBOWYG & FROALA WYSIWYG EDITOR 
+require('trumbowyg');
+import 'trumbowyg/dist/ui/trumbowyg.css';
+import 'trumbowyg/plugins/emoji/ui/sass/trumbowyg.emoji.scss';
+require('trumbowyg/plugins/fontsize/trumbowyg.fontsize.js');
+require('trumbowyg/plugins/emoji/trumbowyg.emoji.js');
+require('trumbowyg/plugins/upload/trumbowyg.upload.js');
+require('trumbowyg/plugins/pasteimage/trumbowyg.pasteimage.js');
+require('trumbowyg/plugins/pasteembed/trumbowyg.pasteembed.js');
+import 'trumbowyg/plugins/table/ui/sass/trumbowyg.table.scss';
+require('trumbowyg/plugins/table/trumbowyg.table.js');
+require('trumbowyg/plugins/resizimg/trumbowyg.resizimg.js');
+// require('trumbowyg/plugins/resizimg/resizable-resolveconflict.js');
+require('trumbowyg/plugins/specialchars/trumbowyg.specialchars.js');
+import 'trumbowyg/plugins/specialchars/ui/sass/trumbowyg.specialchars.scss';
+require('trumbowyg/plugins/colors/trumbowyg.colors.js');
+import 'trumbowyg/plugins/colors/ui/sass/trumbowyg.colors.scss';
+
 window.addEventListener('load', (event) => {
-  var el = document.getElementById("block_1");
+        //get wysiwygSetting setting
+        const wysiwygSetting = document.getElementById("wysiwygSetting").getAttribute("value");
+        console.log(wysiwygSetting);
+    
+        /* froala editor */
+        if (wysiwygSetting == 10) {
+    
+        // Froala license
+        $.FroalaEditor.DEFAULTS.key = "4Wa1WDPTf1ZNRGb1OG1g1==";
+        if ($(".wysiwyg-editor").length > 0) {
+          $(".wysiwyg-editor").froalaEditor({
+            toolbarInline: false,
+            // linkText: true,
+            height: 300,
+            theme: "dark",
+            toolbarButtons: [
+              "bold",
+              "italic",
+              "underline",
+              "strikeThrough",
+              "fontFamily",
+              "fontSize",
+              "color",
+              "|",
+              "paragraphFormat",
+              "paragraphStyle",
+              "align",
+              "formatOL",
+              "formatUL",
+              "outdent",
+              "indent",
+              "|",
+              "insertLink",
+              "insertImage",
+              "insertVideo",
+              "insertFile",
+              "insertTable",
+              "insertHR",
+              "undo",
+              "redo",
+              "html"
+            ],
+            toolbarButtonsSM: [
+              "bold",
+              "italic",
+              "underline",
+              "strikeThrough",
+              "fontFamily",
+              "fontSize",
+              "color",
+              "|",
+              "paragraphFormat",
+              "paragraphStyle",
+              "align",
+              "formatOL",
+              "formatUL",
+              "outdent",
+              "indent",
+              "|",
+              "insertLink",
+              "insertImage",
+              "insertVideo",
+              "insertFile",
+              "insertTable",
+              "insertHR",
+              "undo",
+              "redo",
+              "html"
+            ],
+            toolbarButtonsXS: [
+              "bold",
+              "italic",
+              "underline",
+              "strikeThrough",
+              "fontFamily",
+              "fontSize",
+              "color",
+              "|",
+              "paragraphFormat",
+              "paragraphStyle",
+              "align",
+              "formatOL",
+              "formatUL",
+              "outdent",
+              "indent",
+              "|",
+              "insertLink",
+              "insertImage",
+              "insertVideo",
+              "insertFile",
+              "insertTable",
+              "insertHR",
+              "undo",
+              "redo",
+              "html"
+            ],
+            imageUploadURL: "/assets/upload",
+            imageManagerLoadURL: "/assets/get",
+            imageManagerDeleteURL: "/assets/delete",
+            fileUploadURL: "/assets/upload",
+            paragraphFormat: {
+              N: "Normal",
+              BLOCKQUOTE: "Quote",
+              PRE: "Code",
+              H1: "Heading 1",
+              H2: "Heading 2",
+              H3: "Heading 3",
+              H4: "Heading 4",
+              H5: "Heading 5",
+              H6: "Heading 6"
+            },
+            htmlRemoveTags: []
+          });
+        }
+      } else {
+    
+        $('.wysiwyg-editor').trumbowyg({
+            btnsDef: {
+                // Create a new dropdown
+                image: {
+                    dropdown: ['insertImage', 'upload'],
+                    ico: 'insertImage'
+                }
+            },
+            btns: [
+                ['viewHTML'],
+                ['undo', 'redo'], // Only supported in Blink browsers
+                ['formatting'],
+                ['strong', 'em', 'fontsize', 'foreColor', 'backColor', 'del', 'specialChars', 'removeformat'],
+                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                ['unorderedList', 'orderedList'],
+                ['horizontalRule'],
+                ['link'],
+                ['image'],
+                ['fullscreen'],
+                ['table'],
+                ['emoji'],
+            ],
+            plugins: {
+                upload: {
+                    serverPath: '/assets/upload',
+                    fileFieldName: 'file',
+                    data: [{ name: "_token", value: $('[name=csrf-token]').attr('content')}, { name: "type", value: "trumbowyg" }],
+                }
+            },
+            tagsToRemove: ['script', 'link'],
+            tagsToKeep: [['hr', 'img', 'embed', 'iframe', 'input', 'i']],
+            imageWidthModalEdit: true,
+            defaultLinkTarget: '_blank',
+            svgPath: '/pilot-assets/admin/svg/icons.svg',
+        });
+      }
 
-  if (el != null) {
+    var el = document.getElementById("block_1");
+
+    if (el != null) {
     CodeMirror.fromTextArea(el, {
-      lineNumbers: true,
-      theme: 'monokai',
-      matchBrackets: true,
-      mode: "application/x-httpd-php",
-      indentUnit: 4,
-      indentWithTabs: false,
-      autoRefresh: true,
+        lineNumbers: true,
+        theme: 'monokai',
+        matchBrackets: true,
+        mode: "application/x-httpd-php",
+        indentUnit: 4,
+        indentWithTabs: false,
+        autoRefresh: true,
     });
-  }
+    }
 
-  var el = document.getElementById("block_2");
+    var el = document.getElementById("block_2");
 
-  if (el != null) {
+    if (el != null) {
     CodeMirror.fromTextArea(el, {
-      lineNumbers: true,
-      theme: 'monokai',
-      matchBrackets: true,
-      mode: "application/x-httpd-php",
-      indentUnit: 4,
-      indentWithTabs: false,
-      autoRefresh: true,
+        lineNumbers: true,
+        theme: 'monokai',
+        matchBrackets: true,
+        mode: "application/x-httpd-php",
+        indentUnit: 4,
+        indentWithTabs: false,
+        autoRefresh: true,
     });
-  }
+    }
 });

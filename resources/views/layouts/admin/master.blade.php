@@ -21,6 +21,7 @@
     <!-- main admin css -->
     <link href="{{ '/pilot-assets/legacy/css/main.css' }}" rel="stylesheet">
     <link href="{{ pmix('/pilot-assets/admin/css/app.css') }}" rel="stylesheet">
+    <link src="/dist/components/Trumbowyg-master/dist/ui/trumbowyg.min.css"></link>
 
     @yield('head')
 
@@ -43,23 +44,23 @@
                 <div class="collapse navbar-collapse" id="collapse_target">
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                         @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins')['pages']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">Pages</a></li>
+                            <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">{{ config('pilot.plugins')['pages']['name'] }}</a></li>
                         @endif
 
                         @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins')['events']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">Events</a></li>
+                            <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">{{ config('pilot.plugins')['events']['name'] }}</a></li>
                         @endif
 
                         @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins')['news']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot/post*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.post.index') }}">News</a></li>
+                            <li class="nav-item {{ Request::is('pilot/post*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.post.index') }}">{{ config('pilot.plugins')['news']['name'] }}</a></li>
                         @endif
 
                         @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins')['annoucements']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot/annoucement*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.annoucement.index') }}">Annoucements</a></li>
+                            <li class="nav-item {{ Request::is('pilot/annoucement*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.annoucement.index') }}">{{ config('pilot.plugins')['annoucements']['name'] }}</a></li>
                         @endif
 
                         @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins')['forms']['enabled'] && WufooForm::hasForms())
-                            <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">Forms</a></li>
+                            <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">{{ config('pilot.plugins')['forms']['name'] }}</a></li>
                         @endif
 
                         @include('pilot::admin.partials.modules')
@@ -152,7 +153,13 @@
     <!-- DirtyFormsJS - Leave Site? code -->
     <script src="/pilot-assets/components/jquery.dirtyforms/jquery.dirtyforms.min.js"></script>
 
+    <!-- Trumbow editor -->
+    {{-- <script src="/pilot-assets/components/trumbowyg/trumbowyg.min.js"></script> --}}
+
     @yield('scripts')
+
+    <!-- Import Trumbowyg plugins... -->
+    <p id="wysiwygSetting" style="display: none;" value="{!! config('wysiwyg.type') !!}"></p>
 
 </body>
 </html>

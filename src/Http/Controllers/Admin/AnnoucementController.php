@@ -5,6 +5,7 @@ namespace Flex360\Pilot\Http\Controllers\Admin;
 use App\Http\Requests;
 
 use Jzpeepz\Dynamo\Dynamo;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
@@ -17,6 +18,8 @@ class AnnoucementController extends DynamoController
     {
         return Dynamo::make(Annoucement::class)
                     ->auto()
+
+                    ->alias(Str::singular(config('pilot.plugins')['annoucements']['name']))
 
                     // form
                     ->text('headline', [

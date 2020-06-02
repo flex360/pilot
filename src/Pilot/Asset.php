@@ -60,7 +60,7 @@ class Asset
     public static function initUploadDirectory()
     {
         // make asset uploads folder id needed
-        $uploadPath = public_path() . '/assets/uploads';
+        $uploadPath = storage_path('app/public') . '/uploads';
 
         if (! \File::isDirectory($uploadPath)) {
             \File::makeDirectory($uploadPath);

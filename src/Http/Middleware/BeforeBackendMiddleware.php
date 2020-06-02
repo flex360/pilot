@@ -98,6 +98,9 @@ class BeforeBackendMiddleware
         Asset::css('/pilot-assets/components/fullcalendar/dist/fullcalendar.min.css');
         Asset::css('/pilot-assets/components/fullcalendar/dist/fullcalendar.print.css', 'print');
 
+        // Jquery resizimg
+        Asset::js('//rawcdn.githack.com/RickStrahl/jquery-resizable/master/dist/jquery-resizable.min.js');
+
         return $next($request);
     }
 }
