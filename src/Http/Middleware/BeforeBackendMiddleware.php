@@ -6,6 +6,7 @@ use Closure;
 use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Site;
 use Flex360\Pilot\Pilot\Asset;
+use Illuminate\Support\Facades\Cache;
 
 class BeforeBackendMiddleware
 {
@@ -23,7 +24,7 @@ class BeforeBackendMiddleware
         // set a fake page for routes without a page
         $title = Site::getRequestTitle();
 
-        Page::mimic([
+        mimic([
             'title' => $title
         ]);
 
@@ -40,7 +41,9 @@ class BeforeBackendMiddleware
         $site->initLearnPages();
 
         // share learn pages
-        $learnRoot = Page::findByPath('/learn');
+        $learnRoot = Cache::rememberForever('pilot-learn-root', function () {
+            return Page::findByPath('/learn');
+        });
 
         if (!empty($learnRoot)) {
             $learnPages = $learnRoot->getChildren();

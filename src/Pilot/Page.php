@@ -28,6 +28,9 @@ class Page extends Model implements HasMedia
 
     public static $current = null;
 
+    // place to store findByPath results so that they aren't duplicated
+    public static $results = [];
+
     protected $table = 'pages';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
@@ -103,6 +106,7 @@ class Page extends Model implements HasMedia
 
             // clear the page root cache just in case
             Cache::forget('page-root');
+            Cache::forget('pilot-learn-root');
         });
 
         Page::deleted(function () {
@@ -110,6 +114,7 @@ class Page extends Model implements HasMedia
             $site = Site::getCurrent();
             Cache::forget('site-nav-' . $site->id);
             Cache::forget('site-nav-view-' . $site->id);
+            Cache::forget('pilot-learn-root');
         });
     }
 
@@ -568,7 +573,6 @@ class Page extends Model implements HasMedia
 
     public function getStatusSelectList()
     {
-
         if ($this->parent_id != null) {
             $parentPage = Page::find($this->parent_id);
 
@@ -578,7 +582,7 @@ class Page extends Model implements HasMedia
                     'publish' => 'Publish',
                     'hidden' => 'Hidden'
                 ];
-            } else if ($parentPage->status == 'hidden') {
+            } elseif ($parentPage->status == 'hidden') {
                 return $statusList[] = [
                     'hidden' => 'Hidden',
                     'publish' => 'Publish',
@@ -591,14 +595,30 @@ class Page extends Model implements HasMedia
                     'hidden' => 'Hidden'
                 ];
             }
-        } 
+        }
     }
 
     public static function findByPath($path)
     {
-        return static::where('site_id', '=', Site::getCurrent()->id)
+        $site = Site::getCurrent();
+
+        // create a key that combines the site id and path
+        $key = $site->id . '||' . $path;
+
+        // if the key is already set, just return that value
+        if (array_key_exists($key, self::$results)) {
+            return self::$results[$key];
+        }
+
+        // find the page in the database
+        $page = static::where('site_id', '=', $site->id)
                     ->where('path', $path)
                     ->first();
+
+        // store the value in case it is request later
+        self::$results[$key] = $page;
+
+        return $page;
     }
 
     public static function mimic($data = [], $override = false, $overrideType = 'replace')
@@ -613,10 +633,9 @@ class Page extends Model implements HasMedia
             $page = Page::find($data);
         } else {
             // otherwise, find by the current path
-            $page = Page::findByPath('/' . \Request::instance()->path());
+            $path = '/' . request()->path();
+            $page = Page::findByPath($path);
         }
-
-        $page = Page::findByPath('/' . \Request::instance()->path());
 
         if (empty($page) || $override) {
             if ($overrideType == 'merge') {

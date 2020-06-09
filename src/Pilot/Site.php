@@ -2,17 +2,17 @@
 
 namespace Flex360\Pilot\Pilot;
 
-use Cache;
 use Config;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Site extends Model implements HasMedia
 {
@@ -422,7 +422,10 @@ class Site extends Model implements HasMedia
     public function initLearnPages()
     {
         if (self::isBackend()) {
-            $learnPage = Page::where('title', 'CMS Guides')->first();
+            // $learnPage = Page::where('title', 'CMS Guides')->first();
+            $learnPage = Cache::rememberForever('pilot-learn-root', function () {
+                return Page::findByPath('/learn');
+            });
 
             if (empty($learnPage)) {
                 // we are clear to add the pages because they don't exist

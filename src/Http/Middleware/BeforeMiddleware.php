@@ -31,8 +31,8 @@ class BeforeMiddleware
         // set current site in config
         $site = Site::setCurrent();
 
-        // \View::share('page', new \Page);
-        Page::mimic();
+        // mimic a page so that we can use it for page metadata
+        mimic();
 
         // redirect if wrong domain or protocol is used
         if ($site->needsRedirect()) {
