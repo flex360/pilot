@@ -5,6 +5,8 @@ return [
 
     'default_layout' => 'layouts.internal',
 
+    'backend_side_bar_layout' => false,
+
     'social_image' => env('SOCIAL_IMAGE'),
     'social_image_width' => env('SOCIAL_IMAGE_WIDTH'),
     'social_image_height' => env('SOCIAL_IMAGE_HEIGHT'),
