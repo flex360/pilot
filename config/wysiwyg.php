@@ -3,5 +3,5 @@
 // rules: 10 => frola, 20 => trumbow
 
 return [
-    'type' => '20'
+    'type' => '10'
 ];

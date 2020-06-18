@@ -50,32 +50,6 @@ class BeforeBackendMiddleware
             view()->share('learnPages', $learnPages);
         }
 
-        // Froala Editor 2.7.3
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/froala_editor.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/themes/dark.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/froala_style.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/plugins/draggable.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/plugins/file.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/plugins/image.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/plugins/image_manager.min.css');
-        Asset::css('/pilot-assets/components/froala-wysiwyg-editor/css/plugins/code_view.min.css');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/froala_editor.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/draggable.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/file.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/link.min.js');
-        // \Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/font_size.min.js');
-        // \Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/font_family.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/paragraph_format.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/paragraph_style.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/align.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/image.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/image_manager.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/third_party/image_aviary.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/lists.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/video.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/code_view.min.js');
-        Asset::js('/pilot-assets/components/froala-wysiwyg-editor/js/plugins/code_beautifier.min.js');
-
         // color picker
         Asset::css('/pilot-assets/components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css');
         Asset::js('/pilot-assets/components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js');
