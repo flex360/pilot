@@ -1,50 +1,5 @@
 $(function () {
 
-    // // Froala license
-    $.FroalaEditor.DEFAULTS.key = '4Wa1WDPTf1ZNRGb1OG1g1==';
-
-    /* froala editor */
-    if ($('.wysiwyg-editor').length > 0) {
-        //$('.wysiwyg-editor').trumbowyg();
-        $('.wysiwyg-editor').froalaEditor({
-            toolbarInline: false,
-            // linkText: true,
-            height: 300,
-            theme: 'dark',
-            toolbarButtons: ["bold", "italic", "underline", "strikeThrough",
-                "fontFamily", "fontSize", "color", "|", "paragraphFormat",
-                "paragraphStyle", "align", "formatOL", "formatUL",
-                "outdent", "indent", "|", "insertLink", "insertImage", "insertVideo",
-                "insertFile", "insertTable", "insertHR", "undo", "redo", "html"],
-            toolbarButtonsSM: ["bold", "italic", "underline", "strikeThrough",
-                "fontFamily", "fontSize", "color", "|", "paragraphFormat",
-                "paragraphStyle", "align", "formatOL", "formatUL",
-                "outdent", "indent", "|", "insertLink", "insertImage", "insertVideo",
-                "insertFile", "insertTable", "insertHR", "undo", "redo", "html"],
-            toolbarButtonsXS: ["bold", "italic", "underline", "strikeThrough",
-                "fontFamily", "fontSize", "color", "|", "paragraphFormat",
-                "paragraphStyle", "align", "formatOL", "formatUL",
-                "outdent", "indent", "|", "insertLink", "insertImage", "insertVideo",
-                "insertFile", "insertTable", "insertHR", "undo", "redo", "html"],
-            imageUploadURL: '/assets/upload',
-            imageManagerLoadURL: '/assets/get',
-            imageManagerDeleteURL: '/assets/delete',
-            fileUploadURL: '/assets/upload',
-            paragraphFormat: {
-                N: 'Normal',
-                BLOCKQUOTE: 'Quote',
-                PRE: 'Code',
-                H1: 'Heading 1',
-                H2: 'Heading 2',
-                H3: 'Heading 3',
-                H4: 'Heading 4',
-                H5: 'Heading 5',
-                H6: 'Heading 6'
-            },
-            htmlRemoveTags: []
-        });
-    }
-
     if ($('.datetimepicker').length > 0) {
         $('.datetimepicker').datetimepicker();
     }

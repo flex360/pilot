@@ -153,9 +153,6 @@
     <!-- DirtyFormsJS - Leave Site? code -->
     <script src="/pilot-assets/components/jquery.dirtyforms/jquery.dirtyforms.min.js"></script>
 
-    <!-- Trumbow editor -->
-    {{-- <script src="/pilot-assets/components/trumbowyg/trumbowyg.min.js"></script> --}}
-
     @yield('scripts')
 
     <!-- Import Trumbowyg plugins... -->

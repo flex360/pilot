@@ -16,7 +16,7 @@ trait UserHtmlTrait
     {
         if (!Site::isBackend() && isset($this->html) && in_array($key, $this->html) !== false &&
         array_key_exists($key, $this->attributes)) {
-            $this->attributes[$key] = '<div class="user-html">' . $this->attributes[$key] . '</div>';
+            $this->attributes[$key] = '<div class="fr-view user-html">' . $this->attributes[$key] . '</div>';
         }
 
         if (array_key_exists($key, $this->attributes) || $this->hasGetMutator($key)) {
@@ -28,6 +28,6 @@ trait UserHtmlTrait
 
     public function getUserHtml($key)
     {
-        return '<div class="user-html">' . $this->$key . '</div>';
+        return '<div class="fr-view user-html">' . $this->$key . '</div>';
     }
 }

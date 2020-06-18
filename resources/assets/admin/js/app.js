@@ -56,7 +56,7 @@ if (window.Element && !Element.prototype.closest) {
     };
 }
 
-//TRUMBOWYG & FROALA WYSIWYG EDITOR 
+//TRUMBOWYG  EDITOR 
 require('trumbowyg');
 import 'trumbowyg/dist/ui/trumbowyg.css';
 import 'trumbowyg/plugins/emoji/ui/sass/trumbowyg.emoji.scss';
@@ -74,6 +74,49 @@ import 'trumbowyg/plugins/specialchars/ui/sass/trumbowyg.specialchars.scss';
 require('trumbowyg/plugins/colors/trumbowyg.colors.js');
 import 'trumbowyg/plugins/colors/ui/sass/trumbowyg.colors.scss';
 
+//FROALA EDITOR
+var FroalaEditor = require('froala-editor');
+
+// Base Froala CSS and JS
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'froala-editor/js/froala_editor.pkgd.min.js';
+
+//Froala plugins
+import 'froala-editor/js/plugins/align.min.js';
+import 'froala-editor/js/plugins/char_counter.min.js';
+import 'froala-editor/js/plugins/code_beautifier.min.js';
+import 'froala-editor/js/plugins/code_view.min.js';
+import 'froala-editor/js/plugins/colors.min.js';
+import 'froala-editor/js/plugins/draggable.min.js';
+import 'froala-editor/js/plugins/edit_in_popup.min.js';
+import 'froala-editor/js/plugins/entities.min.js';
+import 'froala-editor/js/plugins/file.min.js';
+import 'froala-editor/js/plugins/font_family.min.js';
+import 'froala-editor/js/plugins/font_size.min.js';
+import 'froala-editor/js/plugins/forms.min.js';
+import 'froala-editor/js/plugins/fullscreen.min.js';
+import 'froala-editor/js/plugins/help.min.js';
+import 'froala-editor/js/plugins/image.min.js';
+import 'froala-editor/js/plugins/image_manager.min.js';
+import 'froala-editor/js/plugins/inline_class.min.js';
+import 'froala-editor/js/plugins/inline_style.min.js';
+import 'froala-editor/js/plugins/line_breaker.min.js';
+import 'froala-editor/js/plugins/line_height.min.js';
+import 'froala-editor/js/plugins/link.min.js';
+import 'froala-editor/js/plugins/lists.min.js';
+import 'froala-editor/js/plugins/paragraph_format.min.js';
+import 'froala-editor/js/plugins/paragraph_style.min.js';
+import 'froala-editor/js/plugins/print.min.js';
+import 'froala-editor/js/plugins/quick_insert.min.js';
+import 'froala-editor/js/plugins/quote.min.js';
+import 'froala-editor/js/plugins/save.min.js';
+import 'froala-editor/js/plugins/special_characters.min.js';
+import 'froala-editor/js/plugins/table.min.js';
+import 'froala-editor/js/plugins/url.min.js';
+import 'froala-editor/js/plugins/video.min.js';
+import 'froala-editor/js/plugins/word_paste.min.js';
+
+
 window.addEventListener('load', (event) => {
         //get wysiwygSetting setting
         const wysiwygSetting = document.getElementById("wysiwygSetting").getAttribute("value");
@@ -81,114 +124,161 @@ window.addEventListener('load', (event) => {
     
         /* froala editor */
         if (wysiwygSetting == 10) {
+
+        // get current domain name to set Froala key
+        var domain = window.location.hostname;
+
+        if (domain == 'hanks.flextestdrive.com/') {
+            var key = "eHE5C-11D2B1E2E2C5A3D-17e1hdh1C-7A3hcuifvgareqoF-11A2C-9rscA5A4D4B3E4C2H3E3C1C2==";
+        } else if (domain == 'hanksfurniture.com') {
+            var key = "eHE5C-11D2B1E2E2C5A3D-17e1hdh1C-7A3hcuifvgareqoF-11A2C-9rscA5A4D4B3E4C2H3E3C1C2==";
+        } else {
+            var key = "NO KEY NEEDED ON TEST SITE :D";
+        }
+
+        // ***** NEW FROALA EDITOR :D ******
+        var editor = FroalaEditor('textarea.wysiwyg-editor', {
+            key: key,
+            toolbarButtons: {
+                'moreText': {
+                  'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
+                },
+                'moreParagraph': {
+                  'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
+                },
+                'moreRich': {
+                  'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
+                },
+                'moreMisc': {
+                  'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
+                }
+              },
+
+              imageUploadURL: '/assets/upload',
+              imageManagerLoadURL: "/assets/get",
+              imageManagerDeleteURL: "/assets/delete",
+              fileUploadURL: "/assets/upload",
+              paragraphFormat: {
+                N: "Normal",
+                BLOCKQUOTE: "Quote",
+                PRE: "Code",
+                H1: "Heading 1",
+                H2: "Heading 2",
+                H3: "Heading 3",
+                H4: "Heading 4",
+                H5: "Heading 5",
+                H6: "Heading 6"
+            },
+            videoInsertButtons: ['videoBack', '|', 'videoByURL', 'videoEmbed']
+        });
     
         // Froala license
-        $.FroalaEditor.DEFAULTS.key = "4Wa1WDPTf1ZNRGb1OG1g1==";
-        if ($(".wysiwyg-editor").length > 0) {
-          $(".wysiwyg-editor").froalaEditor({
-            toolbarInline: false,
-            // linkText: true,
-            height: 300,
-            theme: "dark",
-            toolbarButtons: [
-              "bold",
-              "italic",
-              "underline",
-              "strikeThrough",
-              "fontFamily",
-              "fontSize",
-              "color",
-              "|",
-              "paragraphFormat",
-              "paragraphStyle",
-              "align",
-              "formatOL",
-              "formatUL",
-              "outdent",
-              "indent",
-              "|",
-              "insertLink",
-              "insertImage",
-              "insertVideo",
-              "insertFile",
-              "insertTable",
-              "insertHR",
-              "undo",
-              "redo",
-              "html"
-            ],
-            toolbarButtonsSM: [
-              "bold",
-              "italic",
-              "underline",
-              "strikeThrough",
-              "fontFamily",
-              "fontSize",
-              "color",
-              "|",
-              "paragraphFormat",
-              "paragraphStyle",
-              "align",
-              "formatOL",
-              "formatUL",
-              "outdent",
-              "indent",
-              "|",
-              "insertLink",
-              "insertImage",
-              "insertVideo",
-              "insertFile",
-              "insertTable",
-              "insertHR",
-              "undo",
-              "redo",
-              "html"
-            ],
-            toolbarButtonsXS: [
-              "bold",
-              "italic",
-              "underline",
-              "strikeThrough",
-              "fontFamily",
-              "fontSize",
-              "color",
-              "|",
-              "paragraphFormat",
-              "paragraphStyle",
-              "align",
-              "formatOL",
-              "formatUL",
-              "outdent",
-              "indent",
-              "|",
-              "insertLink",
-              "insertImage",
-              "insertVideo",
-              "insertFile",
-              "insertTable",
-              "insertHR",
-              "undo",
-              "redo",
-              "html"
-            ],
-            imageUploadURL: "/assets/upload",
-            imageManagerLoadURL: "/assets/get",
-            imageManagerDeleteURL: "/assets/delete",
-            fileUploadURL: "/assets/upload",
-            paragraphFormat: {
-              N: "Normal",
-              BLOCKQUOTE: "Quote",
-              PRE: "Code",
-              H1: "Heading 1",
-              H2: "Heading 2",
-              H3: "Heading 3",
-              H4: "Heading 4",
-              H5: "Heading 5",
-              H6: "Heading 6"
-            },
-            htmlRemoveTags: []
-          });
-        }
+        // $.FroalaEditor.DEFAULTS.key = "4Wa1WDPTf1ZNRGb1OG1g1==";
+        // if ($(".wysiwyg-editor").length > 0) {
+        //   $(".wysiwyg-editor").froalaEditor({
+        //     toolbarInline: false,
+        //     // linkText: true,
+        //     height: 300,
+        //     theme: "dark",
+        //     toolbarButtons: [
+        //       "bold",
+        //       "italic",
+        //       "underline",
+        //       "strikeThrough",
+        //       "fontFamily",
+        //       "fontSize",
+        //       "color",
+        //       "|",
+        //       "paragraphFormat",
+        //       "paragraphStyle",
+        //       "align",
+        //       "formatOL",
+        //       "formatUL",
+        //       "outdent",
+        //       "indent",
+        //       "|",
+        //       "insertLink",
+        //       "insertImage",
+        //       "insertVideo",
+        //       "insertFile",
+        //       "insertTable",
+        //       "insertHR",
+        //       "undo",
+        //       "redo",
+        //       "html"
+        //     ],
+        //     toolbarButtonsSM: [
+        //       "bold",
+        //       "italic",
+        //       "underline",
+        //       "strikeThrough",
+        //       "fontFamily",
+        //       "fontSize",
+        //       "color",
+        //       "|",
+        //       "paragraphFormat",
+        //       "paragraphStyle",
+        //       "align",
+        //       "formatOL",
+        //       "formatUL",
+        //       "outdent",
+        //       "indent",
+        //       "|",
+        //       "insertLink",
+        //       "insertImage",
+        //       "insertVideo",
+        //       "insertFile",
+        //       "insertTable",
+        //       "insertHR",
+        //       "undo",
+        //       "redo",
+        //       "html"
+        //     ],
+        //     toolbarButtonsXS: [
+        //       "bold",
+        //       "italic",
+        //       "underline",
+        //       "strikeThrough",
+        //       "fontFamily",
+        //       "fontSize",
+        //       "color",
+        //       "|",
+        //       "paragraphFormat",
+        //       "paragraphStyle",
+        //       "align",
+        //       "formatOL",
+        //       "formatUL",
+        //       "outdent",
+        //       "indent",
+        //       "|",
+        //       "insertLink",
+        //       "insertImage",
+        //       "insertVideo",
+        //       "insertFile",
+        //       "insertTable",
+        //       "insertHR",
+        //       "undo",
+        //       "redo",
+        //       "html"
+        //     ],
+        //     imageUploadURL: "/assets/upload",
+        //     imageManagerLoadURL: "/assets/get",
+        //     imageManagerDeleteURL: "/assets/delete",
+        //     fileUploadURL: "/assets/upload",
+        //     paragraphFormat: {
+        //       N: "Normal",
+        //       BLOCKQUOTE: "Quote",
+        //       PRE: "Code",
+        //       H1: "Heading 1",
+        //       H2: "Heading 2",
+        //       H3: "Heading 3",
+        //       H4: "Heading 4",
+        //       H5: "Heading 5",
+        //       H6: "Heading 6"
+        //     },
+        //     htmlRemoveTags: []
+        //   });
+        // }
       } else {
     
         $('.wysiwyg-editor').trumbowyg({
