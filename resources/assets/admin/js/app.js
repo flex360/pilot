@@ -136,6 +136,34 @@ window.addEventListener('load', (event) => {
             var key = "NO KEY NEEDED ON TEST SITE :D";
         }
 
+        FroalaEditor.DefineIcon('bootstrapButtonsDropdown', {NAME: 'cog', SVG_KEY: 'bold'});
+        FroalaEditor.RegisterCommand('bootstrapButtonsDropdown', {
+            title: 'Buttons',
+            type: 'dropdown',
+            focus: false,
+            undo: false,
+            refreshAfterCallback: true,
+            options: {
+            'Primary Button': 'Primary Button',
+            'Danger Button': 'Danger Button'
+            },
+            callback: function (cmd, val) {
+                if (val == 'Primary Button') {
+                    this.html.insert('<a href="/" class="btn btn-primary">Primary Button</a>');
+                } else if (val == 'Danger Button') {
+                    this.html.insert('<a href="/" class="btn btn-danger">Danger Button</a>');
+                }
+            },
+            // Callback on refresh.
+            refresh: function ($btn) {
+            console.log ('do refresh');
+            },
+            // Callback on dropdown show.
+            refreshOnShow: function ($btn, $dropdown) {
+            console.log ('do refresh when show');
+            }
+        });
+
         // ***** NEW FROALA EDITOR :D ******
         var editor = FroalaEditor('textarea.wysiwyg-editor', {
             key: key,
@@ -144,7 +172,7 @@ window.addEventListener('load', (event) => {
                   'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
                 },
                 'moreParagraph': {
-                  'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
+                  'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent']
                 },
                 'moreRich': {
                   'buttons': ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
@@ -169,6 +197,7 @@ window.addEventListener('load', (event) => {
                 H5: "Heading 5",
                 H6: "Heading 6"
             },
+            linkEditButtons: ['linkOpen', 'linkEdit', 'linkRemove'],
             videoInsertButtons: ['videoBack', '|', 'videoByURL', 'videoEmbed']
         });
     

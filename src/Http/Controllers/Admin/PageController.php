@@ -49,7 +49,11 @@ class PageController extends AdminController
 
         $formOptions = ['route' => 'admin.page.store'];
 
-        $parent_id = request()->input('parent_id');
+        $parent_id = $page->parent_id ;
+
+        $parent = Page::find($parent_id);
+
+        $page->status = optional($parent)->status;
 
         return view('pilot::admin.pages.form', compact('action', 'page', 'formOptions', 'parent_id'));
     }
