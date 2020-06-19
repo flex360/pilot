@@ -123,6 +123,8 @@
 
     </div>
 
+    <!-- Froala plugin for downloading html textarea as a pdf -->
+    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 
     <script type="text/javascript" src="{{ pmix('/pilot-assets/admin/js/app.js') }}"></script>
 
