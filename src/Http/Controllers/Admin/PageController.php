@@ -71,8 +71,10 @@ class PageController extends AdminController
 
         $data = request()->except('blocks', 'block_settings', 'featured_image');
 
-        if(isset($data['slug'])) {
+        if (isset($data['slug'])) {
             $data['slug'] = Str::slug($data['slug']);
+        } else {
+            $data['slug'] = Str::slug($data['title']);
         }
 
         $page = Page::create($data);
