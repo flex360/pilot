@@ -511,10 +511,12 @@ class Site extends Model implements HasMedia
         // let's always use standard names like thumb, xsmall, small, medium, large, xlarge
 
         $this->addMediaConversion('thumb')
-             ->crop(Manipulations::CROP_TOP_RIGHT, 300, 300);
+             ->crop(Manipulations::CROP_TOP_RIGHT, 300, 300)
+             ->nonQueued();
 
         $this->addMediaConversion('small')
              ->width(300)
-             ->height(300);
+             ->height(300)
+             ->nonQueued();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Illuminate\Support\Facades\Artisan;
 use Spatie\MediaLibrary\Models\Media as BaseMedia;
 
 class Media extends BaseMedia
@@ -45,6 +46,11 @@ class Media extends BaseMedia
 
                 if (!empty($item)) {
                     $media->save();
+                    // regenerate possible missing conversions
+                    Artisan::call('medialibrary:regenerate', [
+                        '--ids' => $media->id,
+                        '--only-missing' => true,
+                    ]);
                 } else {
                     $media->temp = true;
                 }
