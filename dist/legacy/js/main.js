@@ -548,6 +548,14 @@ $(document).ready(function () {
         handleCharacterLimit(this);
     });
 
+    $('.character-counter-not-limited').each(function () {
+        handleCharacterCounter(this, true);
+    });
+
+    $('.character-counter-not-limited').keyup(function () {
+        handleCharacterCounter(this);
+    });
+
     // Leave site? code
     $('form').dirtyForms();
 
@@ -562,6 +570,30 @@ function handleCharacterLimit(el, append = false) {
     var maxLength = parseInt($(el).attr('maxlength'));
     $(el).closest('.form-group').find('.character-counter-total').text(maxLength);
     var length = $(el).val().length;
+    // var length = maxLength-length;
+    $(el).closest('.form-group').find('.character-counter').text(length);
+}
+
+/**
+ * 
+ * same as function above except is doesn't actually limit the input box characters. it just recommmends limit
+ * used on pages module Meta Description field
+ * 
+ */
+function handleCharacterCounter(el, append = false) {
+    if (append) {
+        var html = $('<p class="help-block"></p>').html('<span class="character-counter"></span>/<span class="character-counter-total"></span>');
+        $(el).closest('.form-group').append(html);
+    }
+
+    var maxLength = parseInt($(el).attr('max-character'));
+    $(el).closest('.form-group').find('.character-counter-total').text(maxLength);
+    var length = $(el).val().length;
+    if (length > maxLength) {
+        $(el).closest('.form-group').find('.character-counter').css('color', 'red');
+    } else {
+        $(el).closest('.form-group').find('.character-counter').css('color', '#212529');
+    }
     // var length = maxLength-length;
     $(el).closest('.form-group').find('.character-counter').text(length);
 }

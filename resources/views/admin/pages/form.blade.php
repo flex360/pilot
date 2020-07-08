@@ -263,10 +263,7 @@
 
                             <div class="form-group">
                                 {!! Form::label('meta_description', 'Meta Description') !!}
-                                {!! Form::text('meta_description', null, array('class' => 'form-control character-limited', 'maxlength' => 120)) !!}
-                                <div class="help-block">
-                                    <span class="character-counter"></span>/<span class="character-counter-total"></span>
-                                </div>
+                                {!! Form::text('meta_description', null, array('class' => 'form-control character-counter-not-limited', 'max-character' => 120)) !!}
                             </div>
 
                             <div class="form-group">
