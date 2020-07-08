@@ -32,7 +32,7 @@
         <div class="row align-items-center card-header pages-card-header" id="heading-{{ $page->id }}">
 
             <div class="col-12 col-md-6 col-lg-6 align-self-center page-link">
-                @if ($page->hasChildren())
+                @if ($page->children)
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{ $page->id }}" aria-expanded="false" aria-controls="collapse-{{ $page->id }}">
 
                     </button>
@@ -51,7 +51,7 @@
                 @endif
 
                 @php 
-                $selectList = \Flex360\Pilot\Pilot\Page::selectList();
+                // $selectList = \Flex360\Pilot\Pilot\Page::selectList();
                 // foreach($selectList as $key=>$item){
                 //     dd($key);
                 // }
@@ -74,7 +74,7 @@
             </div>
 
         </div>
-        @if ($page->hasChildren())
+        @if ($children)
             <div id="collapse-{{ $page->id }}" class="collapse" aria-labelledby="heading-{{ $page->id }}" data-parent="#accordion-{{ $page->id }}">
                 <ul class="children-tree">{!! $children !!}</ul>
             </div>

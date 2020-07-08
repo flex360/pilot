@@ -143,7 +143,7 @@ class PageController extends AdminController
         // update blocks
         $data = request()->except('blocks', 'block_order', 'block_settings');
 
-        if(isset($data['slug'])) {
+        if (isset($data['slug'])) {
             $data['slug'] = Str::slug($data['slug']);
         }
 

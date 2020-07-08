@@ -170,7 +170,7 @@ class Site extends Model implements HasMedia
         $site = Config::get('site');
 
         if (empty($site)) {
-            $site = new Site;
+            $site = Site::firstOrNew();
         }
 
         return $site;

@@ -148,11 +148,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        // determine root based on role
-
-        // $root = Page::where('site_id', '=', $site->id)->where('id', '=', 3)->first();
-
-        $root = Page::where('site_id', '=', $site->id)->where('level', '=', 0)->first();
+        $root = Page::where('site_id', '=', $site->id)->where('level', '=', 0)->with('children', 'type')->first();
 
         return empty($root) ? new Page : $root;
     }
@@ -314,6 +310,17 @@ class Page extends Model implements HasMedia
         return $pages->get();
     }
 
+    public function children()
+    {
+        $site = Site::getCurrent();
+
+        return $this->hasMany(Page::class, 'parent_id')
+                ->with('children', 'type')
+                ->where('site_id', '=', $site->id)
+                ->orderBy('position', 'ASC')
+                ->orderBy('id', 'ASC');
+    }
+
     public function getDescendants(&$descendants = [])
     {
         foreach ($this->getChildren() as $child) {
@@ -360,15 +367,23 @@ class Page extends Model implements HasMedia
         return view('partials.breadcrumbs', compact('page', 'breadcrumbs'));
     }
 
-    public function renderTree()
+    public function renderTree($selectList = null)
     {
         $html = null;
-        $children = $this->getChildren();
+        $children = $this->children;
+
+        if ($selectList === null) {
+            $selectList = \Flex360\Pilot\Pilot\Page::selectList();
+        }
 
         foreach ($children as $child) {
-            $children_html = $child->renderTree();
+            $children_html = $child->renderTree($selectList);
 
-            $html .= view('pilot::admin.pages.tree', ['page' => $child, 'children' => $children_html])->render();
+            $html .= view('pilot::admin.pages.tree', [
+                'page' => $child,
+                'children' => $children_html,
+                'selectList' => $selectList,
+            ])->render();
         }
 
         return $html;
@@ -479,7 +494,7 @@ class Page extends Model implements HasMedia
         $level++;
         $list[] = ['level' => $level, 'page' => $this];
 
-        foreach ($this->getChildren() as $child) {
+        foreach ($this->children as $child) {
             $list = $child->getList($list, $level);
         }
 
