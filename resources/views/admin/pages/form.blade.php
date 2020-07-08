@@ -263,6 +263,8 @@
 
                             <div class="form-group">
                                 {!! Form::label('meta_description', 'Meta Description') !!}
+                                <i style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
+                                title="Google and other search engines usually only display the first 120 characters of your meta description, so we recommend keeping them under that length."></i>
                                 {!! Form::text('meta_description', null, array('class' => 'form-control character-counter-not-limited', 'max-character' => 120)) !!}
                             </div>
 
