@@ -592,7 +592,7 @@ function handleCharacterCounter(el, append = false) {
     if (length > maxLength) {
         $(el).closest('.form-group').find('.character-counter').css('color', 'red');
     } else {
-        $(el).closest('.form-group').find('.character-counter').css('color', '#212529');
+        $(el).closest('.form-group').find('.character-counter').css('color', '#737373');
     }
     // var length = maxLength-length;
     $(el).closest('.form-group').find('.character-counter').text(length);
