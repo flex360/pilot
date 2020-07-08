@@ -573,29 +573,11 @@ class Page extends Model implements HasMedia
 
     public function getStatusSelectList()
     {
-        if ($this->parent_id != null) {
-            $parentPage = Page::find($this->parent_id);
-
-            if ($parentPage->status == 'draft') {
-                return $statusList[] = [
-                    'draft' => 'Draft',
-                    'publish' => 'Publish',
-                    'hidden' => 'Hidden'
-                ];
-            } elseif ($parentPage->status == 'hidden') {
-                return $statusList[] = [
-                    'hidden' => 'Hidden',
-                    'publish' => 'Publish',
-                    'draft' => 'Draft',
-                ];
-            } else {
-                return $statusList[] = [
-                    'publish' => 'Publish',
-                    'draft' => 'Draft',
-                    'hidden' => 'Hidden'
-                ];
-            }
-        }
+        return $statusList[] = [
+            'publish' => 'Publish',
+            'draft' => 'Draft',
+            'hidden' => 'Hidden'
+        ];
     }
 
     public static function findByPath($path)
