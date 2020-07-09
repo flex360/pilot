@@ -32,7 +32,7 @@
         <div class="row align-items-center card-header pages-card-header" id="heading-{{ $page->id }}">
 
             <div class="col-12 col-md-6 col-lg-6 align-self-center page-link">
-                @if ($page->children)
+                @if ($page->children->isNotEmpty())
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{ $page->id }}" aria-expanded="false" aria-controls="collapse-{{ $page->id }}">
 
                     </button>
