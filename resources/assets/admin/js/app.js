@@ -966,7 +966,7 @@ function handleCharacterLimit(el, append = false) {
  */
 function handleCharacterCounter(el, append = false) {
     if (append) {
-        var html = $('<p class="help-block"></p>').html('<span class="character-counter"></span>/<span class="character-counter-total"></span>');
+        var html = $('<p class="help-block" style="margin-top: 1px;"></p>').html('<span class="character-counter"></span>/<span class="character-counter-total"></span>');
         $(el).closest('.form-group').append(html);
     }
 
