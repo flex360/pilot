@@ -350,56 +350,67 @@
                                     label="Admin"
                                     :expanded="true"
                                 >
+
                                     <template v-slot:label="$props">
-                                        <div class="flex items-center border-iron border-b p-2 text-2xl cursor-pointer" style="display: flex; justify-content: space-between; color: #fff;">
+                                        <a href="#submenu4" data-toggle="collapse" aria-expanded="true" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
+                                            <div class="d-flex w-100 justify-content-start align-items-center">
+                                                <span class="menu-collapsed">Admin</span>
+                                                <i class="fas fa-chevron-right ml-auto fa-rotate-90" style="font-size: 16px;"></i>
+                                            </div>
+                                        </a>
+                                        {{-- <div class="flex items-center border-iron border-b p-2 text-2xl cursor-pointer" style="display: flex; justify-content: space-between; color: #fff;">
                                             <div class="text-left">Admin</div>
                                             <div class="">
                                                 <svg width="17" height="11" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.2s linear 0s;" :style="{ transform: $props.collapsed ? '' : 'rotate(180deg)' }">
                                                     <path stroke="currentColor" stroke-width="3" d="M1 2l7.547 6.534L16.017 2" fill="none" fill-rule="evenodd"/>
                                                 </svg>
                                             </div>
+                                        </div> --}}
+
+                                        <div id="submenu4" class="sidebar-submenu collapse show text-left">
+                                            <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
+                                                <li>
+                                                    <a href="{{ route('admin.site.index') }}" class="{{ Request::is('pilot/site*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
+                                                        <span class="menu-collapsed">Websites</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('admin.user.index') }}" class="{{ Request::is('pilot/user*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
+                                                        <span class="menu-collapsed">Users</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('admin.role.index') }}" class="{{ Request::is('pilot/role*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
+                                                        <span class="menu-collapsed">Roles</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pilot/clear" class="{{ Request::is('pilot/clear*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
+                                                        <span class="menu-collapsed">Clear Application Cache</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="/pilot/logout" class="{{ Request::is('pilot/logout*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
+                                                        <span class="menu-collapsed">Logout</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </template>
 
-                                    <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
-                                        <li>
-                                            <a href="{{ route('admin.site.index') }}" class="{{ Request::is('pilot/site*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Websites</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('admin.user.index') }}" class="{{ Request::is('pilot/user*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Users</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('admin.role.index') }}" class="{{ Request::is('pilot/role*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Roles</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pilot/clear" class="{{ Request::is('pilot/clear*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Clear Application Cache</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pilot/logout" class="{{ Request::is('pilot/logout*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Logout</span>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                    
                                 </collapsable>
 
 
                                 <!-- admin pages -->
-                                <a href="#submenu4" data-toggle="collapse" aria-expanded="true" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
+                                {{-- <a href="#submenu4" data-toggle="collapse" aria-expanded="true" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
                                     <div class="d-flex w-100 justify-content-start align-items-center">
                                         <span class="menu-collapsed">Admin</span>
                                         <i class="fas fa-chevron-right ml-auto fa-rotate-90" style="font-size: 16px;"></i>
                                     </div>
-                                </a>
+                                </a> --}}
 
-                                <div id="submenu4" class="sidebar-submenu collapse show">
+                                {{-- <div id="submenu4" class="sidebar-submenu collapse show">
                                     <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
                                         <li>
                                             <a href="{{ route('admin.site.index') }}" class="{{ Request::is('pilot/site*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
@@ -427,7 +438,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> --}}
                             </div>
                         </ul>
                     </div>
