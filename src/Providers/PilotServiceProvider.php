@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Providers;
 
+use Flex360\Pilot\Pilot\Nav;
 use Flex360\Pilot\Pilot\Tag;
 use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Post;
@@ -11,9 +12,11 @@ use Flex360\Pilot\Pilot\View;
 use Flex360\Pilot\Pilot\Asset;
 use Flex360\Pilot\Pilot\Event;
 use Flex360\Pilot\Pilot\Pilot;
+use Flex360\Pilot\Pilot\NavItem;
 use Flex360\Pilot\Pilot\Setting;
 use Flex360\Pilot\Pilot\PageType;
 use Flex360\Pilot\Pilot\UrlHelper;
+use Flex360\Pilot\Pilot\MediaHandler;
 use Illuminate\Support\ServiceProvider;
 use Flex360\Pilot\Console\Commands\SyncForms;
 use Flex360\Pilot\Pilot\Forms\Wufoo\WufooForm;
@@ -23,7 +26,6 @@ use Flex360\Pilot\Console\Commands\SyncNewsFeeds;
 use Flex360\Pilot\Http\Middleware\BeforeMiddleware;
 use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
 use Flex360\Pilot\Http\Middleware\BeforeBackendMiddleware;
-use Flex360\Pilot\Pilot\MediaHandler;
 
 class PilotServiceProvider extends ServiceProvider
 {
@@ -105,6 +107,8 @@ class PilotServiceProvider extends ServiceProvider
         class_alias(User::class, 'PilotUser');
         class_alias(Tag::class, 'PilotTag');
         class_alias(Pilot::class, 'Pilot');
+        class_alias(Nav::class, 'PilotNav');
+        class_alias(NavItem::class, 'PilotNavItem');
 
         MediaHandler::register();
     }

@@ -27,7 +27,7 @@ function setting($key, $default = null)
 function pmix($path, $manifestDirectory = '')
 {
     try {
-        return mix('/custom'.$path, $manifestDirectory);
+        return mix('/custom' . $path, $manifestDirectory);
     } catch (\Exception $e) {
         try {
             return mix($path, $manifestDirectory);
@@ -35,4 +35,14 @@ function pmix($path, $manifestDirectory = '')
             return $path;
         }
     }
+}
+
+function pilotNav()
+{
+    return new \Flex360\Pilot\Pilot\Nav;
+}
+
+function pilotNavItem($name, $url)
+{
+    return new \Flex360\Pilot\Pilot\NavItem($name, $url);
 }
