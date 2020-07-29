@@ -2,6 +2,8 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Illuminate\Support\Str;
+
 class NavItem
 {
     public $name;
@@ -10,6 +12,7 @@ class NavItem
     public $parent;
     public $activeRoutes;
     public $routePattern;
+    private $id;
 
     public function __construct($name, $url, $routePattern = null)
     {
@@ -19,6 +22,7 @@ class NavItem
         $this->children = collect();
         $this->parent = null;
         $this->activeRoutes = collect();
+        $this->id = uniqid(Str::slug($this->name) . '-', false);
     }
 
     public static function make($name, $url, $routePattern = null)
@@ -45,7 +49,7 @@ class NavItem
 
     public function getCssClasses()
     {
-        $classes = [];
+        $classes = ['pilot-nav__item'];
 
         if ($this->isActive()) {
             $classes[] = 'pilot-nav__item--active';
@@ -68,5 +72,15 @@ class NavItem
     public function hasActiveChild()
     {
         return $this->children->filter->isActive()->count();
+    }
+
+    public function hasChildren()
+    {
+        return $this->children->isNotEmpty();
+    }
+
+    public function id()
+    {
+        return $this->id;
     }
 }
