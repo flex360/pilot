@@ -157,8 +157,5 @@
 
     @yield('scripts')
 
-    <!-- Import Trumbowyg plugins... -->
-    <p id="wysiwygSetting" style="display: none;" value="{!! config('wysiwyg.type') !!}"></p>
-
 </body>
 </html>
