@@ -156,6 +156,7 @@
     <script src="/pilot-assets/components/jquery.dirtyforms/jquery.dirtyforms.min.js"></script>
 
     @yield('scripts')
+    @stack('scripts')
 
     <!-- Import Trumbowyg plugins... -->
     <p id="wysiwygSetting" style="display: none;" value="{!! config('wysiwyg.type') !!}"></p>
