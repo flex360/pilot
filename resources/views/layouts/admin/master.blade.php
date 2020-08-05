@@ -160,7 +160,7 @@
                                 <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">{{ config('pilot.plugins')['forms']['name'] }}</a></li>
                             @endif
     
-                            @include('pilot::admin.partials.modules')
+                            @include('pilot::admin.partials.modulesSidebar')
 
                             <li class="nav-item {{ Request::is('pilot/setting*') ? 'active' : null }}"><a class="nav-link" href="/pilot/setting"><i class="fa fa-cogs"></i> Settings</a></li>
     
@@ -231,82 +231,28 @@
                             </li> --}}
                             <!-- /END Separator -->
                             <!-- Menu with submenu -->
-                            @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins')['pages']['enabled'])
-                                <a href="/pilot" class="{{ Request::is('pilot')  ? 'active' : null }} sidebar list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <span class="menu-collapsed">{{ config('pilot.plugins')['pages']['name'] }}</span>
-                                    </div>
-                                </a>
-                            @endif
-                            @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins')['events']['enabled'])
-                                <a href="{{ route('admin.event.index') }}" class="{{ Request::is('pilot/event*')  ? 'active' : null }} sidebar list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <span class="menu-collapsed">{{ config('pilot.plugins')['events']['name'] }}</span>
-                                    </div>
-                                </a>
-                            @endif
-                            @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins')['news']['enabled'])
-                                <a href="{{ route('admin.post.index') }}" class="{{ Request::is('pilot/post*')  ? 'active' : null }} sidebar list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <span class="menu-collapsed">{{ config('pilot.plugins')['news']['name'] }}</span>
-                                    </div>
-                                </a>
-                            @endif
-                            @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins')['annoucements']['enabled'])
-                                <a href="{{ route('admin.annoucement.index') }}" class="{{ Request::is('pilot/annoucement*')  ? 'active' : null }} sidebar list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <span class="menu-collapsed">{{ config('pilot.plugins')['annoucements']['name'] }}</span>
-                                    </div>
-                                </a>
-                            @endif
-                            
-                            @include('pilot::admin.partials.modulesSidebar')
 
-                            {{-- EXAMPLE OF SUBMENUS --}}
-                            {{-- <a href="#submenu1" data-toggle="collapse" aria-expanded="false" onclick="rotateIcon(this.lastElementChild.lastElementChild)"class="submenu-toggler sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
-                                <div class="d-flex w-100 justify-content-start align-items-center">
-                                    <span class="menu-collapsed">Profile</span>
-                                    <i class="fas fa-chevron-right ml-auto" style="font-size: 16px;"></i>
-                                </div>
-                            </a> --}}
-                            <!-- Submenu content -->
-                            {{-- <div id="submenu1" class="collapse sidebar-submenu">
-                                <ul style="background: #474b54 !important; padding: 0px 5px;">
-                                    <li>
-                                        <a href="#" class="{{ Request::is('pilot/test*')  ? 'active' : null }} sidebar list-group-item list-group-item-action text-secondary" style="background-color: #474b54 !important;">
-                                            <span class="menu-collapsed">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="sidebar list-group-item list-group-item-action text-secondary" style="background-color: #474b54 !important;">
-                                            <span class="menu-collapsed">Password</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div> --}}
-                            {{-- <a href="#submenu2" data-toggle="collapse" aria-expanded="false" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
-                                <div class="d-flex w-100 justify-content-start align-items-center">
-                                    <span class="menu-collapsed">Profile</span>
-                                    <i class="fas fa-chevron-right ml-auto" style="font-size: 16px;"></i>
-                                </div>
-                            </a> --}}
-                            <!-- Submenu content -->
-                            {{-- <div id="submenu2" class="collapse sidebar-submenu">
-                                <ul style="background: #474b54 !important; padding: 0px 5px;">
-                                    <li>
-                                        <a href="#" class="sidebar list-group-item list-group-item-action text-secondary" style="background-color: #474b54 !important;">
-                                            <span class="menu-collapsed">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="sidebar list-group-item list-group-item-action text-secondary" style="background-color: #474b54 !important;">
-                                            <span class="menu-collapsed">Password</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div> --}}
                         </ul>
                         </div>
+
+                        @php
+                            $navItems = [];
+                            foreach (config('pilot.plugins') as $key => $settings) {
+                                if (isset($settings['enabled']) && $settings['enabled']) {
+                                    if (isset($settings['url']) && is_array($settings['url'])) {
+                                        $url = route(...$settings['url']);
+                                    } else {
+                                        $url = $settings['url'] ?? '';
+                                    }
+                                    $navItems[] = PilotNavItem::make($settings['name'], $url);
+                                }
+                            }
+                        @endphp
+
+                        {!! PilotNav::create(...$navItems) !!}
+                    
+                            
+                            @include('pilot::admin.partials.modulesSidebar')
                         <!-- List Group END-->
 
                         <hr style="
@@ -318,18 +264,41 @@
                         border-style: inset;
                         border-width: 1px;">
 
+
                         <!-- Second half of the sidebar modules -->
                         <ul class="list-group sticky-top">
                             <div class="second-half-sidebar">
+
+                            @php
+                                $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*', 'secondhalf');
+                                foreach($learnPages as $learnPage) {
+                                    $learnNav->addChildren(
+                                        PilotNavItem::make($learnPage->title, $learnPage->url(), null, 'secondhalf', '_blank')
+                                    );
+                                }
+                            @endphp
+    
+                            {!! PilotNav::create(
+                                PilotNavItem::make('<i class="fa fa-cogs" style="margin-right: 7px;"></i> Settings', route('admin.setting.index'), 'admin.setting.*', 'secondhalf'),
+                                $learnNav,
+                                PilotNavItem::make('Admin', '', null, 'secondhalf')
+                                    ->addChildren(
+                                        PilotNavItem::make('Websites', route('admin.site.index'), null, 'secondhalf'),
+                                        PilotNavItem::make('Users', route('admin.user.index'), null, 'secondhalf'),
+                                        PilotNavItem::make('Roles', route('admin.role.index'), null, 'secondhalf'),
+                                        PilotNavItem::make('Logout', '/pilot/logout', null, 'secondhalf')
+                                    )
+                            ) !!}
+
                                 <!-- settings -->
-                                <a href="{{ route('admin.setting.index') }}" class="{{ Request::is('pilot/setting*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action">
+                                {{-- <a href="{{ route('admin.setting.index') }}" class="{{ Request::is('pilot/setting*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-start align-items-center">
                                         <i class="fa fa-cogs" style="margin-right: 7px;"></i><span class="menu-collapsed">Settings</span>
                                     </div>
-                                </a>
+                                </a> --}}
 
                                 <!-- Learn more pages -->
-                                <a href="#submenu3" data-toggle="collapse" aria-expanded="false" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
+                                {{-- <a href="#submenu3" data-toggle="collapse" aria-expanded="false" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
                                     <div class="d-flex w-100 justify-content-start align-items-center">
                                         <i class="fa fa-graduation-cap" style="margin-right: 7px;"></i><span class="menu-collapsed">Learn</span>
                                         <i class="fas fa-chevron-right ml-auto" style="font-size: 16px;"></i>
@@ -344,9 +313,9 @@
                                         </li>
                                         @endforeach
                                     </ul>
-                                </div>
+                                </div> --}}
 
-                                <collapsable 
+                                {{-- <collapsable 
                                     label="Admin"
                                     :expanded="true"
                                 >
@@ -358,14 +327,14 @@
                                                 <i class="fas fa-chevron-right ml-auto fa-rotate-90" style="font-size: 16px;"></i>
                                             </div>
                                         </a>
-                                        {{-- <div class="flex items-center border-iron border-b p-2 text-2xl cursor-pointer" style="display: flex; justify-content: space-between; color: #fff;">
+                                        <div class="flex items-center border-iron border-b p-2 text-2xl cursor-pointer" style="display: flex; justify-content: space-between; color: #fff;">
                                             <div class="text-left">Admin</div>
                                             <div class="">
                                                 <svg width="17" height="11" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.2s linear 0s;" :style="{ transform: $props.collapsed ? '' : 'rotate(180deg)' }">
                                                     <path stroke="currentColor" stroke-width="3" d="M1 2l7.547 6.534L16.017 2" fill="none" fill-rule="evenodd"/>
                                                 </svg>
                                             </div>
-                                        </div> --}}
+                                        </div>
 
                                         <div id="submenu4" class="sidebar-submenu collapse show text-left">
                                             <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
@@ -399,7 +368,7 @@
                                     </template>
 
                                     
-                                </collapsable>
+                                </collapsable> --}}
 
 
                                 <!-- admin pages -->
@@ -495,6 +464,7 @@
     </script>
 
     @yield('scripts')
+    @stack('scripts')
 
     <!-- Import Trumbowyg plugins... -->
     <p id="wysiwygSetting" style="display: none;" value="{!! config('wysiwyg.type') !!}"></p>
