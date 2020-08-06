@@ -169,7 +169,7 @@ window.addEventListener('load', (event) => {
                 buttonsVisible: 3
             },
             'moreMisc': {
-                buttons: ['undo', 'redo', 'html', 'print', 'getPDF', 'spellChecker', 'selectAll', 'help', 'fullscreen'],
+                buttons: ['undo', 'redo', 'html', 'print', 'getPDF', 'spellChecker', 'selectAll', 'fullscreen', 'help'],
                 align: 'left',
                 buttonsVisible: 3
             }
