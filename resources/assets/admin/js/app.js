@@ -154,18 +154,26 @@ window.addEventListener('load', (event) => {
         key: key,
         toolbarButtons: {
             'moreText': {
-                'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
+                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                align: 'left',
+                buttonsVisible: 3
             },
             'moreParagraph': {
-                'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
+                buttons: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'formatOLSimple',   'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
+                align: 'left',
+                buttonsVisible: 0
             },
             'moreRich': {
-                'buttons': ['insertLink', 'bootstrapButtonsDropdown', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR']
+                buttons: ['bootstrapButtonsDropdown', 'insertLink',  'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR'],
+                align: 'left',
+                buttonsVisible: 3
             },
             'moreMisc': {
-                'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help']
+                buttons: ['undo', 'redo', 'html', 'print', 'getPDF', 'spellChecker', 'selectAll', 'help', 'fullscreen'],
+                align: 'left',
+                buttonsVisible: 3
             }
-            },
+        },
 
             pasteDeniedAttrs: ['class', 'id', 'style'],
 
