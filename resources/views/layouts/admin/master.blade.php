@@ -128,7 +128,7 @@
             <body class="body-sidebar">
             <!-- First render the top navbar like normal, but don't include module links -->
             <header>
-                <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #fff;">
+                <nav class="navbar navbar-expand-lg navbar-dark navbar-bg-sidebar">
                     <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse_target">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -198,14 +198,50 @@
     
                         </ul>
 
-                        <hr> <!-- This line forces the right side to float right -->
+                        <hr class="d-none d-lg-block"> <!-- This line forces the right side to float right -->
     
                         <!--Right side of cms nav bar -->
-                        <ul class="navbar-nav navbar-right">
-                            @if (! empty($currentSite))
-                              <li class="nav-item"><a class="nav-link" href="{{ $currentSite->getDefaultProtocol() }}://{{ $currentSite->getDefaultDomain() }}" target="_blank"><i class="fa fa-eye"></i> View Site</a></li>
-                            @endif
-                        </ul>
+                        <div class="align-items-center d-none d-lg-flex">
+                            <ul class="navbar-nav navbar-right" style="margin-right: 1rem;">
+                                @if (! empty($currentSite))
+                                <li class="nav-item"><a class="nav-link view-site-btn-sidebar" href="{{ $currentSite->getDefaultProtocol() }}://{{ $currentSite->getDefaultDomain() }}" target="_blank"> View Site</a></li>
+                                @endif
+                            </ul>
+
+                            @php
+                                $user = auth()->user();
+                            @endphp
+                            <!-- Sidebar profile icon -->
+                            {{-- <a class="sidebar-profile-icon" href="/">
+                                <div class="sidebar-profile-icon-container">
+                                    {{ $user->name != null ? substr($user->name, 0, 1) : 'U' }}
+                                </div>
+                            </a> --}}
+
+
+
+                            <div id="profile-menu" class="order-1 order-lg-12 ml-auto">
+                                <div class="dropdown-toggle account" role="button" id="dropdownMenuLink" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="sidebar-profile-icon" href="/">
+                                        <div class="sidebar-profile-icon-container">
+                                            {{ $user->name != null ? substr($user->name, 0, 1) : 'U' }}
+                                        </div>
+                                    </a>
+                                </div>
+                    
+                                <div class="dropdown-menu dropdown-menu-center dropdown-menu-lg-right px-3 py-3" aria-labelledby="dropdownMenuLink" style="background-color: #222529;">
+                                    <a class="d-block" href="/pilot/logout" style="color: white;">Sign Out</a>
+                                </div>
+                              </div>
+
+
+
+
+
+
+
+
+                        </div>
     
                     </div> <!--collapse navbar-collapse -->
     
@@ -293,7 +329,7 @@
                                 <!-- settings -->
                                 {{-- <a href="{{ route('admin.setting.index') }}" class="{{ Request::is('pilot/setting*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action">
                                     <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <i class="fa fa-cogs" style="margin-right: 7px;"></i><span class="menu-collapsed">Settings</span>
+                                        <i class="fa fa-cogs" style="margin-right: 7px;"></i><span class="menu-collapsed" style="font-weight: 200;">Settings</span>
                                     </div>
                                 </a> --}}
 
@@ -323,8 +359,8 @@
                                     <template v-slot:label="$props">
                                         <a href="#submenu4" data-toggle="collapse" aria-expanded="true" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
                                             <div class="d-flex w-100 justify-content-start align-items-center">
-                                                <span class="menu-collapsed">Admin</span>
-                                                <i class="fas fa-chevron-right ml-auto fa-rotate-90" style="font-size: 16px;"></i>
+                                                <span class="menu-collapsed" style="font-weight: 200;">Admin</span>
+                                                <i class="fas fa-chevron-right ml-auto" style="font-size: 13px;"></i>
                                             </div>
                                         </a>
                                         <div class="flex items-center border-iron border-b p-2 text-2xl cursor-pointer" style="display: flex; justify-content: space-between; color: #fff;">
@@ -336,7 +372,7 @@
                                             </div>
                                         </div>
 
-                                        <div id="submenu4" class="sidebar-submenu collapse show text-left">
+                                        <div id="submenu4" class="sidebar-submenu collapse text-left">
                                             <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
                                                 <li>
                                                     <a href="{{ route('admin.site.index') }}" class="{{ Request::is('pilot/site*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
@@ -370,44 +406,6 @@
                                     
                                 </collapsable> --}}
 
-
-                                <!-- admin pages -->
-                                {{-- <a href="#submenu4" data-toggle="collapse" aria-expanded="true" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <span class="menu-collapsed">Admin</span>
-                                        <i class="fas fa-chevron-right ml-auto fa-rotate-90" style="font-size: 16px;"></i>
-                                    </div>
-                                </a> --}}
-
-                                {{-- <div id="submenu4" class="sidebar-submenu collapse show">
-                                    <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
-                                        <li>
-                                            <a href="{{ route('admin.site.index') }}" class="{{ Request::is('pilot/site*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Websites</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('admin.user.index') }}" class="{{ Request::is('pilot/user*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Users</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('admin.role.index') }}" class="{{ Request::is('pilot/role*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Roles</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pilot/clear" class="{{ Request::is('pilot/clear*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Clear Application Cache</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/pilot/logout" class="{{ Request::is('pilot/logout*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                <span class="menu-collapsed">Logout</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div> --}}
                             </div>
                         </ul>
                     </div>
