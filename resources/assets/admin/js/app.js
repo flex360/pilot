@@ -196,7 +196,8 @@ window.addEventListener('load', (event) => {
             H6: "Heading 6"
         },
         linkEditButtons: ['linkOpen', 'linkEdit', 'linkRemove'],
-        videoInsertButtons: ['videoBack', '|', 'videoByURL', 'videoEmbed']
+        videoInsertButtons: ['videoBack', '|', 'videoByURL', 'videoEmbed'],
+        codeMirror: window.CodeMirror
     });
 
      // CODE TAB ON PAGES MODULES
