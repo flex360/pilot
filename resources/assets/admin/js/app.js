@@ -63,11 +63,14 @@ var FroalaEditor = require('froala-editor');
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/js/froala_editor.pkgd.min.js';
 
+//code mirror
+import 'froala-editor/js/plugins/code_view.min.js';
+import 'froala-editor/css/plugins/code_view.min.css';
+
 //Froala plugins
 import 'froala-editor/js/plugins/align.min.js';
 import 'froala-editor/js/plugins/char_counter.min.js';
 import 'froala-editor/js/plugins/code_beautifier.min.js';
-import 'froala-editor/js/plugins/code_view.min.js';
 import 'froala-editor/js/plugins/colors.min.js';
 import 'froala-editor/js/plugins/draggable.min.js';
 import 'froala-editor/js/plugins/edit_in_popup.min.js';

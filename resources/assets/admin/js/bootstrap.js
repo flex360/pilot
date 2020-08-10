@@ -68,4 +68,7 @@ import 'codemirror/mode/clike/clike.js';
 import 'codemirror/mode/php/php.js';
 import 'codemirror/addon/display/autorefresh.js';
 
+// include xml mode for Froala code view plugin
+import 'codemirror/mode/xml/xml.js';
+
 window.CodeMirror = CodeMirror;
