@@ -2,17 +2,20 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Setting extends \Eloquent
 {
-    use SoftDeletes;
+    use SoftDeletes, HasEmptyStringAttributes;
 
     protected $table = 'settings';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    protected $emptyStrings = ['value'];
 
     // if no settings exist, these initial settings will be created
     public static $initialSettings = ['Google Analytics', 'Tracking Code'];

@@ -7,20 +7,13 @@
 @push('scripts')
 <script>
 window.addEventListener('load', function () {
-    document.querySelectorAll('.nav__item--expanded').forEach(function (el) {
-        //rotate chevon 90 degrees
-        el.lastElementChild.lastElementChild.classList.add('fa-rotate-90');
-
-        // get the dropdown menu this parent menu references and show it
-        var id = el.getAttribute("href");
-        var collaspedMenu = document.querySelector(id).classList.add("show");
-
-        // el.style.height = 'auto';
+    document.querySelectorAll('.pilot-nav__item--expanded > ul').forEach(function (el) {
+        el.style.height = 'auto';
     });
-    document.querySelectorAll('.nav__item--expanded [data-action=show]').forEach(function (el) {
+    document.querySelectorAll('.pilot-nav__item--expanded [data-action=show]').forEach(function (el) {
         el.style.display = 'none';
     });
-    document.querySelectorAll('.nav__item--expanded [data-action=hide]').forEach(function (el) {
+    document.querySelectorAll('.pilot-nav__item--expanded [data-action=hide]').forEach(function (el) {
         el.style.display = 'inline-block';
     });
     document.querySelectorAll('[data-toggle-menu]').forEach(function (el) {
@@ -41,37 +34,4 @@ window.addEventListener('load', function () {
     });
 });
 </script>
-
-<style>
-ul.pilot-nav {
-    padding-left: 0;
-    list-style: none;
-    color: #fff;
-}
-ul.pilot-nav ul {
-    padding-left: 20px;
-    list-style: none;
-}
-.pilot-nav a {
-    color: #fff;
-}
-.pilot-nav__item--active-child  a {
-    color: green !important;
-}
-.pilot-nav__item--active  a {
-    color: red !important;
-}
-
-.pilot-nav__item  div {
-    padding: 0px 5px;
-}
-.pilot-nav__item--active-child  div {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-}
-.pilot-nav__item--active > div > a {
-    font-weight: bold;
-    text-decoration: underline;
-}
-</style>
 @endpush

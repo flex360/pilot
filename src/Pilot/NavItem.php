@@ -16,12 +16,11 @@ class NavItem
     public $linkTarget;
     private $id;
 
-    public function __construct($name, $url, $routePattern = null, $sidebarPosition = null, $linkTarget = "_self")
+    public function __construct($name, $url, $routePattern = null, $sidebarPosition = null, $linkTarget = '_self')
     {
         $this->name = $name;
         $this->url = $url;
         $this->routePattern = $routePattern;
-        $this->sidebarPosition = $sidebarPosition;
         $this->linkTarget = $linkTarget;
         $this->children = collect();
         $this->parent = null;
@@ -29,9 +28,9 @@ class NavItem
         $this->id = uniqid(Str::slug($this->name) . '-', false);
     }
 
-    public static function make($name, $url, $routePattern = null, $sidebarPosition = null, $linkTarget = "_self")
+    public static function make($name, $url, $routePattern = null, $linkTarget = '_self')
     {
-        return new static($name, $url, $routePattern, $sidebarPosition, $linkTarget);
+        return new static($name, $url, $routePattern, $linkTarget);
     }
 
     public function addChildren(...$children)
@@ -53,11 +52,7 @@ class NavItem
 
     public function getCssClasses()
     {
-        if ($this->sidebarPosition != null) {
-            $classes = ['pilot-nav__item secondhalf sidebar list-group-item list-group-item-action'];
-        } else {
-            $classes = ['pilot-nav__item sidebar list-group-item list-group-item-action'];
-        }
+        $classes = ['pilot-nav__item'];
 
         if ($this->isActive()) {
             $classes[] = 'pilot-nav__item--active';
@@ -65,6 +60,7 @@ class NavItem
 
         if ($this->hasActiveChild()) {
             $classes[] = 'pilot-nav__item--active-child';
+            $classes[] = 'pilot-nav__item--expanded';
         }
 
         return implode(' ', $classes);

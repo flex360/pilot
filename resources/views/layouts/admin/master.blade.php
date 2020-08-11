@@ -24,6 +24,8 @@
     <link src="/dist/components/Trumbowyg-master/dist/ui/trumbowyg.min.css"></link>
 
     @yield('head')
+    @stack('head')
+    @include('pilot::admin.nav.sidebar._styles')
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -204,7 +206,7 @@
                         <div class="align-items-center d-none d-lg-flex">
                             <ul class="navbar-nav navbar-right" style="margin-right: 1rem;">
                                 @if (! empty($currentSite))
-                                <li class="nav-item"><a class="nav-link view-site-btn-sidebar" href="{{ $currentSite->getDefaultProtocol() }}://{{ $currentSite->getDefaultDomain() }}" target="_blank"> View Site</a></li>
+                                <li class="nav-item"><a class="nav-link pilot-sidebar-view-site" href="{{ $currentSite->getDefaultProtocol() }}://{{ $currentSite->getDefaultDomain() }}" target="_blank"> View Site</a></li>
                                 @endif
                             </ul>
 
@@ -252,25 +254,13 @@
             <div id="app">
                 <div class="row" id="body-row">
                     <!-- Sidebar -->
-                    <div id="sidebar-container" class="sidebar-expanded d-none d-lg-block col-2 bg-light sidebar">
+                    <div id="pilot-sidebar-container" class="sidebar-expanded d-none d-lg-block col-2 sidebar">
                         <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
 
                         <!-- Website name -->
-                        <div class="websiteName-sidebar">{{ $currentSite->name }}</div>
-                        <!-- Bootstrap List Group -->
-                        
-                        <div style="background-color: blue; overflow: hidden;">
-                        <ul class="list-group sticky-top">
-                            <!-- Separator with title -->
-                            {{-- <li class="list-group-item sidebar-separator-title text-muted d-flex align-items-center menu-collapsed">
-                                <small>MODULES</small>
-                            </li> --}}
-                            <!-- /END Separator -->
-                            <!-- Menu with submenu -->
-
-                        </ul>
-                        </div>
-
+                        <div class="pilot-sidebar-name">{{ $currentSite->name }}</div>
+                        <!-- Sidebar -->
+                        <div class="pilot-sidebar">
                         @php
                             $navItems = [];
                             foreach (config('pilot.plugins') as $key => $settings) {
@@ -291,40 +281,42 @@
                             @include('pilot::admin.partials.modulesSidebar')
                         <!-- List Group END-->
 
-                        <hr style="
+                        {{-- <hr style="
                         margin: 20px;
                         border-top-color: rgba(0, 0, 0, 0.1);
                         border-top-style: solid;
                         border-top-width: 1px;
                         border-top: 1px solid rgba(0, 0, 0, 0.1);
                         border-style: inset;
-                        border-width: 1px;">
+                        border-width: 1px;"> --}}
 
 
                         <!-- Second half of the sidebar modules -->
-                        <ul class="list-group sticky-top">
-                            <div class="second-half-sidebar">
-
+                        {{-- <ul class=""> --}}
+                            {{-- <div class="second-half-sidebar"> --}}
+                            <div class="pilot-sidebar-lower">
                             @php
-                                $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*', 'secondhalf');
+                                $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*');
                                 foreach($learnPages as $learnPage) {
                                     $learnNav->addChildren(
-                                        PilotNavItem::make($learnPage->title, $learnPage->url(), null, 'secondhalf', '_blank')
+                                        PilotNavItem::make($learnPage->title, $learnPage->url(), null, '_blank')
                                     );
                                 }
                             @endphp
     
                             {!! PilotNav::create(
-                                PilotNavItem::make('<i class="fa fa-cogs" style="margin-right: 7px;"></i> Settings', route('admin.setting.index'), 'admin.setting.*', 'secondhalf'),
+                                PilotNavItem::make('<i class="fa fa-cogs" style="margin-right: 7px;"></i> Settings', route('admin.setting.index'), 'admin.setting.*'),
                                 $learnNav,
-                                PilotNavItem::make('Admin', '', null, 'secondhalf')
+                                PilotNavItem::make('<i class="fas fa-tools" style="margin-right: 7px;"></i> Admin', '', null)
                                     ->addChildren(
-                                        PilotNavItem::make('Websites', route('admin.site.index'), null, 'secondhalf'),
-                                        PilotNavItem::make('Users', route('admin.user.index'), null, 'secondhalf'),
-                                        PilotNavItem::make('Roles', route('admin.role.index'), null, 'secondhalf'),
-                                        PilotNavItem::make('Logout', '/pilot/logout', null, 'secondhalf')
+                                        PilotNavItem::make('Websites', route('admin.site.index'), null),
+                                        PilotNavItem::make('Users', route('admin.user.index'), null),
+                                        PilotNavItem::make('Roles', route('admin.role.index'), null),
+                                        PilotNavItem::make('Logout', '/pilot/logout', null)
                                     )
                             ) !!}
+                            </div>
+                        </div>
 
                                 <!-- settings -->
                                 {{-- <a href="{{ route('admin.setting.index') }}" class="{{ Request::is('pilot/setting*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action">
@@ -406,12 +398,12 @@
                                     
                                 </collapsable> --}}
 
-                            </div>
-                        </ul>
+                            {{-- </div> --}}
+                        {{-- </ul> --}}
                     </div>
 
                     <!-- sidebar-container END -->
-                    <div  class="col py-3" style="background-color: #f7f7f7;">
+                    <div class="pilot-content col py-3">
 
                         @yield('content')
 

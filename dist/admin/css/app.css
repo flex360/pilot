@@ -11038,6 +11038,22 @@ a.text-dark:focus {
   border: none;
 }
 
+.help-block {
+  margin-top: -3px;
+  margin-bottom: 4px;
+  color: #737373;
+  font-size: 12px;
+}
+
+.help-block > strong {
+  color: #2d2d2d;
+}
+
+mark {
+  background-color: #FFFF00;
+  padding: 0em;
+}
+
 @media only screen and (max-width: 600px) {
   .nav-tabs .nav-link {
     white-space: nowrap;

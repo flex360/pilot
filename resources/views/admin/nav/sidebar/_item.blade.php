@@ -1,4 +1,23 @@
+<li class="{{ $navItem->getCssClasses() }}">
+    <div style="display: flex; justify-content: space-between;">
+        <a href="{{ $navItem->url }}">{!! $navItem->name !!}</a>
+        @if ($navItem->hasChildren())
+            <div data-toggle-menu="#{{ $navItem->id() }}" style="cursor: pointer; display: flex; align-items: center;">
+                <i class="fa fa-chevron-down" data-action="show"></i>
+                <i class="fa fa-chevron-up" data-action="hide" style="display: none;"></i>
+            </div>
+        @endif
+    </div>
+    @if ($navItem->hasChildren())
+        <ul id="{{ $navItem->id() }}" class="{{ $navItem->hasActiveChild() ? 'expanded' : '' }}" style="height: 0px; overflow: hidden;">
+	        @foreach($navItem->children as $child)
+                @include('pilot::admin.nav.sidebar._item', ['navItem' => $child])
+	        @endforeach
+	    </ul>
+	@endif
+</li>
 
+<?php /*
 <!-- has children but no parent -->
 @if ($navItem->hasChildren())
 <a href="#{{ $navItem->id() }}" data-toggle="collapse" aria-expanded="false" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="{{ $navItem->getCssClasses() }} {{ $navItem->hasActiveChild() ? 'nav__item--expanded' : '' }}  {{ $navItem->isActive() ? 'pilot-nav__item--active' : '' }} flex-column align-items-start submenu-toggler" style="background-color: rgb(71, 75, 84); font-size: {{ $navItem->sidebarPosition != null ? '12px !important;' : '18px !important;' }}">
@@ -23,3 +42,4 @@
 <!-- has NO children but NO parent ( normal link ) -->
 <a href="{{ $navItem->url }}" target="{{ $navItem->linkTarget }}" class="pilot-nav__item {{ $navItem->sidebarPosition != null ? 'secondhalf' : '' }} {{ $navItem->isActive() ? 'pilot-nav__item--active' : '' }} sidebar list-group-item list-group-item-action" style="background-color: rgb(71, 75, 84); font-size: {{ $navItem->sidebarPosition != null ? '12px !important;' : '18px !important;' }}">{!! $navItem->name !!}</a>
 @endif
+*/ ?>
