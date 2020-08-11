@@ -3,7 +3,6 @@
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Request as RequestFacade;
 use Flex360\Pilot\Pilot\Menu;
 
 class MenuController extends AdminController
@@ -21,14 +20,14 @@ class MenuController extends AdminController
     public function index()
     {
         mimic('Menu Manager');
-        
+
         if (config('pilot.multisite')) {
             $items = Menu::where('site_id', '=', $this->site->id)->get();
         } else {
             $items = Menu::all();
             // $items = collect();
         }
-        
+
         return view('pilot::admin.menus.index', compact('items'));
     }
 
@@ -44,12 +43,12 @@ class MenuController extends AdminController
 
         mimic($item->name . ' Menu');
 
-        $formOptions = array(
-            'route' => array('admin.' . strtolower($this->getClassNameFromModel()) . '.update', $id),
+        $formOptions = [
+            'route' => ['admin.' . strtolower($this->getClassNameFromModel()) . '.update', $id],
             'method' => 'put',
-        );
+        ];
 
-        return view('pilot::admin.' . static::$viewFolder . '.form', compact('item', 'formOptions', 'model'));
+        return view('pilot::admin.' . static::$viewFolder . '.form', compact('item', 'formOptions'));
     }
 
     /**
@@ -77,7 +76,7 @@ class MenuController extends AdminController
         // set success message
         session()->flash('alert-success', 'Menu saved successfully!');
 
-        return redirect()->route('admin.menu.edit', array($id));
+        return redirect()->route('admin.menu.edit', [$id]);
     }
 
     /**
@@ -100,7 +99,7 @@ class MenuController extends AdminController
 
         $items = json_decode($menu->items);
 
-        if (! is_array($items)) {
+        if (!is_array($items)) {
             $items = [];
         }
 
