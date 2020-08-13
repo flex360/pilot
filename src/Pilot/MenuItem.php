@@ -33,7 +33,9 @@ class MenuItem
         if (!empty($new->page)) {
             $page = Page::find($new->page);
             $new->url = $page->path;
-            $new->title = $page->title;
+            if (empty($new->title)) {
+                $new->title = $page->title;
+            }
         }
 
         return $new;
