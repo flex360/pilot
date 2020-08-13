@@ -38,7 +38,7 @@ class MenuItemCollection extends Collection
 
     public function getChildrenOf($parent)
     {
-        $children = collect();
+        $children = new MenuItemCollection();
 
         $childLevel = $parent->level + 1;
 
@@ -84,5 +84,33 @@ class MenuItemCollection extends Collection
     public function getItemsByLevel($level)
     {
         return $this->where('level', $level);
+    }
+
+    public function columns($count = 2)
+    {
+        $total = 0;
+        $columns = collect();
+        foreach ($this as $item) {
+            $total += $item->descendants()->count();
+        }
+        $suggestedColumnSize = ceil($total / $count);
+
+        $currentColumnSize = 0;
+        $currentColumn = new MenuItemCollection();
+        foreach ($this as $item) {
+            $currentColumnSize += $item->descendants()->count();
+            if ($currentColumnSize >= $suggestedColumnSize) {
+                $columns->push($currentColumn);
+                $currentColumnSize = 0;
+                $currentColumn = new MenuItemCollection();
+            }
+            $currentColumn->push($item);
+        }
+
+        if ($columns->isNotEmpty()) {
+            $columns->push($currentColumn);
+        }
+
+        return $columns;
     }
 }

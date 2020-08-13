@@ -8,7 +8,7 @@ class MenuItem
 
     public function __construct()
     {
-        $this->children = collect();
+        $this->children = new MenuItemCollection();
     }
 
     public static function hydrate($data = [])
@@ -42,5 +42,18 @@ class MenuItem
     public function hasChildren()
     {
         return $this->children->isNotEmpty();
+    }
+
+    public function descendants(&$carry = null)
+    {
+        $descendants = $carry ?: new MenuItemCollection();
+
+        $descendants->push(...$this->children);
+
+        foreach ($this->children as $child) {
+            $child->descendants($descendants);
+        }
+
+        return $descendants;
     }
 }
