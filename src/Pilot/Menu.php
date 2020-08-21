@@ -3,10 +3,11 @@
 namespace Flex360\Pilot\Pilot;
 
 use Exception;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Menu extends Model
 {
@@ -27,11 +28,19 @@ class Menu extends Model
     public static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($menu) {
             if (empty($menu->slug)) {
                 $menu->slug = Str::slug($menu->name);
             }
+        });
+
+        static::saved(function ($menu) {
+            Cache::forget('pilot-menu-' . $menu->slug);
+        });
+
+        static::deleted(function ($menu) {
+            Cache::forget('pilot-menu-' . $menu->slug);
         });
     }
 
