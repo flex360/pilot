@@ -16,7 +16,7 @@ class SitemapController extends Controller
     {
         $root = Page::getRoot();
 
-        return view('frontend.sitemap.index', compact('root'));
+        return view('pilot::frontend.sitemap.index', compact('root'));
     }
 
     /**
@@ -28,6 +28,6 @@ class SitemapController extends Controller
     {
         $root = Page::getRoot();
 
-        return view('frontend.sitemap.xml', compact('root'));
+        return view('pilot::frontend.sitemap.xml', compact('root'));
     }
 }
