@@ -3,7 +3,9 @@
 @section('panel-heading', 'Users')
 
 @section('buttons')
-    <a href="{{ route('admin.user.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add User</a>
+    @if (Auth::user()->hasRole('super', 'admin'))
+        <a href="{{ route('admin.user.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add User</a>
+    @endif
 @endsection
 
 @section('panel-body')
@@ -30,7 +32,11 @@
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role->name }}</td>
-                    <td>{!! link_to_route('admin.user.edit', 'Edit', $user->id) !!}</td>
+                    <td>
+                        @if (Auth::user()->canEditUser($user))
+                            {!! link_to_route('admin.user.edit', 'Edit', $user->id) !!}
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

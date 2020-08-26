@@ -2,7 +2,6 @@
 
 namespace Flex360\Pilot\Pilot;
 
-use Flex360\Pilot\Pilot\Role;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -48,19 +47,36 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
     }
 
-    public function hasRole($key)
+    public function hasRole(...$keys)
     {
-        $role = Role::findByKey($key);
+        $roles = Role::findByKey(...$keys);
 
-        if (empty($role)) {
+        if (empty($roles)) {
             return false;
         }
 
-        return $this->role_id == $role->id;
+        $roles = is_array($roles) ? $roles : [$roles];
+
+        $roleIds = collect($roles)->pluck('id');
+
+        return $roleIds->contains($this->role_id);
     }
 
     public function isAdmin()
     {
-        return $this->hasRole('admin');
+        return $this->hasRole('super', 'admin');
+    }
+
+    public function canEditUser(User $user)
+    {
+        if ($this->hasRole('super')) {
+            return true;
+        }
+
+        if ($this->hasRole('admin') && !$user->hasRole('super')) {
+            return true;
+        }
+
+        return false;
     }
 }

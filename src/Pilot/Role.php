@@ -35,12 +35,17 @@ class Role extends Model
         return $this->hasMany('User');
     }
 
-    public static function findByKey($key)
+    public static function findByKey(...$keys)
     {
         $roles = Cache::rememberForever('pilot-all-roles', function () {
             return Role::withoutGlobalScopes()->get();
         });
 
-        return $roles->where('key', $key)->first();
+        // if multiple keys, return multiple roles
+        if (count($keys) > 1) {
+            return $roles->whereIn('key', $keys)->all();
+        }
+
+        return $roles->whereIn('key', $keys)->first();
     }
 }

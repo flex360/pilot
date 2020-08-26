@@ -34,7 +34,7 @@
 
             <div class="form-group">
                 {!! Form::label('role_id', 'Role') !!}
-                {!! Form::select('role_id', \Flex360\Pilot\Pilot\Role::pluck('name', 'id'), null, array('class' => 'form-control')) !!}
+                {!! Form::select('role_id', $roles, null, array('class' => 'form-control')) !!}
             </div>
 
             <button class="btn btn-primary">Save</button>

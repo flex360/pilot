@@ -93,14 +93,14 @@
                           <?php //dd(Auth::user()); ?>
                           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#" data-toggle="dropdown" data-target="#dropdown_admin">{{ optional(Auth::user())->getName() }} <span class="caret"></span></a>
                               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_admin">
-                                @if (Auth::user()->hasRole('admin'))
+                                @if (Auth::user()->isAdmin())
                                     @if (isset(config('pilot.plugins')['styles']) && config('pilot.plugins')['styles']['enabled'])
                                         {{-- <a class="dropdown-item" href="{{ route('admin.style.index') }}"><i class="fa fa-paint-brush"></i> Styles</a> --}}
                                     @endif
-                                    <a class="dropdown-item" href="{{ route('admin.site.index') }}"><i class="fa fa-globe"></i> Websites</a>
                                     <a class="dropdown-item" href="{{ route('admin.user.index') }}"><i class="fa fa-users"></i> Users</a>
-                                    <a class="dropdown-item" href="{{ route('admin.role.index') }}"><i class="fa fa-lock"></i> Roles</a>
-                                    @if(Auth::user()->username == 'admin')
+                                    @if(Auth::user()->hasRole('super'))
+                                        <a class="dropdown-item" href="{{ route('admin.role.index') }}"><i class="fa fa-lock"></i> Roles</a>
+                                        <a class="dropdown-item" href="{{ route('admin.site.index') }}"><i class="fa fa-globe"></i> Websites</a>
                                         <a class="dropdown-item" href="/pilot/clear"><i class="fas fa-trash-alt"></i> Clear Application Cache</a>
                                     @endif
                                     <div class="dropdown-divider"></div>
