@@ -59,16 +59,16 @@ class AnnoucementController extends DynamoController
                     })
                     ->addActionButton(function ($annoucement) {
                         if (!$annoucement->status) {
-                            return '|' . '<a href="' . route('admin.annoucement.activate', $annoucement->id) . '" style="padding: 10px 5px!important;" class="btn btn-link btn-sm"> Activate</a>';
+                            return '<a href="' . route('admin.annoucement.activate', $annoucement->id) . '" class="btn btn-secondary btn-sm"> Activate</a>';
                         }
 
                         return '';
                     })
                     ->addActionButton(function ($item) {
-                        return '| ' . '<a href="annoucement/' . $item->id . '/copy" style="padding: 10px 0px!important;" class="btn btn-link btn-sm">Copy</a>';
+                        return '<a href="annoucement/' . $item->id . '/copy" class="btn btn-secondary btn-sm">Copy</a>';
                     })
                     ->addActionButton(function ($item) {
-                        return '| ' . '<a href="annoucement/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')" style="padding: 10px 0px!important;" class="btn btn-link btn-sm">Delete</a>';
+                        return '<a href="annoucement/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')" class="btn btn-secondary btn-sm">Delete</a>';
                     })
                     ->indexOrderBy('headline');
     }
