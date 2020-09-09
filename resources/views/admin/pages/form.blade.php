@@ -308,7 +308,7 @@
                             {!! Form::select('status', $page->getStatusSelectList(), null, array('class' => 'form-control')) !!}
                         </div>
 
-                        @if (Auth::user()->hasRole('admin'))
+                        @if (Auth::user()->isAdmin())
                         <div class="form-group col-md-4">
                             {!! Form::label('layout', 'Layout') !!}
                             <i style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
@@ -320,7 +320,7 @@
                         </div>
                         @endif
 
-                        @if (!Auth::user()->hasRole('admin') && $page->title != "Home")
+                        @if (!Auth::user()->isAdmin() && $page->title != "Home")
                         <div class="form-group col-md-4">
                             {!! Form::label('layout', 'Layout') !!}
                             <i style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
@@ -425,7 +425,7 @@
 
         {!! Form::close() !!}
 
-        @if (Auth::user()->hasRole('admin') && !$page->isRoot() && $page->exists)
+        @if (Auth::user()->isAdmin() && !$page->isRoot() && $page->exists)
             {!! Form::model($page, array('route' => array('admin.page.destroy', $page->id), 'method' => 'delete', 'class' => 'delete-form float-right', 'onsubmit' => 'return confirm(\'Are you sure?\');')) !!}
                 <button class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
             {!! Form::close() !!}

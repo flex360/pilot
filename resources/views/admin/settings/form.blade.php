@@ -32,7 +32,7 @@
 
         {!! Form::close() !!}
 
-        @if (Auth::user()->hasRole('admin'))
+        @if (Auth::user()->isAdmin())
             {!! Form::model($item, array('route' => array('admin.setting.destroy', $item->id), 'method' => 'delete', 'class' => 'delete-form float-right', 'onsubmit' => 'return confirm(\'Are you sure?\');')) !!}
                 <button class="btn btn-danger float-right"><i class="fa fa-trash-o"></i> Delete</button>
             {!! Form::close() !!}

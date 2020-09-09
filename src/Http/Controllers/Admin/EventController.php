@@ -300,7 +300,7 @@ class EventController extends AdminController
     public function destroy($id)
     {
         // make sure the current user is an admin
-        if (! Auth::user()->hasRole('admin')) {
+        if (! Auth::user()->isAdmin()) {
             return redirect()->route('admin.auth.denied');
         }
 
