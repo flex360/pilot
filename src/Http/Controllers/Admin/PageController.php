@@ -163,14 +163,29 @@ class PageController extends AdminController
         return redirect()->route('admin.page.edit', [$id]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
     public function destroy($id)
     {
+        // check to see if there is any Menu builder referencing this page or children of this page
+        $page = Page::find($id);
+
+        $dontDestroyChildren = false;
+        foreach ($page->getChildren() as $child) {
+            $used = $child->usedByMenu();
+            if ($used) {
+                $dontDestroyChildren = true;
+            }
+        }
+        $dontDestroyChildrenParent = $page->usedByMenu();
+
+        //if parent or child is used by a menu, don't destroy the page and tell the user they can't delete page
+        // because a menuBuilder is using this page or one of its children
+        if ($dontDestroyChildrenParent || $dontDestroyChildren) {
+            
+            session()->flash('alert-warning', self::$model . ' cannot be deleted while it or one of it\'s child pages are being referenced by a MenuBuilder.');
+
+            return redirect()->route('admin.page.index');
+        }
+
         Page::destroy($id);
 
         // set success message

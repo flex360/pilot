@@ -4,6 +4,7 @@ namespace Flex360\Pilot\Pilot;
 
 use Auth;
 use Illuminate\Support\Str;
+use Flex360\Pilot\Pilot\Menu;
 use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
@@ -712,5 +713,27 @@ class Page extends Model implements HasMedia
         }
 
         return $value;
+    }
+
+    /**
+     *  Check if the page is being used by any MenuBuilders
+     * 
+     * return Boolean
+     */
+    public function usedByMenu()
+    {
+        // get all Menus
+        $menus = Menu::all();
+
+        //loop thru menu Items and see if the page id matches this page id
+        foreach ($menus as $menu) {
+            foreach (json_decode($menu->items) as $item) {
+                if ($item->page == $this->id) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
