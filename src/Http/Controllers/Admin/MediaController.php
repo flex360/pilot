@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Flex360\Pilot\Pilot\Site;
 use Flex360\Pilot\Pilot\Media;
-use Flex360\Pilot\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use Flex360\Pilot\Pilot\MediaHandler;
 use Illuminate\Support\Facades\Artisan;
@@ -50,7 +49,7 @@ class MediaController extends Controller
         foreach ($files as $file) {
             $filePath = $storagePath . '/' . $file;
             $isDir = is_dir($filePath) && $file != '.' && $file != '..';
-            if ($isDir && ! is_dir($filePath . '/conversions')) {
+            if ($isDir && !is_dir($filePath . '/conversions')) {
                 array_push($mediaIdsWithoutConversions, $file);
             }
         }
@@ -74,6 +73,7 @@ class MediaController extends Controller
 
         $result = $file->storeAs($mediaPath, $media->file_name);
 
+        define('STDIN', null); // fix an error caused when STDIN not defined
         $exitCode = Artisan::call('medialibrary:regenerate', [
             'modelType' => $media->model_type,
             '--only-missing' => true,
@@ -98,7 +98,7 @@ class MediaController extends Controller
                     ->orderBy('model_type')
                     ->pluck('model_type')
                     ->transform(function ($class) {
-                        $classParts = explode('\\',  $class);
+                        $classParts = explode('\\', $class);
 
                         return [
                             'model_type' => $class,
@@ -181,10 +181,10 @@ class MediaController extends Controller
         $q = request()->input('query');
 
         return Media::where(function ($query) use ($q) {
-                            $query->where('name', 'like', '%' . $q . '%')
+            $query->where('name', 'like', '%' . $q . '%')
                                   ->orWhere('file_name', 'like', '%' . $q . '%')
                                   ->orWhere('custom_properties', 'like', '%' . $q . '%');
-                        })
+        })
                         ->groupBy('model_type', 'file_name')
                         ->orderBy('id', 'desc')
                         ->get();
