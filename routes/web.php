@@ -130,29 +130,25 @@ Route::middleware(['web', 'pilot.global'])->namespace('Flex360\Pilot\Http\Contro
 
     // Route::post('/webhook/wufoo/{hash}', ['as' => 'form.webhook', 'uses' => 'Admin\FormController@webhook']);
 
-    if (config('plugins.news.enabled')) {
-        // blog routes
-        Route::get('/news', ['as' => 'blog', 'uses' => 'BlogController@index']);
-        Route::get('/news/post/{id}/{slug}', ['as' => 'blog.post', 'uses' => 'BlogController@post']);
-        Route::get('/news/tagged/{id}/{slug}', ['as' => 'blog.tagged', 'uses' => 'BlogController@tagged']);
-        Route::get('/rss.xml', ['as' => 'rss', 'uses' => 'BlogController@rss']);
+    // blog routes
+    Route::get('/news', ['as' => 'blog', 'uses' => 'BlogController@index']);
+    Route::get('/news/post/{id}/{slug}', ['as' => 'blog.post', 'uses' => 'BlogController@post']);
+    Route::get('/news/tagged/{id}/{slug}', ['as' => 'blog.tagged', 'uses' => 'BlogController@tagged']);
+    Route::get('/rss.xml', ['as' => 'rss', 'uses' => 'BlogController@rss']);
 
-        //Blog Routes for 'Load More Post' Button
-        Route::get('/load-more-news', ['as' => 'blog.more', 'uses' => 'BlogController@loadMorePostIntoIndex']);
-        Route::get('/load-more-tagged-news/{id}/{slug}', [
-            'as' => 'blog.moreTagged',
-            'uses' => 'BlogController@loadMorePostIntoTagged'
-        ]);
-    }
+    //Blog Routes for 'Load More Post' Button
+    Route::get('/load-more-news', ['as' => 'blog.more', 'uses' => 'BlogController@loadMorePostIntoIndex']);
+    Route::get('/load-more-tagged-news/{id}/{slug}', [
+        'as' => 'blog.moreTagged',
+        'uses' => 'BlogController@loadMorePostIntoTagged'
+    ]);
 
-    if (config('plugins.events.enabled')) {
-        // calendar routes
-        Route::get('/calendar', ['as' => 'calendar', 'uses' => 'CalendarController@index']);
-        Route::get('/calendar/month', ['as' => 'calendar.month', 'uses' => 'CalendarController@month']);
-        Route::get('/calendar/json', ['as' => 'calendar.json', 'uses' => 'CalendarController@json']);
-        Route::get('/calendar/event/{id}/{slug}', ['as' => 'calendar.event', 'uses' => 'CalendarController@event']);
-        Route::get('/calendar/tagged/{id}/{slug}', ['as' => 'calendar.tagged', 'uses' => 'CalendarController@tagged']);
-    }
+    // calendar routes
+    Route::get('/calendar', ['as' => 'calendar', 'uses' => 'CalendarController@index']);
+    Route::get('/calendar/month', ['as' => 'calendar.month', 'uses' => 'CalendarController@month']);
+    Route::get('/calendar/json', ['as' => 'calendar.json', 'uses' => 'CalendarController@json']);
+    Route::get('/calendar/event/{id}/{slug}', ['as' => 'calendar.event', 'uses' => 'CalendarController@event']);
+    Route::get('/calendar/tagged/{id}/{slug}', ['as' => 'calendar.tagged', 'uses' => 'CalendarController@tagged']);
 
     // sitemap routes
     Route::get('/sitemap', ['as' => 'sitemap', 'uses' => 'SitemapController@index']);

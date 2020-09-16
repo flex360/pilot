@@ -2,65 +2,76 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
+use Flex360\Pilot\Pilot\Page;
+use Flex360\Pilot\Pilot\Event;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\Console\Input\Input;
+
 class CalendarController extends Controller
 {
+    public function __construct()
+    {
+        if (!config('plugins.events.enabled')) {
+            abort(404);
+        }
+    }
 
     public function index()
     {
-        $events = \MyEvent::whereRaw('events.end >= NOW()')
+        $events = Event::whereRaw('events.end >= NOW()')
                 ->orderBy('events.start', 'asc')
                 ->limit(15)
                 ->get();
 
-        \Page::mimic([
+        Page::mimic([
             'title' => 'Upcoming Events'
         ]);
 
-        return \View::make('frontend.calendar.index', compact('events'));
+        return view('frontend.calendar.index', compact('events'));
     }
 
     public function month()
     {
-        return \View::make('frontend.calendar.month');
+        return view('frontend.calendar.month');
     }
 
     public function event($id, $slug)
     {
-        if (\Auth::check()) {
-            $event = \MyEvent::withoutGlobalScopes()->findOrFail($id);
+        if (Auth::check()) {
+            $event = Event::withoutGlobalScopes()->findOrFail($id);
         } else {
-            $event = \MyEvent::findOrFail($id);
+            $event = Event::findOrFail($id);
         }
 
-        \Page::mimic([
+        Page::mimic([
             'title' => $event->title
         ]);
 
-        return \View::make('frontend.calendar.event', compact('event'));
+        return view('frontend.calendar.event', compact('event'));
     }
 
     public function tagged($id, $tagged)
     {
-        $events = \MyEvent::join('event_tag', 'posts.id', '=', 'event_tag.event_id')
+        $events = Event::join('event_tag', 'posts.id', '=', 'event_tag.event_id')
                 ->where('event_tag.tag_id', '=', $id)
                 ->whereRaw('events.end >= NOW()')
                 ->orderBy('events.start', 'asc')
                 ->simplePaginate(10);
 
-        \Page::mimic([
-            'title' => 'Events tagged '.$tagged
+        Page::mimic([
+            'title' => 'Events tagged ' . $tagged
         ]);
 
-        return \View::make('frontend.blog.index', compact('events'));
+        return view('frontend.blog.index', compact('events'));
     }
 
     public function json()
     {
-        $start = \Input::get('start') . ' 00:00:00';
+        $start = Input::get('start') . ' 00:00:00';
 
-        $end = \Input::get('end') . ' 23:59:59';
+        $end = Input::get('end') . ' 23:59:59';
 
-        $events = \MyEvent::whereBetween('start', array($start, $end))
+        $events = Event::whereBetween('start', [$start, $end])
                     ->orderBy('start', 'asc')
                     ->limit(100)
                     ->get();
