@@ -16,7 +16,8 @@
     <link rel="stylesheet" type="text/css" href="/pilot-assets/components/bootstrap-duallistbox/src/bootstrap-duallistbox.css">
 
     <!-- DateTimePicker CSS -->
-    <link rel="stylesheet" type="text/css" href="/pilot-assets/components/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css">
+    {{-- <link rel="stylesheet" type="text/css" href="/pilot-assets/components/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css"> --}}
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> --}}
 
     <!-- main admin css -->
     <link href="{{ '/pilot-assets/legacy/css/main.css' }}" rel="stylesheet">
@@ -150,7 +151,7 @@
     <script src="/pilot-assets/components/jquery-sortablejs/jquery-sortable.js"></script>
 
     <!-- DateTimePicker -->
-    <script src="/pilot-assets/components/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js"></script>
+    {{-- <script src="/pilot-assets/components/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js"></script> --}}
 
     <!-- DirtyFormsJS - Leave Site? code -->
     <script src="/pilot-assets/components/jquery.dirtyforms/jquery.dirtyforms.min.js"></script>

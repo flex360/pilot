@@ -152,6 +152,26 @@ window.addEventListener('load', (event) => {
         }
     });
 
+    // date pickr
+    const flatpickr = require("flatpickr");
+
+    // standard dateTimePicker used on Events and News modules
+    flatpickr('.datetimepicker', {
+        enableTime: true,
+        dateFormat: "m/d/Y H:i",
+    });
+
+    // date picker used on Employee module
+    flatpickr('.datepicker', {
+        dateFormat: "m-d-Y",
+    });
+
+    // date picker used on Specials module
+    flatpickr('.specialsDatePicker', {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i:S",
+    });
+
     // ***** NEW FROALA EDITOR :D ******
     var editor = FroalaEditor('textarea.wysiwyg-editor', {
         key: key,
@@ -285,22 +305,22 @@ function toggleOther(element) {
    */
   $(function () {
   
-      if ($('.datetimepicker').length > 0) {
-          $('.datetimepicker').datetimepicker();
-      }
+    //   if ($('.datetimepicker').length > 0) {
+    //       $('.datetimepicker').datetimepicker();
+    //   }
   
-      if ($('.datepicker').length > 0) {
-          $('.datepicker').datetimepicker({
-              pickTime: false,
-              format: "m-d-Y",
-          });
-      }
+    //   if ($('.datepicker').length > 0) {
+    //       $('.datepicker').datetimepicker({
+    //           pickTime: false,
+    //           format: "m-d-Y",
+    //       });
+    //   }
   
-      if ($('.timepicker').length > 0) {
-          $('.timepicker').datetimepicker({
-              datepicker: false
-          });
-      }
+    //   if ($('.timepicker').length > 0) {
+    //       $('.timepicker').datetimepicker({
+    //           datepicker: false
+    //       });
+    //   }
   
       /* dropzone */
       if ($('#template').length > 0) {

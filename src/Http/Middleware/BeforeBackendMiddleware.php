@@ -55,8 +55,8 @@ class BeforeBackendMiddleware
         Asset::js('/pilot-assets/components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js');
 
         // Date Time Picker
-        Asset::css('/pilot-assets/components/datetimepicker-2.5.20/jquery.datetimepicker.css');
-        Asset::js('/pilot-assets/components/datetimepicker-2.5.20/jquery.datetimepicker.js');
+        // Asset::css('/pilot-assets/components/datetimepicker-2.5.20/jquery.datetimepicker.css');
+        // Asset::js('/pilot-assets/components/datetimepicker-2.5.20/jquery.datetimepicker.js');
 
         // Select2
         Asset::css('/pilot-assets/components/select2/dist/css/select2.min.css');
