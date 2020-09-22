@@ -73,7 +73,7 @@ class MediaController extends Controller
 
         $result = $file->storeAs($mediaPath, $media->file_name);
 
-        define('STDIN', null); // fix an error caused when STDIN not defined
+        // define('STDIN', null); // fix an error caused when STDIN not defined
         $exitCode = Artisan::call('medialibrary:regenerate', [
             'modelType' => $media->model_type,
             '--only-missing' => true,

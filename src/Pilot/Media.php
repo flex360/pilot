@@ -47,10 +47,11 @@ class Media extends BaseMedia
                 if (!empty($item)) {
                     $media->save();
                     // regenerate possible missing conversions
-                    define('STDIN', null); // fix an error caused when STDIN not defined
+                    // define('STDIN', null); // fix an error caused when STDIN not defined
                     Artisan::call('medialibrary:regenerate', [
                         '--ids' => $media->id,
                         '--only-missing' => true,
+                        '--force' => true,
                     ]);
                 } else {
                     $media->temp = true;
