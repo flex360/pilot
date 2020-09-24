@@ -72,6 +72,7 @@ class PilotServiceProvider extends ServiceProvider
             __DIR__ . '/../../resources/views/layouts/internal.blade.php' => base_path('resources/views/layouts/internal.blade.php'),
             __DIR__ . '/../../resources/views/partials/header.blade.php' => base_path('resources/views/partials/header.blade.php'),
             __DIR__ . '/../../resources/views/partials/footer.blade.php' => base_path('resources/views/partials/footer.blade.php'),
+            __DIR__ . '/../../resources/views/partials/modal.blade.php' => base_path('resources/views/partials/modal.blade.php'),
             __DIR__ . '/../../resources/views/page.blade.php' => base_path('resources/views/vendor/pilot/page.blade.php'),
         ], 'pilot-templates');
 
