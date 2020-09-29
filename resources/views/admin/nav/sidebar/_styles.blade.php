@@ -50,7 +50,7 @@ ul.pilot-nav ul {
 }
 .pilot-nav__item > div > a {
     width: 100%;
-    padding: 0px 7px;
+    padding: 4px 7px;
     border-radius: 3px;
 }
 .pilot-nav__item > div > a:hover {
@@ -88,11 +88,10 @@ ul.pilot-nav ul {
     */
 }
 :root {
-    --pilot-color: #43379D;
-    --pilot-color-dark: #322975;
-    --pilot-color-light: #5B4EC1;
-    /* --pilot-color-highlight: #55389F; */
-    --pilot-color-highlight: #786bd5;
+    --pilot-color: {!! config('pilot.pilot_color', '#43379D') !!};
+    --pilot-color-dark: {!! config('pilot.pilot_color_dark', '#322975') !!};
+    --pilot-color-light: {!! config('pilot.pilot_color_light', '#5B4EC1') !!};
+    --pilot-color-highlight: {!! config('pilot.pilot_color_highlight', '#786bd5') !!};
 }
 </style>
 
