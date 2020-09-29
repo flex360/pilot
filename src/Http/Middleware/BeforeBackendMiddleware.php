@@ -28,6 +28,9 @@ class BeforeBackendMiddleware
             'title' => $title
         ]);
 
+        // set current site in config
+        $site = Site::setCurrent();
+        
         $site = Site::getCurrent();
 
         // only executed in the admin
@@ -44,6 +47,8 @@ class BeforeBackendMiddleware
         $learnRoot = Cache::rememberForever('pilot-learn-root', function () {
             return Page::findByPath('/learn');
         });
+
+        view()->share('currentSite', $site);
 
         if (!empty($learnRoot)) {
             $learnPages = $learnRoot->getChildren();

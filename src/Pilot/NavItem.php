@@ -12,22 +12,25 @@ class NavItem
     public $parent;
     public $activeRoutes;
     public $routePattern;
+    public $sidebarPosition;
+    public $linkTarget;
     private $id;
 
-    public function __construct($name, $url, $routePattern = null)
+    public function __construct($name, $url, $routePattern = null, $sidebarPosition = null, $linkTarget = '_self')
     {
         $this->name = $name;
         $this->url = $url;
         $this->routePattern = $routePattern;
+        $this->linkTarget = $linkTarget;
         $this->children = collect();
         $this->parent = null;
         $this->activeRoutes = collect();
         $this->id = uniqid(Str::slug($this->name) . '-', false);
     }
 
-    public static function make($name, $url, $routePattern = null)
+    public static function make($name, $url, $routePattern = null, $linkTarget = '_self')
     {
-        return new static($name, $url, $routePattern);
+        return new static($name, $url, $routePattern, $linkTarget);
     }
 
     public function addChildren(...$children)
@@ -57,6 +60,7 @@ class NavItem
 
         if ($this->hasActiveChild()) {
             $classes[] = 'pilot-nav__item--active-child';
+            $classes[] = 'pilot-nav__item--expanded';
         }
 
         return implode(' ', $classes);

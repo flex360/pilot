@@ -28,6 +28,7 @@ Vue.component('media-browser', require('./components/MediaBrowser.vue').default)
 Vue.component('media-browser-rename', require('./components/MediaBrowserRename.vue').default);
 Vue.component('menu-edit-modal', require('./components/MenuEditModal.vue').default);
 Vue.component('menu-item-list', require('./components/MenuItemList.vue').default);
+Vue.component('collapsable', require('./components/Collapsable.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
