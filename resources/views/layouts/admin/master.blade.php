@@ -44,7 +44,7 @@
                 
                 <!--Left side of cms nav bar -->
                 @if (! empty($currentSite))
-                <a class="navbar-brand" href="{{ route('admin.pages.index') }}">{{ $currentSite->name }}</a>
+                <a class="navbar-brand" href="{{ route('admin.page.index') }}">{{ $currentSite->name }}</a>
                 @endif
 
                 <div class="collapse navbar-collapse" id="collapse_target">
@@ -138,7 +138,7 @@
                     
                     <!--Left side of cms nav bar -->
                     @if (! empty($currentSite))
-                    <a class="navbar-brand" href="{{ route('admin.pages.index') }}">{{ $currentSite->name }}</a>
+                    <a class="navbar-brand" href="{{ route('admin.page.index') }}">{{ $currentSite->name }}</a>
                     @endif
     
                     <div class="collapse navbar-collapse" id="collapse_target">

@@ -46,7 +46,7 @@ class Pilot
             Route::get('/pilot/denied', ['as' => 'auth.denied', 'uses' => 'Admin\AuthController@denied']);
 
             Route::group(['as' => 'admin.', 'prefix' => 'pilot', 'middleware' => ['auth.admin', 'backend']], function () {
-                Route::any('/', ['as' => 'pages.index', 'uses' => 'Admin\PageController@index']);
+                Route::any('/', ['as' => 'page.index', 'uses' => 'Admin\PageController@index']);
                 Route::get('/page/{id}/sync', ['as' => 'page.sync', 'uses' => 'Admin\PageController@syncType']);
                 Route::post('/page/reorder', ['as' => 'page.reorder', 'uses' => 'Admin\PageController@reorder']);
                 Route::post('/page/{page}/updateParent/{newParentPageId}', 'Admin\PageController@updateParent')

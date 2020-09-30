@@ -20,32 +20,32 @@ return [
         'pages' => [
             'name' => 'Pages',
             'enabled' => true,
-            'url' => route('admin.page.index'),
+            'url' => ['admin.page.index'],
         ],
         'events' => [
             'name' => 'Events',
             'enabled' => true,
-            'url' => route('admin.event.index'),
+            'url' => ['admin.event.index'],
         ],
         'news' => [
             'name' => 'News',
             'enabled' => true,
-            'url' => route('admin.post.index'),
+            'url' => ['admin.post.index'],
         ],
         'annoucements' => [
             'name' => 'Annoucements',
             'enabled' => false,
-            'url' => route('admin.annoucement.index'),
+            'url' => ['admin.annoucement.index'],
         ],
         'forms' => [
             'name' => 'Forms',
             'enabled' => false,
-            'url' => route('admin.form.index'),
+            'url' => ['admin.form.index'],
         ],
         'styles' => [
             'name' => 'Styles',
             'enabled' => false,
-            'url' => route('admin.style.index'),
+            'url' => ['admin.style.index'],
         ],
     ],
 
