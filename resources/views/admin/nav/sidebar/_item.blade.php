@@ -1,6 +1,6 @@
 <li class="{{ $navItem->getCssClasses() }}">
     <div style="display: flex; justify-content: space-between;">
-        <a href="{{ $navItem->url }}">{!! $navItem->name !!}</a>
+        <a href="{{ $navItem->url }}" target="{{ $navItem->linkTarget }}">{!! $navItem->name !!}</a>
         @if ($navItem->hasChildren())
             <div data-toggle-menu="#{{ $navItem->id() }}" style="cursor: pointer; display: flex; align-items: center;">
                 <i class="fa fa-chevron-down" data-action="show"></i>

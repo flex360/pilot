@@ -7,7 +7,7 @@
 
                 @include('pilot::admin.partials.alerts')
 
-                <div class="card mb-4">
+                <div class="card {{ config('pilot.backend_side_bar_layout') ? 'sidebar-card' : ''}} mb-4">
 
                     <div class="card-header">
                         <div class="float-left">

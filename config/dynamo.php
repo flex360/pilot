@@ -21,6 +21,8 @@ return [
 
     'modules_links_path' => base_path('resources/views/vendor/pilot/admin/partials/modules.blade.php'),
 
+    'modulesSidebar_links_path' => base_path('resources/views/vendor/pilot/admin/partials/modulesSidebar.blade.php'),
+
     'editor_command' => 'code',
 
     /*
@@ -51,7 +53,7 @@ return [
     |
     */
     'model_implements' => [
-        'HasMediaConversions',
+        'HasMedia',
     ],
 
     /*

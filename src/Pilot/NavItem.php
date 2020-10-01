@@ -28,9 +28,9 @@ class NavItem
         $this->id = uniqid(Str::slug($this->name) . '-', false);
     }
 
-    public static function make($name, $url, $routePattern = null, $linkTarget = '_self')
+    public static function make($name, $url, $routePattern = null, $sidebarPosition = null, $linkTarget = '_self')
     {
-        return new static($name, $url, $routePattern, $linkTarget);
+        return new static($name, $url, $routePattern, $sidebarPosition, $linkTarget);
     }
 
     public function addChildren(...$children)

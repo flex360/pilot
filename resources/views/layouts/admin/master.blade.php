@@ -8,20 +8,14 @@
 
     {!! PilotAsset::link('css') !!}
 
-    <!-- Font awesome -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    {{-- <script src="https://kit.fontawesome.com/abeb59e04a.js" crossorigin="anonymous"></script> --}}
 
     <!-- DualListBox CSS -->
     <link rel="stylesheet" type="text/css" href="/pilot-assets/components/bootstrap-duallistbox/src/bootstrap-duallistbox.css">
 
-    <!-- DateTimePicker CSS -->
-    {{-- <link rel="stylesheet" type="text/css" href="/pilot-assets/components/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css"> --}}
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> --}}
-
     <!-- main admin css -->
-    <link href="{{ '/pilot-assets/legacy/css/main.css' }}" rel="stylesheet">
-    <link href="{{ pmix('/pilot-assets/admin/css/app.css') }}" rel="stylesheet">
+    <link href="{{ pmix('/custom/pilot-assets/admin/css/app.css') }}" rel="stylesheet">
     <link src="/dist/components/Trumbowyg-master/dist/ui/trumbowyg.min.css"></link>
 
     @yield('head')
@@ -142,6 +136,7 @@
                     @endif
     
                     <div class="collapse navbar-collapse" id="collapse_target">
+                        <!-- this menu is tablet and mobile only -->
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 d-lg-none d-block">
                             @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins')['pages']['enabled'])
                                 <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">{{ config('pilot.plugins')['pages']['name'] }}</a></li>
@@ -162,8 +157,9 @@
                             @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins')['forms']['enabled'] && WufooForm::hasForms())
                                 <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">{{ config('pilot.plugins')['forms']['name'] }}</a></li>
                             @endif
-    
-                            @include('pilot::admin.partials.modulesSidebar')
+
+                            <!-- this menu is tablet and mobile only -->
+                            @include('pilot::admin.partials.modules')
 
                             <li class="nav-item {{ Request::is('pilot/setting*') ? 'active' : null }}"><a class="nav-link" href="/pilot/setting"><i class="fa fa-cogs"></i> Settings</a></li>
     
@@ -257,6 +253,7 @@
             <div id="app">
                 <div class="row" id="body-row">
                     <!-- Sidebar -->
+                    <!-- this menu is destop view -->
                     <div id="pilot-sidebar-container" class="sidebar-expanded d-none d-lg-block col-2 sidebar">
                         <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
 
@@ -276,14 +273,17 @@
                                     $navItems[] = PilotNavItem::make($settings['name'], $url);
                                 }
                             }
+
                         @endphp
 
-                        {!! PilotNav::create(...$navItems) !!}
+                        <!-- this wrapper makes the base plugin modules Nav have no margin on bottom -->
+                        <div class="plugins-nav-items-wrapper">{!! PilotNav::create(...$navItems) !!}</div>
                     
-                            
-                            @include('pilot::admin.partials.modulesSidebar')
-                        <!-- List Group END-->
+                        <!-- this menu is destop view right under the default plugin modules -->
+                        @include('pilot::admin.partials.modulesSidebar')
 
+
+                        <!-- List Group END-->
                         {{-- <hr style="
                         margin: 20px;
                         border-top-color: rgba(0, 0, 0, 0.1);
@@ -299,10 +299,10 @@
                             {{-- <div class="second-half-sidebar"> --}}
                             <div class="pilot-sidebar-lower">
                             @php
-                                $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*');
+                                $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*', null, '_blank');
                                 foreach($learnPages as $learnPage) {
                                     $learnNav->addChildren(
-                                        PilotNavItem::make($learnPage->title, $learnPage->url(), null, '_blank')
+                                        PilotNavItem::make($learnPage->title, $learnPage->url(), null, null, '_blank')
                                     );
                                 }
                             @endphp
@@ -310,12 +310,12 @@
                             {!! PilotNav::create(
                                 PilotNavItem::make('<i class="fa fa-cogs" style="margin-right: 7px;"></i> Settings', route('admin.setting.index'), 'admin.setting.*'),
                                 $learnNav,
-                                PilotNavItem::make('<i class="fas fa-tools" style="margin-right: 7px;"></i> Admin', '', null)
+                                PilotNavItem::make('<i class="fas fa-tools" style="margin-right: 7px;"></i> Admin', '')
                                     ->addChildren(
-                                        PilotNavItem::make('Websites', route('admin.site.index'), null),
-                                        PilotNavItem::make('Users', route('admin.user.index'), null),
-                                        PilotNavItem::make('Roles', route('admin.role.index'), null),
-                                        PilotNavItem::make('Logout', '/pilot/logout', null)
+                                        PilotNavItem::make('Websites', route('admin.site.index')),
+                                        PilotNavItem::make('Users', route('admin.user.index')),
+                                        PilotNavItem::make('Roles', route('admin.role.index')),
+                                        PilotNavItem::make('Logout', '/pilot/logout')
                                     )
                             ) !!}
                             </div>
@@ -441,9 +441,6 @@
     <!-- SortableJS -->
     <script src="/pilot-assets/components/sortablejs/Sortable.min.js"></script>
     <script src="/pilot-assets/components/jquery-sortablejs/jquery-sortable.js"></script>
-
-    <!-- DateTimePicker -->
-    {{-- <script src="/pilot-assets/components/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js"></script> --}}
 
     <!-- DirtyFormsJS - Leave Site? code -->
     <script src="/pilot-assets/components/jquery.dirtyforms/jquery.dirtyforms.min.js"></script>

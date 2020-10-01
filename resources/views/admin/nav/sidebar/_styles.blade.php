@@ -342,4 +342,7 @@ a.secondhalf.pilot-nav__item--active.sidebar.list-group-item.list-group-item-act
 a.pilot-nav__item.pilot-nav__item--active.sidebar.list-group-item.list-group-item-action {
     background-color: rgba(255, 255, 255, 0.2) !important;
 }
+.plugins-nav-items-wrapper .pilot-nav {
+    margin-bottom: 0px;
+}
 </style>
