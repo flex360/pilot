@@ -19,7 +19,7 @@ class AuthController extends AdminController
         ];
         
         if (Auth::attempt($credentials, true)) {
-            return redirect()->route('admin.pages.index');
+            return redirect()->route('admin.page.index');
         } else {
             return redirect()->route('admin.login')->withErrors(['login' => 'Login failed!']);
         }

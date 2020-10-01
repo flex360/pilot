@@ -27,7 +27,7 @@ class PageController extends AdminController
     {
         $root = Page::getAdminRoot();
 
-        return view('pilot::admin.pages.index', compact('root'));
+        return view('pilot::admin.page.index', compact('root'));
     }
 
     /**
