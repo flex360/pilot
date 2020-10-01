@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="/pilot-assets/components/bootstrap-duallistbox/src/bootstrap-duallistbox.css">
 
     <!-- main admin css -->
-    <link href="{{ pmix('/admin/css/app.css') }}" rel="stylesheet">
+    <link href="{{ pmix('/pilot-assets/admin/css/app.css') }}" rel="stylesheet">
     <link src="/dist/components/Trumbowyg-master/dist/ui/trumbowyg.min.css"></link>
 
     @yield('head')
