@@ -80,6 +80,13 @@ class PilotTakeoff extends Command
             $pilotRoutes = "\n\nPilot::routesBefore();\n\n// your backend routes go here\nRoute::middleware(['web', 'pilot.global', 'auth.admin', 'backend'])\n    ->prefix('pilot')\n    ->name('admin.')\n    ->group(function () {\n        /* ---- Dynamo Routes ---- */\n\n});\n\n// your frontend routes go here\nRoute::middleware(['web', 'pilot.global'])\n    ->group(function () {\n\n});\n\nPilot::routesAfter();\n";
             $webRoutes = str_replace($welcomeRouteCode, $pilotRoutes, $webRoutes);
             file_put_contents(base_path('routes/web.php'), $webRoutes);
+
+            // update config/database.php file to remove strict SQL setting
+            $databaseConfig = file_get_contents(base_path('config/database.php'));
+            $searchTerm = "'strict' => true,";
+            $replaceTerm = "'strict' => false,";
+            $updatedConfigFileContents = str_replace($searchTerm, $replaceTerm, $databaseConfig);
+            file_put_contents(base_path('config/database.php'), $updatedConfigFileContents);
         }
     }
 
