@@ -14,7 +14,7 @@ trait PresentableTrait
     {
         $className = get_class($this);
 
-        $presenterClass = 'App\\Pilot\\' . str_replace('App\\Pilot\\', '', $className) . 'Presenter';
+        $presenterClass = $className . 'Presenter';
 
         return new $presenterClass($this);
     }

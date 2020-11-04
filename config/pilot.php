@@ -22,15 +22,15 @@ return [
             'enabled' => true,
             'url' => ['admin.page.index'],
         ],
-        'events' => [
-            'name' => 'Events',
-            'enabled' => true,
-            'url' => ['admin.event.index'],
-        ],
         'news' => [
             'name' => 'News',
             'enabled' => true,
             'url' => ['admin.post.index'],
+        ],
+        'events' => [
+            'name' => 'Events',
+            'enabled' => true,
+            'url' => ['admin.event.index'],
         ],
         'annoucements' => [
             'name' => 'Annoucements',

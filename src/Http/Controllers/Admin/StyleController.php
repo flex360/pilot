@@ -20,6 +20,6 @@ class StyleController extends AdminController
             'method' => 'put',
         );
 
-        return View::make('admin.styles.index', compact('site', 'formOptions'));
+        return View::make('pilot::admin.styles.index', compact('site', 'formOptions'));
     }
 }

@@ -58,7 +58,7 @@ class MediaController extends Controller
 
         $media = Media::whereIn('id', $mediaIdsWithoutConversions)->get();
 
-        return view('admin.media.fix', compact('media'));
+        return view('pilot::admin.media.fix', compact('media'));
     }
 
     public function replace()

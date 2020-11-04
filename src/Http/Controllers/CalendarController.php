@@ -5,17 +5,9 @@ namespace Flex360\Pilot\Http\Controllers;
 use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Event;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\Console\Input\Input;
 
 class CalendarController extends Controller
 {
-    public function __construct()
-    {
-        if (!config('plugins.events.enabled')) {
-            abort(404);
-        }
-    }
-
     public function index()
     {
         $events = Event::whereRaw('events.end >= NOW()')
@@ -27,12 +19,12 @@ class CalendarController extends Controller
             'title' => 'Upcoming Events'
         ]);
 
-        return view('frontend.calendar.index', compact('events'));
+        return view('pilot::frontend.calendar.index', compact('events'));
     }
 
     public function month()
     {
-        return view('frontend.calendar.month');
+        return view('pilot::frontend.calendar.month');
     }
 
     public function event($id, $slug)
@@ -47,12 +39,12 @@ class CalendarController extends Controller
             'title' => $event->title
         ]);
 
-        return view('frontend.calendar.event', compact('event'));
+        return view('pilot::frontend.calendar.event', compact('event'));
     }
 
     public function tagged($id, $tagged)
     {
-        $events = Event::join('event_tag', 'posts.id', '=', 'event_tag.event_id')
+        $events = Event::join('event_tag', 'events.id', '=', 'event_tag.event_id')
                 ->where('event_tag.tag_id', '=', $id)
                 ->whereRaw('events.end >= NOW()')
                 ->orderBy('events.start', 'asc')
@@ -62,14 +54,14 @@ class CalendarController extends Controller
             'title' => 'Events tagged ' . $tagged
         ]);
 
-        return view('frontend.blog.index', compact('events'));
+        return view('pilot::frontend.calendar.index', compact('events'));
     }
 
     public function json()
     {
-        $start = Input::get('start') . ' 00:00:00';
+        $start = request()->input('start') . ' 00:00:00';
 
-        $end = Input::get('end') . ' 23:59:59';
+        $end = request()->input('end') . ' 23:59:59';
 
         $events = Event::whereBetween('start', [$start, $end])
                     ->orderBy('start', 'asc')

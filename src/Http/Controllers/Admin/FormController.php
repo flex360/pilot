@@ -12,7 +12,7 @@ class FormController extends Controller
     {
         $forms = WufooForm::getForms();
 
-        return view('admin.forms.index', compact('forms'));
+        return view('pilot::admin.forms.index', compact('forms'));
     }
 
     public function entries($hash)
@@ -25,7 +25,7 @@ class FormController extends Controller
 
         $columns = $wufoo->getColumns(5);
 
-        return view('admin.forms.entries', compact('wufoo', 'entries', 'columns'));
+        return view('pilot::admin.forms.entries', compact('wufoo', 'entries', 'columns'));
     }
 
     public function entry($hash, $id)
@@ -36,7 +36,7 @@ class FormController extends Controller
 
         $entry = \MagicWufooFormEntry::find($id);
 
-        return view('admin.forms.entry', compact('wufoo', 'entry'));
+        return view('pilot::admin.forms.entry', compact('wufoo', 'entry'));
     }
 
     public function webhook($hash)
@@ -59,7 +59,7 @@ class FormController extends Controller
     {
         $form = WufooForm::make($hash);
 
-        return view('admin.forms.configuration', compact('form'));
+        return view('pilot::admin.forms.configuration', compact('form'));
     }
 
     public function sync($hash)

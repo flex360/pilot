@@ -142,12 +142,12 @@
                                 <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">{{ config('pilot.plugins')['pages']['name'] }}</a></li>
                             @endif
     
-                            @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins')['events']['enabled'])
-                                <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">{{ config('pilot.plugins')['events']['name'] }}</a></li>
-                            @endif
-    
                             @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins')['news']['enabled'])
                                 <li class="nav-item {{ Request::is('pilot/post*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.post.index') }}">{{ config('pilot.plugins')['news']['name'] }}</a></li>
+                            @endif
+
+                            @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins')['events']['enabled'])
+                                <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">{{ config('pilot.plugins')['events']['name'] }}</a></li>
                             @endif
     
                             @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins')['annoucements']['enabled'])

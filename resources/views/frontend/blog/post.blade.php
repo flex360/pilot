@@ -15,7 +15,7 @@
         <meta property="og:image:height" content="{{ config('app.social_image_height') }}" />
     @endif
     <meta property="og:url" content="{{ $post->url() }}" />
-    <meta property="og:site_name" content="{{ Site::getCurrent()->name }}" />
+    <meta property="og:site_name" content="{{ Flex360\Pilot\Pilot\Site::getCurrent()->name }}" />
     <meta property="og:description" content="{{ htmlspecialchars($post->getOpenGraphDescription()) }}" />
     <meta property="og:type" content="article" />
 
@@ -33,6 +33,6 @@
 
 @section('content')
 
-    @include('frontend.blog.partials.post', compact('post'))
+    @include('pilot::frontend.blog.partials.post', compact('post'))
 
 @stop

@@ -34,6 +34,6 @@ class AuthController extends AdminController
 
     public function denied()
     {
-        return view('admin.auth.denied');
+        return view('pilot::admin.auth.denied');
     }
 }

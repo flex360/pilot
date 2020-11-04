@@ -365,7 +365,7 @@ class Page extends Model implements HasMedia
 
         $breadcrumbs = $this->getBreadcrumbs();
 
-        return view('partials.breadcrumbs', compact('page', 'breadcrumbs'));
+        return view('pilot::partials.breadcrumbs', compact('page', 'breadcrumbs'));
     }
 
     public function renderTree($selectList = null)

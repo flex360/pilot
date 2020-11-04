@@ -23,7 +23,8 @@ class AnnoucementController extends DynamoController
 
                     // form
                     ->text('headline', [
-                        'help' => 'Suggest keeping to 5 words or less'
+                        'help' => 'Suggest keeping to 5 words or less',
+                        'attributes' => ['id' => 'headline']
                     ])
                     ->text('short_description', [
                         'help' => 'Not required. Suggest keeping to 10 words or less if used.'

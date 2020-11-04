@@ -51,5 +51,6 @@ class Kernel extends HttpKernel
         'auth.admin' => \App\Http\Middleware\AuthenticateAdmin::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'pilot.module' => \App\Http\Middleware\PilotModuleEnabledMiddleware::class,
     ];
 }

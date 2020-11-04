@@ -8,13 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
-    public function __construct()
-    {
-        if (!config('plugins.news.enabled')) {
-            abort(404);
-        }
-    }
-
+    
     public function index()
     {
         $posts = Post::published()
@@ -25,7 +19,7 @@ class BlogController extends Controller
             'title' => 'News'
         ]);
 
-        return view('frontend.blog.index', compact('posts'));
+        return view('pilot::frontend.blog.index', compact('posts'));
     }
 
     public function loadMorePostIntoIndex()
@@ -38,7 +32,7 @@ class BlogController extends Controller
             'title' => 'News'
         ]);
 
-        return view('frontend.blog.loadMorePost', compact('posts'));
+        return view('pilot::frontend.blog.loadMorePost', compact('posts'));
     }
 
     public function post($id, $slug)
@@ -55,7 +49,7 @@ class BlogController extends Controller
 
         $detail = true;
 
-        return view('frontend.blog.post', compact('post', 'detail'));
+        return view('pilot::frontend.blog.post', compact('post', 'detail'));
     }
 
     public function tagged($id, $slug)
@@ -75,7 +69,7 @@ class BlogController extends Controller
             'title' => 'Blog Posts: ' . $slug,
         ]);
 
-        return view('frontend.blog.index', compact('posts'));
+        return view('pilot::frontend.blog.index', compact('posts'));
     }
 
     public function loadMorePostIntoTagged($id, $slug)
@@ -95,7 +89,7 @@ class BlogController extends Controller
             'title' => 'Blog Posts: ' . $slug,
         ]);
 
-        return view('frontend.blog.loadMorePost', compact('posts'));
+        return view('pilot::frontend.blog.loadMorePost', compact('posts'));
     }
 
     public function rss()
@@ -103,7 +97,7 @@ class BlogController extends Controller
         $posts = Post::latest(20);
 
         return response()
-            ->view('frontend.blog.rss', compact('posts'))
+            ->view('pilot::frontend.blog.rss', compact('posts'))
             ->header('Content-Type', 'application/rss+xml');
     }
 }

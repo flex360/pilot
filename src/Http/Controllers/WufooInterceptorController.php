@@ -28,6 +28,6 @@ class WufooInterceptorController extends Controller
 
         $interceptor->loadData(request()->all());
 
-        return view('frontend.wufoo.confirm', compact('interceptor'));
+        return view('pilot::frontend.wufoo.confirm', compact('interceptor'));
     }
 }

@@ -15,6 +15,6 @@ class LearnController extends Controller
             'title' => 'Learn'
         ]);
 
-        return view('admin.learn.' . $view);
+        return view('pilot::admin.learn.' . $view);
     }
 }

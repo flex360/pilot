@@ -26,6 +26,7 @@ use Flex360\Pilot\Console\Commands\SyncNewsFeeds;
 use Flex360\Pilot\Http\Middleware\BeforeMiddleware;
 use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
 use Flex360\Pilot\Http\Middleware\BeforeBackendMiddleware;
+use Flex360\Pilot\Http\Middleware\PilotModuleEnabledMiddleware;
 
 class PilotServiceProvider extends ServiceProvider
 {
@@ -49,6 +50,7 @@ class PilotServiceProvider extends ServiceProvider
         // publish configurations
         $this->publishes([
             __DIR__ . '/../../config/dynamo.php' => config_path('dynamo.php'),
+            __DIR__ . '/../../config/forms.php' => config_path('forms.php'),
             __DIR__ . '/../../config/ignition.php' => config_path('ignition.php'),
             __DIR__ . '/../../config/medialibrary.php' => config_path('medialibrary.php'),
             __DIR__ . '/../../config/pilot.php' => config_path('pilot.php'),
@@ -93,6 +95,7 @@ class PilotServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('auth.admin', AuthenticateAdmin::class);
         $router->aliasMiddleware('backend', BeforeBackendMiddleware::class);
+        $router->aliasMiddleware('pilot.module', PilotModuleEnabledMiddleware::class);
         $router->pushMiddlewareToGroup('pilot.global', BeforeMiddleware::class);
 
         class_alias(UrlHelper::class, 'UrlHelper');

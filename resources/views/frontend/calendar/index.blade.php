@@ -11,7 +11,7 @@
 
         @foreach ($events as $event)
 
-            @include('frontend.calendar.partials.event', compact('event'))
+            @include('pilot::frontend.calendar.partials.event', compact('event'))
 
         @endforeach
 

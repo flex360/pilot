@@ -1,4 +1,6 @@
-<?php $detail = isset($detail) ? $detail : false; ?>
+@php
+    $detail = isset($detail) ? $detail : false;
+@endphp
 
 <h1>{!! $detail ? $post->title : $post->link() !!}</h1>
 

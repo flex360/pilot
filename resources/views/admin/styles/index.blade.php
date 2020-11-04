@@ -28,8 +28,7 @@
                         @elseif ($options['type'] == 'font')
                             {!! Form::select('css[' . $name . ']', $options['options'], $site->getCssProperty($name), array('class' => 'form-control ' . @$options['class'])) !!}
                         @elseif ($options['type'] == 'image')
-
-                            {{ Uploader::input('css[' . $name . ']', null, $site->getCssProperty($name), null, []) }}
+                            {{ Flex360\Pilot\Pilot\Uploader::input('css[' . $name . ']', null, $site->getCssProperty($name), null, []) }}
                         @else
                             {!! Form::$options['type']('css[' . $name . ']', $site->getCssProperty($name), array('class' => 'form-control ' . @$options['class'])) !!}
                         @endif
@@ -50,7 +49,7 @@
 
         {!! Form::close() !!}
 
-        {!! Uploader::helper() !!}
+        {!! Flex360\Pilot\Pilot\Uploader::helper() !!}
 
     </div>
 
