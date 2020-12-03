@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "laravel/framework": "^6.0|^7.0",
+        "laravel/framework": "^6.0|^7.0|^8.0",
         "spatie/laravel-medialibrary": "^7.0.0",
         "doctrine/dbal": "^2.10",
         "laravelcollective/html": "^6.0",
