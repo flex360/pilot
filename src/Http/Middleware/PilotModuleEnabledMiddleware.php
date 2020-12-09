@@ -21,6 +21,9 @@ class PilotModuleEnabledMiddleware
         // create arrays of routeNames for each Pilot module to check if Current route is equal to them
         $blogRouteNames = ['blog', 'blog.post', 'blog.tagged', 'rss', 'blog.more', 'blog.moreTagged'];
         $eventRoutes = ['calendar', 'calendar.month', 'calendar.json', 'calendar.event', 'calendar.tagged'];
+        $resourceRoutes = ['resource.index'];
+        $employeeRoutes = ['employee.index'];
+        $departmentRoutes = ['department.index'];
         // if the current route is a Pilot module route, but that module is disabled,
         // abort this request and return 404 response
         
@@ -34,6 +37,27 @@ class PilotModuleEnabledMiddleware
         // Events module check
         if (in_array($currentRouteName, $eventRoutes)) {
             if (!config('pilot.plugins')['events']['enabled'] === true){
+                abort(404);
+            }
+        }
+
+        // Resources module check
+        if (in_array($currentRouteName, $resourceRoutes)) {
+            if (!config('pilot.plugins')['resources']['enabled'] === true){
+                abort(404);
+            }
+        }
+
+        // Employee module check
+        if (in_array($currentRouteName, $employeeRoutes)) {
+            if (!config('pilot.plugins')['employees']['enabled'] === true){
+                abort(404);
+            }
+        }
+
+        // Department module check
+        if (in_array($currentRouteName, $departmentRoutes)) {
+            if (!config('pilot.plugins')['employees']['children']['departments']['enabled'] === true){
                 abort(404);
             }
         }

@@ -13,6 +13,7 @@ use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
@@ -23,7 +24,8 @@ class Event extends Model implements HasMedia
         UserHtmlTrait,
         HasMediaTrait,
         SoftDeletes,
-        HasEmptyStringAttributes;
+        HasEmptyStringAttributes,
+        PilotTablePrefix;
 
     protected $table = 'events';
 
@@ -53,7 +55,7 @@ class Event extends Model implements HasMedia
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, $this->getPrefix() . 'event_tag');
     }
 
     /**

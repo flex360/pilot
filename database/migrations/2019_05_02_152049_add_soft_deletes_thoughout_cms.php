@@ -1,5 +1,8 @@
 <?php
 
+use Flex360\Pilot\Pilot\Page;
+use Flex360\Pilot\Pilot\Post;
+use Flex360\Pilot\Pilot\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,15 +16,15 @@ class AddSoftDeletesThoughoutCms extends Migration
      */
      public function up()
      {
-         Schema::table('pages', function (Blueprint $table) {
+         Schema::table((new Page)->getTable(), function (Blueprint $table) {
              $table->softDeletes()->after('updated_at');
          });
 
-         Schema::table('events', function (Blueprint $table) {
+         Schema::table((new Event)->getTable(), function (Blueprint $table) {
              $table->softDeletes()->after('updated_at');
          });
 
-         Schema::table('posts', function (Blueprint $table) {
+         Schema::table((new Post)->getTable(), function (Blueprint $table) {
              $table->softDeletes()->after('updated_at');
          });
 
@@ -53,15 +56,15 @@ class AddSoftDeletesThoughoutCms extends Migration
       */
      public function down()
      {
-         Schema::table('pages', function (Blueprint $table) {
+         Schema::table((new Page)->getTable(), function (Blueprint $table) {
              $table->dropColumn('deleted_at');
          });
 
-         Schema::table('events', function (Blueprint $table) {
+         Schema::table((new Event)->getTable(), function (Blueprint $table) {
              $table->dropColumn('deleted_at');
          });
 
-         Schema::table('posts', function (Blueprint $table) {
+         Schema::table((new Post)->getTable(), function (Blueprint $table) {
              $table->dropColumn('deleted_at');
          });
 

@@ -83,7 +83,7 @@ class TagController extends Controller
         // set success message
         session()->flash('alert-success', 'Tag deleted successfully!');
 
-        return redirect()->route('admin.tag.index');
+        return redirect()->route('pilot::admin.tag.index');
     }
 
     public function mergeTags()
@@ -99,7 +99,7 @@ class TagController extends Controller
         $goodTag = Tag::find(request()->goodTag);
 
         foreach ($badTag->posts()->get() as $post) {
-            DB::table('post_tag')->insert(
+            DB::table(config('pilot.table_prefix') . 'post_tag')->insert(
                 ['tag_id' => $goodTag->id, 'post_id' => $post->id,]
             );
         }

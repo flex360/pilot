@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Page;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +13,7 @@ class CreatePagesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('pages', function(Blueprint $table)
+		Schema::create((new Page)->getTable(), function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('title');
@@ -27,8 +28,8 @@ class CreatePagesTable extends Migration {
 	        $table->integer('parent_id')->unsigned()->nullable();
 	        $table->integer('level')->default(0);
 	        $table->index(array('path', 'parent_id', 'level'));
-	        $table->foreign('parent_id')->references('id')->on('pages')->onDelete('CASCADE');
-		});
+	        $table->foreign('parent_id')->references('id')->on((new Page)->getTable())->onDelete('CASCADE');
+        });
 	}
 
 	/**
@@ -38,7 +39,7 @@ class CreatePagesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('pages');
+		Schema::drop((new Page)->getTable());
 	}
 
 }

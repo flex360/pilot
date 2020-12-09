@@ -27,12 +27,12 @@ class Tag extends Model
 
     public function posts()
     {
-        return $this->belongsToMany(Post::class);
+        return $this->belongsToMany(Post::class, config('pilot.table_prefix') . 'post_tag');
     }
 
     public function events()
     {
-        return $this->belongsToMany(Event::class);
+        return $this->belongsToMany(Event::class, config('pilot.table_prefix') . 'event_tag');
     }
 
     public function url()

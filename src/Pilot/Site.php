@@ -189,6 +189,7 @@ class Site extends Model implements HasMedia
         // set site to null for default
         $site = new Site;
         Config::set('site', $site);
+        
 
         // look for this site
         foreach ($sites as $s) {
@@ -197,6 +198,7 @@ class Site extends Model implements HasMedia
                 Config::set('site', $site);
             }
         }
+        
 
         // if there is only one site, use it fool
         if ($sites->count() == 1) {
@@ -424,6 +426,7 @@ class Site extends Model implements HasMedia
         if (self::isBackend()) {
             // $learnPage = Page::where('title', 'CMS Guides')->first();
             $learnPage = Cache::rememberForever('pilot-learn-root', function () {
+                
                 return Page::findByPath('/learn');
             });
 
@@ -484,11 +487,9 @@ class Site extends Model implements HasMedia
 
                     $page->title = $data['title'];
                     if ($page->title == 'CMS Introduction') {
-                        // dd('inside cms intro page script');
                         $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
                     }
                     if ($page->title == 'Internal Page Layout') {
-                        // dd('inside Internal Page Layout page script');
                         $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
                     }
                     $page->save();

@@ -118,11 +118,27 @@
                         <i style="font-size: 16px;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
                         title="You can either search and select tags that already in the system or create new tags by typing out 'Dogs' for example and pressing Enter."></i>
 
-                        <select class="form-control chosen-select" name="tags[]" multiple="true" data-placeholder="Choose Tags">
-                            @foreach ($tags as $tagID =>$tagName)
-                                <option value="{{ $tagID }}" {{ $item->tags()->pluck('id')->search($tagID) !== false ? 'selected' : null }}>{{ $tagName }}</option>
-                            @endforeach
-                        </select>
+                        
+                        {!! Form::select('tags[]', $tags, null, ['multiple' => true, 'class' => 'form-control chosen-select']) !!}
+
+                    </div>
+
+                    <div class="form-group">
+
+                        {!! Form::label('sticky', 'Sticky Post?') !!}
+
+                        {{-- <i style="font-size: 16px;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
+                        title="You can either search and select tags that already in the system or create new tags by typing out 'Dogs' for example and pressing Enter."></i> --}}
+
+                        
+
+                        
+                        {!! Form::checkbox('sticky') !!}
+                        <div class="help-block">
+                            Check this to keep at the top of your news feed until it's un-checked.<br>
+
+                            If multiple posts are marked "sticky" then they will be displayed from newest to oldest before the "live" list begins. (We recommend a max of 3 sticky posts at any given time)
+                        </div>
 
                     </div>
 

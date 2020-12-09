@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Event;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +13,7 @@ class CreateEventsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('events', function(Blueprint $table)
+        Schema::create((new Event)->getTable(), function(Blueprint $table)
         {
             $table->increments('id');
             $table->string('title', 255);
@@ -24,10 +25,11 @@ class CreateEventsTable extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('event_tag', function(Blueprint $table)
+        // pivot table : event_tag
+        Schema::create(config('pilot.table_prefix') . 'event_tag', function(Blueprint $table)
         {
             $table->integer('event_id')->unsigned()->nullable();
-            $table->foreign('event_id')->references('id')->on('events');
+            $table->foreign('event_id')->references('id')->on((new Event)->getTable());
 
             $table->integer('tag_id')->unsigned()->nullable();
             $table->foreign('tag_id')->references('id')->on('tags');
@@ -41,8 +43,8 @@ class CreateEventsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('event_tag');
-        Schema::drop('events');
+        Schema::drop(config('pilot.table_prefix') . 'event_tag');
+        Schema::drop((new Event)->getTable());
     }
 
 }

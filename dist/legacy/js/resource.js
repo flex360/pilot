@@ -1,0 +1,2 @@
+var pdf_url = document.querySelector('label[title="Position: 30"]').innerHTML = '<div class="required">Upload or Link Resource</div>';
+var categories = document.querySelector('label[title="Position: 90"]').innerHTML = '<div class="required">Resource Categories</div>';

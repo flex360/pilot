@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,7 +14,7 @@ class ChangeShortDescriptionOnEventsToVarchar extends Migration
      */
     public function up()
     {
-        Schema::table('events', function (Blueprint $table) {
+        Schema::table((new Event)->getTable(), function (Blueprint $table) {
             $table->string('short_description')->change();
         });
     }
@@ -25,7 +26,7 @@ class ChangeShortDescriptionOnEventsToVarchar extends Migration
      */
     public function down()
     {
-        Schema::table('events', function (Blueprint $table) {
+        Schema::table((new Event)->getTable(), function (Blueprint $table) {
             $table->text('short_description')->change();
         });
     }

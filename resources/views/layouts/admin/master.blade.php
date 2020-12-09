@@ -59,6 +59,10 @@
                             <li class="nav-item {{ Request::is('pilot/annoucement*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.annoucement.index') }}">{{ config('pilot.plugins')['annoucements']['name'] }}</a></li>
                         @endif
 
+                        @if (isset(config('pilot.plugins')['resources']) && config('pilot.plugins')['resources']['enabled'])
+                                <li class="nav-item {{ Request::is('pilot/resource*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.resource.index', ['view' => 'published']) }}">{{ config('pilot.plugins')['resources']['name'] }}</a></li>
+                        @endif
+
                         @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins')['forms']['enabled'] && WufooForm::hasForms())
                             <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">{{ config('pilot.plugins')['forms']['name'] }}</a></li>
                         @endif
@@ -122,6 +126,10 @@
 
             @else <!-- if backend_side_bar_layout is enabled, do this instead -->
 
+            {{--********************************
+            *     SIDEBAR LAYOUT BEGINS    *
+            ******************************** --}}
+
             <body class="body-sidebar">
             <!-- First render the top navbar like normal, but don't include module links -->
             <header>
@@ -134,6 +142,11 @@
                     @if (! empty($currentSite))
                     <a class="navbar-brand" href="{{ route('admin.page.index') }}">{{ $currentSite->name }}</a>
                     @endif
+
+                    {{--*****************************************************************
+                    *     NOTE THIS SECTION IS ONLY DISPLAY ON THE SIDEBAR LAYOUT       *
+                    *                     IF ON TABLET OR MOBILE                        *
+                    ******************************************************************** --}}
     
                     <div class="collapse navbar-collapse" id="collapse_target">
                         <!-- this menu is tablet and mobile only -->
@@ -152,6 +165,10 @@
     
                             @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins')['annoucements']['enabled'])
                                 <li class="nav-item {{ Request::is('pilot/annoucement*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.annoucement.index') }}">{{ config('pilot.plugins')['annoucements']['name'] }}</a></li>
+                            @endif
+
+                            @if (isset(config('pilot.plugins')['resources']) && config('pilot.plugins')['resources']['enabled'])
+                                <li class="nav-item {{ Request::is('pilot/resource*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.resource.index', ['view' => 'published']) }}">{{ config('pilot.plugins')['resources']['name'] }}</a></li>
                             @endif
     
                             @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins')['forms']['enabled'] && WufooForm::hasForms())
@@ -207,20 +224,13 @@
                                 @endif
                             </ul>
 
+                            <!-- Froala plugin for downloading html textarea as a pdf -->
+                            <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+
+                            <!-- profile-menu that shows the signout button -->
                             @php
                                 $user = auth()->user();
                             @endphp
-                            <!-- Sidebar profile icon -->
-                            {{-- <a class="sidebar-profile-icon" href="/">
-                                <div class="sidebar-profile-icon-container">
-                                    {{ $user->name != null ? substr($user->name, 0, 1) : 'U' }}
-                                </div>
-                            </a> --}}
-
-
-
-    <!-- Froala plugin for downloading html textarea as a pdf -->
-    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
                             <div id="profile-menu" class="order-1 order-lg-12 ml-auto">
                                 <div class="dropdown-toggle account" role="button" id="dropdownMenuLink" data-display="static" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <a class="sidebar-profile-icon" href="/">
@@ -229,18 +239,11 @@
                                         </div>
                                     </a>
                                 </div>
-                    
+
                                 <div class="dropdown-menu dropdown-menu-center dropdown-menu-lg-right px-3 py-3" aria-labelledby="dropdownMenuLink" style="background-color: #222529;">
                                     <a class="d-block" href="/pilot/logout" style="color: white;">Sign Out</a>
                                 </div>
-                              </div>
-
-
-
-
-
-
-
+                            </div>
 
                         </div>
     
@@ -267,10 +270,47 @@
                                 if (isset($settings['enabled']) && $settings['enabled']) {
                                     if (isset($settings['url']) && is_array($settings['url'])) {
                                         $url = route(...$settings['url']);
+                                        if (isset($settings['view']) && $settings['view'] != null ) {
+                                            $url = route($settings['url'][0], ['view' => $settings['view']]);
+                                        }
                                     } else {
-                                        $url = $settings['url'] ?? '';
+                                        if (isset($settings['view']) && $settings['view'] != null ) {
+                                            $url = $settings['url'] . '?view=' . $settings['view']  ?? '';
+                                        } else {
+                                            $url = $settings['url'] ?? '';
+                                        }
                                     }
-                                    $navItems[] = PilotNavItem::make($settings['name'], $url);
+                                    // create parent item
+                                    $parentNavItem = PilotNavItem::make($settings['name'], $url, $settings['routePattern'], null, $settings['target']);
+
+                                    // check if current plugin we are looping thru has children NavItems, if so, add it to the parentNavItem
+                                    if ($settings['children'] != null) {
+                                        // create array of children NavItems
+                                        $childrenNavItems = [];
+
+                                        foreach ($settings['children'] as $key => $child) {
+                                            if ($child['enabled']) {
+                                                if (isset($child['url']) && is_array($child['url'])) {
+                                                    $url = route(...$child['url']);
+                                                    if (isset($child['view']) && $child['view'] != null ) {
+                                                        $url = route($child['url'][0], ['view' => $child['view']]);
+                                                    }
+                                                } else {
+                                                    if (isset($child['view']) && $child['view'] != null ) {
+                                                        $url = $child['url'] . '?view=' . $child['view']  ?? '';
+                                                    } else {
+                                                        $url = $child['url'] ?? '';
+                                                    }
+                                                }
+
+                                                $childrenNavItems[] = PilotNavItem::make($child['name'], $url, $child['routePattern'], null, $child['target']);
+                                            }
+                                        }
+                                        $parentNavItem->addChildren(...$childrenNavItems);
+                                    }
+                                    
+                                    //finally add this Parent item with attached children to the navItems array
+                                    $navItems[] = $parentNavItem;
                                 }
                             }
 
@@ -282,21 +322,7 @@
                         <!-- this menu is destop view right under the default plugin modules -->
                         @include('pilot::admin.partials.modulesSidebar')
 
-
-                        <!-- List Group END-->
-                        {{-- <hr style="
-                        margin: 20px;
-                        border-top-color: rgba(0, 0, 0, 0.1);
-                        border-top-style: solid;
-                        border-top-width: 1px;
-                        border-top: 1px solid rgba(0, 0, 0, 0.1);
-                        border-style: inset;
-                        border-width: 1px;"> --}}
-
-
                         <!-- Second half of the sidebar modules -->
-                        {{-- <ul class=""> --}}
-                            {{-- <div class="second-half-sidebar"> --}}
                             <div class="pilot-sidebar-lower">
                             @php
                                 $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*', null, '_blank');
@@ -320,89 +346,6 @@
                             ) !!}
                             </div>
                         </div>
-
-                                <!-- settings -->
-                                {{-- <a href="{{ route('admin.setting.index') }}" class="{{ Request::is('pilot/setting*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <i class="fa fa-cogs" style="margin-right: 7px;"></i><span class="menu-collapsed" style="font-weight: 200;">Settings</span>
-                                    </div>
-                                </a> --}}
-
-                                <!-- Learn more pages -->
-                                {{-- <a href="#submenu3" data-toggle="collapse" aria-expanded="false" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
-                                    <div class="d-flex w-100 justify-content-start align-items-center">
-                                        <i class="fa fa-graduation-cap" style="margin-right: 7px;"></i><span class="menu-collapsed">Learn</span>
-                                        <i class="fas fa-chevron-right ml-auto" style="font-size: 16px;"></i>
-                                    </div>
-                                </a>
-
-                                <div id="submenu3" class="collapse sidebar-submenu">
-                                    <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
-                                        @foreach ($learnPages as $learnPage)
-                                        <li>
-                                            {!! $learnPage->getLink(['class' => 'active secondhalf sidebar list-group-item list-group-item-action text-secondary', 'target' => '_blank']) !!}
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </div> --}}
-
-                                {{-- <collapsable 
-                                    label="Admin"
-                                    :expanded="true"
-                                >
-
-                                    <template v-slot:label="$props">
-                                        <a href="#submenu4" data-toggle="collapse" aria-expanded="true" onclick="rotateIcon(this.lastElementChild.lastElementChild)" class="submenu-toggler secondhalf sidebar list-group-item list-group-item-action flex-column align-items-start" style="background-color: #474b54 !important;">
-                                            <div class="d-flex w-100 justify-content-start align-items-center">
-                                                <span class="menu-collapsed" style="font-weight: 200;">Admin</span>
-                                                <i class="fas fa-chevron-right ml-auto" style="font-size: 13px;"></i>
-                                            </div>
-                                        </a>
-                                        <div class="flex items-center border-iron border-b p-2 text-2xl cursor-pointer" style="display: flex; justify-content: space-between; color: #fff;">
-                                            <div class="text-left">Admin</div>
-                                            <div class="">
-                                                <svg width="17" height="11" xmlns="http://www.w3.org/2000/svg" style="transition: transform 0.2s linear 0s;" :style="{ transform: $props.collapsed ? '' : 'rotate(180deg)' }">
-                                                    <path stroke="currentColor" stroke-width="3" d="M1 2l7.547 6.534L16.017 2" fill="none" fill-rule="evenodd"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        <div id="submenu4" class="sidebar-submenu collapse text-left">
-                                            <ul class="secondhalf" style="background: #474b54 !important; padding: 0px 5px;">
-                                                <li>
-                                                    <a href="{{ route('admin.site.index') }}" class="{{ Request::is('pilot/site*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                        <span class="menu-collapsed">Websites</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('admin.user.index') }}" class="{{ Request::is('pilot/user*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                        <span class="menu-collapsed">Users</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ route('admin.role.index') }}" class="{{ Request::is('pilot/role*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                        <span class="menu-collapsed">Roles</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="/pilot/clear" class="{{ Request::is('pilot/clear*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                        <span class="menu-collapsed">Clear Application Cache</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="/pilot/logout" class="{{ Request::is('pilot/logout*')  ? 'active' : null }} secondhalf sidebar list-group-item list-group-item-action text-secondary">
-                                                        <span class="menu-collapsed">Logout</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </template>
-
-                                    
-                                </collapsable> --}}
-
-                            {{-- </div> --}}
-                        {{-- </ul> --}}
                     </div>
 
                     <!-- sidebar-container END -->

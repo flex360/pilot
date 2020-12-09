@@ -42,6 +42,9 @@
           <li class="nav-item">
             <a class="nav-link {{ $view == 'drafts' ? 'active' : '' }}" href="{{ route('admin.post.draft') }}">Drafts <span class="badge badge-pill badge-danger">{{ $draftsCount }}</span></a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {{ $view == 'sticky' ? 'active' : '' }}" href="{{ route('admin.post.sticky') }}">Sticky</a>
+          </li>
        </ul>
    </div>
 
@@ -62,6 +65,10 @@
 
             @if ($view == 'drafts')
             <p style="margin-top: 0px; padding: 15px">You have no drafted posts right now! <a href="{{ route('admin.post.create') }}">Add a post here.</a></p>
+            @endif
+
+            @if ($view == 'sticky')
+            <p style="margin-top: 0px; padding: 15px">You have no sticky posts right now! You can mark a post sticky by checking the Sticky Post box while editing a Post</p>
             @endif
 
         @else

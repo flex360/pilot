@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\TypeableTrait;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
@@ -25,7 +26,8 @@ class Page extends Model implements HasMedia
         SocialMetadataTrait,
         HasMediaTrait,
         SoftDeletes,
-        HasEmptyStringAttributes;
+        HasEmptyStringAttributes,
+        PilotTablePrefix;
 
     public static $current = null;
 

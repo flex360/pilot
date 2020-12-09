@@ -11624,6 +11624,11 @@ input[readonly] {
   color: #fff;
 }
 
+.required:after {
+  content: " *";
+  color: red;
+}
+
 .panel-body .table {
   margin-bottom: 0;
 }

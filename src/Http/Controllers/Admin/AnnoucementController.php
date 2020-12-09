@@ -3,7 +3,6 @@
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
 use App\Http\Requests;
-
 use Jzpeepz\Dynamo\Dynamo;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -50,7 +49,7 @@ class AnnoucementController extends DynamoController
                     ->addIndex('short_description')
                     ->addIndex('button_text')
                     ->addIndex('button_link')
-                    ->addIndex('updated_at', 'Last update')
+                    ->addIndex('updated_at', 'Last Edited')
                     ->addIndex('active', 'Status', function ($annoucement) {
                         if ($annoucement->status) {
                             return '<span class="badge alert-success">Active</span';

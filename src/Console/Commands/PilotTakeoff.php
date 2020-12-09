@@ -50,6 +50,11 @@ class PilotTakeoff extends Command
 
         $this->updateAppUrl();
 
+        $this->setPilotTablePrefix();
+
+        // this will be sure to get the pilot prefix varible from the .env file before migrating
+        $this->call('config:clear');
+
         // migrate the database
         $this->call('migrate');
 
@@ -60,11 +65,14 @@ class PilotTakeoff extends Command
         $this->addIgnitionVariablesToEnv();
 
         $this->vendorPublish();
+
+        // this will ensure the backendMiddleWare reruns and creates the new Pages
+        $this->call('cache:clear');
     }
 
     private function removeInitialLaravelFiles()
     {
-        $confirm = $this->confirm('Is this a new Laravel install?');
+        $confirm = $this->confirm('Is this a new Laravel install?', true);
 
         if ($confirm) {
             // remove default users table migration
@@ -88,24 +96,6 @@ class PilotTakeoff extends Command
             $updatedConfigFileContents = str_replace($searchTerm, $replaceTerm, $databaseConfig);
             file_put_contents(base_path('config/database.php'), $updatedConfigFileContents);
         }
-    }
-
-    private function vendorPublish()
-    {
-        // publish all the files needed to make Pilot work
-        $this->line('Copying support files...');
-        $this->callSilent('vendor:publish', [
-            '--provider' => 'Flex360\Pilot\Providers\PilotServiceProvider'
-        ]);
-        $this->line('Support files copied!');
-    }
-
-    private function updateAppUrl()
-    {
-        // update APP_URL in .env
-        $appUrl = 'APP_URL=' . $this->ask('App url (ie http://pilot.test)?');
-        $envContent = file_get_contents(base_path('.env'));
-        file_put_contents(base_path('.env'), str_replace('APP_URL=http://localhost', $appUrl, $envContent));
     }
 
     private function updateDatabaseCredentials()
@@ -139,6 +129,31 @@ class PilotTakeoff extends Command
         }
     }
 
+    private function updateAppUrl()
+    {
+        // update APP_URL in .env
+        $appUrl = 'APP_URL=' . $this->ask('App url (ie http://pilot.test)?');
+        $envContent = file_get_contents(base_path('.env'));
+        file_put_contents(base_path('.env'), str_replace('APP_URL=http://localhost', $appUrl, $envContent));
+    }
+
+    private function setPilotTablePrefix()
+    {
+        $confirm = $this->confirm('Do you want a Pilot Table Prefix? (This will prefix the table names for base migration, recommneded)', true);
+        if ($confirm) {
+            
+            $prefix = $this->anticipate('Prefix name? (Recommended: pilot_ )', ['pilot_']);
+            //this line create an empty PILOT_TABLE_PREFIX= variable in the env since it doesn't exist with base laravel install
+            file_put_contents(base_path('.env'), "\r\n\r\nPILOT_TABLE_PREFIX=", FILE_APPEND);
+            $envContent = file_get_contents(base_path('.env'));
+            $envContent = str_replace('PILOT_TABLE_PREFIX=', 'PILOT_TABLE_PREFIX=' . $prefix, $envContent);
+            file_put_contents(base_path('.env'), $envContent);
+        }
+
+        $this->info("Loading...");
+        sleep(1);
+    }
+
     private function updateAuthConfig()
     {
         // update config/auth.php
@@ -149,7 +164,7 @@ class PilotTakeoff extends Command
     private function createUser()
     {
         // create a new user
-        $confirm = $this->confirm('Would you like to create a user?');
+        $confirm = $this->confirm('Would you like to create a user?', true);
         if ($confirm) {
             $this->call('pilot:user');
         }
@@ -167,5 +182,15 @@ class PilotTakeoff extends Command
                 . "\r\n\r\nIGNITION_REMOTE_SITES_PATH=$remoteSitesPath\r\nIGNITION_LOCAL_SITES_PATH=$localSitesPath\r\n";
             file_put_contents(base_path('.env'), $envContent);
         }
+    }
+
+    private function vendorPublish()
+    {
+        // publish all the files needed to make Pilot work
+        $this->line('Copying support files...');
+        $this->callSilent('vendor:publish', [
+            '--provider' => 'Flex360\Pilot\Providers\PilotServiceProvider'
+        ]);
+        $this->line('Support files copied!');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+use Flex360\Pilot\Pilot\Post;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -19,14 +21,22 @@ class AddTags extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('post_tag', function(Blueprint $table)
+        Schema::create(config('pilot.table_prefix') . 'post_tag', function(Blueprint $table)
         {
             $table->integer('post_id')->unsigned()->nullable();
-            $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('post_id')->references('id')->on((new Post)->getTable());
 
             $table->integer('tag_id')->unsigned()->nullable();
             $table->foreign('tag_id')->references('id')->on('tags');
         });
+
+        // create test tag
+        DB::table('tags')->insert(
+            ['name' => 'Example Tag',
+             'created_at' => Carbon::now(),
+             'updated_at' => Carbon::now(),
+            ]
+        );
     }
 
     /**
@@ -36,7 +46,7 @@ class AddTags extends Migration {
      */
     public function down()
     {
-        Schema::drop('post_tag');
+        Schema::drop(config('pilot.table_prefix') . 'post_tag');
         Schema::drop('tags');
     }
 

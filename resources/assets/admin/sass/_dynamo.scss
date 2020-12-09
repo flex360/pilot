@@ -68,6 +68,12 @@
   color: #fff;
 }
 
+//Required astrisk next to form field label to indicate that field is required
+.required:after {
+    content:" *";
+    color: red;
+}
+
 //Styling for dynamo search label, panel-bodys, tables, and nav
 .panel-body .table {
     margin-bottom: 0;

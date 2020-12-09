@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Page;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -25,7 +26,7 @@ class CreateMenusTable extends Migration
             $table->foreign('menu_id')->references('id')->on('menus');
 
             $table->integer('page_id')->unsigned()->nullable();
-            $table->foreign('page_id')->references('id')->on('pages');
+            $table->foreign('page_id')->references('id')->on((new Page)->getTable());
 
             $table->integer('position')->unsigned()->default(999);
         });

@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Post;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +13,7 @@ class CreatePostsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('posts', function(Blueprint $table)
+        Schema::create((new Post)->getTable(), function(Blueprint $table)
         {
             $table->increments('id');
             $table->string('title', 255);
@@ -33,7 +34,7 @@ class CreatePostsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('posts');
+        Schema::drop((new Post)->getTable());
     }
 
 }

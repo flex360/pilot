@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Flex360\Pilot\Pilot\Page;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class AddIndexesToPages extends Migration
 {
@@ -13,7 +14,7 @@ class AddIndexesToPages extends Migration
      */
     public function up()
     {
-        Schema::table('pages', function (Blueprint $table) {
+        Schema::table((new Page)->getTable(), function (Blueprint $table) {
             $table->index('path');
             $table->index('site_id');
             $table->index('deleted_at');
@@ -28,7 +29,7 @@ class AddIndexesToPages extends Migration
      */
     public function down()
     {
-        Schema::table('pages', function (Blueprint $table) {
+        Schema::table((new Page)->getTable(), function (Blueprint $table) {
             //
         });
     }

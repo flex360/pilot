@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Page;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +13,7 @@ class AddTypeToPages extends Migration
      */
     public function up()
     {
-        Schema::table('pages', function (Blueprint $table) {
+        Schema::table((new Page)->getTable(), function (Blueprint $table) {
             $table->integer('type_id')->default(null);
         });
     }
@@ -24,7 +25,7 @@ class AddTypeToPages extends Migration
      */
     public function down()
     {
-        Schema::table('pages', function (Blueprint $table) {
+        Schema::table((new Page)->getTable(), function (Blueprint $table) {
             $table->dropColumn('type_id');
         });
     }

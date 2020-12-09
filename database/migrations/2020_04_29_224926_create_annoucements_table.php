@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Carbon\Carbon;
+use Flex360\Pilot\Pilot\Annoucement;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateAnnoucementsTable extends Migration
 {
@@ -14,7 +16,7 @@ class CreateAnnoucementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('annoucements', function (Blueprint $table) {
+        Schema::create((new Annoucement())->getTable(), function (Blueprint $table) {
             $table->increments('id');
             $table->string('headline');
             $table->string('short_description');
@@ -25,13 +27,15 @@ class CreateAnnoucementsTable extends Migration
             $table->softDeletes();
         });
 
-        // create the Standard exmaple Annoucement
-        DB::table('annoucements')->insert(
+        // create the Standard Example Annoucement
+        DB::table((new Annoucement())->getTable())->insert(
             ['headline' => 'Testing Alert Module',
              'short_description' => 'We\'re testing out our new alert module!',
              'button_text' => 'Did it work?',
              'button_link' => '/learn/alert-module-test',
              'status' => 1,
+             'created_at' => Carbon::now(),
+             'updated_at' => Carbon::now(),
             ]
         );
     }
@@ -43,6 +47,6 @@ class CreateAnnoucementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('annoucements');
+        Schema::dropIfExists((new Annoucement())->getTable());
     }
 }

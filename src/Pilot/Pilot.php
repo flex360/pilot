@@ -16,16 +16,16 @@ class Pilot
             Route::get('/css/theme.css', 'SiteController@css');
 
             // asset routes (these are used by Froala editor)
-            Route::get('/assets/get', ['as' => 'assets.get', 'uses' => 'Admin\AssetController@getAll']);
+            Route::get('/assets/get', 'Admin\AssetController@getAll')->name('assets.get');
             Route::group(['middleware' => ['auth.admin']], function () {
-                Route::post('/assets/upload', ['as' => 'assets.upload', 'uses' => 'Admin\AssetController@postUpload']);
-                Route::post('/assets/delete', ['as' => 'assets.delete', 'uses' => 'Admin\AssetController@postDelete']);
+                Route::post('/assets/upload', 'Admin\AssetController@postUpload')->name('assets.upload');
+                Route::post('/assets/delete', 'Admin\AssetController@postDelete')->name('assets.delete');
             });
 
             // // auth routes
-            Route::get('/pilot/logout', ['as' => 'admin.logout',      'uses' => 'Admin\AuthController@getLogout']);
-            Route::get('/pilot/login', ['as' => 'admin.login',       'uses' => 'Admin\AuthController@getLogin']);
-            Route::post('/pilot/login', ['as' => 'admin.login.post',  'uses' => 'Admin\AuthController@postLogin']);
+            Route::get('/pilot/logout', 'Admin\AuthController@getLogout')->name('admin.logout');
+            Route::get('/pilot/login', 'Admin\AuthController@getLogin')->name('admin.login');
+            Route::post('/pilot/login', 'Admin\AuthController@postLogin')->name('admin.login.post');
 
             // // frontend auth routes
             if (config('auth.allow_frontend_login') === true) {
@@ -43,12 +43,12 @@ class Pilot
                 }
             }
 
-            Route::get('/pilot/denied', ['as' => 'auth.denied', 'uses' => 'Admin\AuthController@denied']);
+            Route::get('/pilot/denied', 'Admin\AuthController@denied')->name('auth.denied');
 
             Route::group(['as' => 'admin.', 'prefix' => 'pilot', 'middleware' => ['auth.admin', 'backend']], function () {
-                Route::any('/', ['as' => 'page.index', 'uses' => 'Admin\PageController@index']);
-                Route::get('/page/{id}/sync', ['as' => 'page.sync', 'uses' => 'Admin\PageController@syncType']);
-                Route::post('/page/reorder', ['as' => 'page.reorder', 'uses' => 'Admin\PageController@reorder']);
+                Route::any('/', 'Admin\PageController@index')->name('page.index');
+                Route::get('/page/{id}/sync', 'Admin\PageController@syncType')->name('page.sync');
+                Route::post('/page/reorder', 'Admin\PageController@reorder')->name('page.reorder');
                 Route::post('/page/{page}/updateParent/{newParentPageId}', 'Admin\PageController@updateParent')
                     ->name('page.updateParentPageId');
                 Route::get('/page/select-list', 'Admin\PageController@selectList')->name('page.select-list');
@@ -74,13 +74,14 @@ class Pilot
                     return redirect('/pilot');
                 });
 
-                // Routes for News module     
+                // Backend Routes for Routes for News module     
+                Route::get('post/sticky', 'Admin\PostController@indexOfSticky')->name('post.sticky');
                 Route::get('post/scheduled', 'Admin\PostController@indexOfScheduled')->name('post.scheduled');
                 Route::get('post/drafts', 'Admin\PostController@indexOfDrafts')->name('post.draft');
                 Route::get('post/all', 'Admin\PostController@indexOfAll')->name('post.all');
                 Route::resource('post', 'Admin\PostController');
 
-                // Routes for Events module
+                // Backend Routes for Standard Events module
                 Route::get('event/scheduled', 'Admin\EventController@indexOfScheduled')->name('event.scheduled');
                 Route::get('event/drafts', 'Admin\EventController@indexOfDrafts')->name('event.draft');
                 Route::get('event/past', 'Admin\EventController@indexOfPast')->name('event.past');
@@ -88,14 +89,41 @@ class Pilot
                 Route::get('/event/{id}/copy', 'Admin\EventController@copy')->name('event.copy');
                 Route::resource('event', 'Admin\EventController');
 
-                // Standard Annoucement module
-                Route::get('activate-annoucement/{id}', ['as' => 'annoucement.activate', 'uses' => 'Admin\AnnoucementController@activate']);
+                // Backend Routes for Standard Annoucement module
+                Route::get('activate-annoucement/{id}', 'Admin\AnnoucementController@activate')
+                    ->name('annoucement.activate');
                 Route::get('annoucement/{id}/copy', 'Admin\AnnoucementController@copy')->name('annoucement.copy');
-                Route::get('annoucement/{id}/delete', 'Admin\AnnoucementController@destroy')->name('annoucement.destroy');
-                Route::get('annoucement/deactivate', 'Admin\AnnoucementController@deactivate')->name('annoucement.deactivate');
+                Route::get('annoucement/{id}/delete', 'Admin\AnnoucementController@destroy')
+                    ->name('annoucement.destroy');
+                Route::get('annoucement/deactivate', 'Admin\AnnoucementController@deactivate')
+                    ->name('annoucement.deactivate');
                 Route::resource('annoucement', 'Admin\AnnoucementController');
 
-                // Routes for Settings module
+                // Backend Routes for Standard Resources & Resource Category Module
+                Route::get('resource/{id}/copy', 'Admin\ResourceController@copy')->name('resource.copy');
+                Route::get('resource/{id}/delete', 'Admin\ResourceController@destroy')
+                    ->name('resource.destroy');
+                Route::resource('resource', 'Admin\ResourceController');
+                Route::get('resourcecategory/{id}/copy', 'Admin\ResourceCategoryController@copy')->name('resourceCategory.copy');
+                Route::get('resourcecategory/{id}/delete', 'Admin\ResourceCategoryController@destroy')
+                    ->name('resourceCategory.destroy');
+                Route::resource('resourcecategory', 'Admin\ResourceCategoryController');
+
+                // Backend Routes for Standard Employees & Departments Module
+                Route::get('employee/{id}/copy', 'Admin\EmployeeController@copy')->name('employee.copy');
+                Route::get('employee/{id}/delete', 'Admin\EmployeeController@destroy')
+                    ->name('employee.destroy');
+                Route::resource('employee', 'Admin\EmployeeController');
+                
+                Route::get('department/{id}/copy', 'Admin\DepartmentController@copy')->name('department.copy');
+                Route::get('department/{id}/delete', 'Admin\DepartmentController@destroy')
+                    ->name('department.destroy');
+                Route::get('/department-employees/{department}/staffers', 'Admin\DepartmentController@staffMembers')->name('department.staff');
+                Route::post('/department/reorderDepartments', 'Admin\DepartmentController@reorderDepartments')->name('department.reorder');
+                Route::post('/department-employees/{department}/staffers/reorderStaffWithinDepartments', 'Admin\DepartmentController@reorderStaffWithinDepartment')->name('departmentStaff.reorder');
+                Route::resource('department', 'Admin\DepartmentController');
+
+                // Backend Routes for Routes for Settings module
                 Route::resource('setting', 'Admin\SettingController');
                 Route::get('setting/{setting}', 'Admin\SettingController@settings')->name('setting.default');
 
@@ -105,20 +133,18 @@ class Pilot
 
                 Route::resource('pagetype', 'Admin\PageTypeController');
 
-                Route::post('/menu/{id}/reorder', ['as' => 'menu.reorder', 'uses' => 'Admin\MenuController@reorder']);
-                Route::get('/menu/{id}/items', ['as' => 'menu.items', 'uses' => 'Admin\MenuController@items']);
+                Route::post('/menu/{id}/reorder', 'Admin\MenuController@reorder')->name('menu.reorder');
+                Route::get('/menu/{id}/items', 'Admin\MenuController@items')->name('menu.items');
                 Route::resource('menu', 'Admin\MenuController');
 
-                Route::get('/style', ['as' => 'style.index', 'uses' => 'Admin\StyleController@index']);
+                Route::get('/style', 'Admin\StyleController@index')->name('style.index');
 
-                Route::get('/form', ['as' => 'form.index', 'uses' => 'Admin\FormController@index']);
-                Route::get('/form/{hash}/configuration', [
-                    'as' => 'form.configuration',
-                    'uses' => 'Admin\FormController@configuration'
-                ]);
-                Route::get('/form/{hash}/entries', ['as' => 'form.entries', 'uses' => 'Admin\FormController@entries']);
-                Route::post('/form/{hash}/sync', ['as' => 'form.sync', 'uses' => 'Admin\FormController@sync']);
-                Route::get('/form/{hash}/entry/{id}', ['as' => 'form.entry', 'uses' => 'Admin\FormController@entry']);
+                Route::get('/form', 'Admin\FormController@index')->name('form.index');
+                Route::get('/form/{hash}/configuration', 'Admin\FormController@configuration')
+                    ->name('form.configuration');
+                Route::get('/form/{hash}/entries', 'Admin\FormController@entries')->name('form.entries');
+                Route::post('/form/{hash}/sync', 'Admin\FormController@sync')->name('form.sync');
+                Route::get('/form/{hash}/entry/{id}', 'Admin\FormController@entry')->name('form.entry');
 
                 // media routes
                 Route::group(['prefix' => 'media'], function () {
@@ -141,43 +167,53 @@ class Pilot
                 /* ---- Dynamo Routes ---- */
             });
 
+            /********************************************************
+             *          END OF BACKEND ROUTES,                      *
+             *          BEGIN FRONTEND ROUTES                       *
+             *                                                      *
+             ********************************************************/
+
             // Route::post('/webhook/wufoo/{hash}', ['as' => 'form.webhook', 'uses' => 'Admin\FormController@webhook']);
 
-            // blog routes
+            
+            // - note that all pilot module routes must be wrapped in the pilot.module middleware to check if this route
+            // should be available on the frontend
             Route::group(['middleware' => ['pilot.module']], function () {
-                Route::get('/news', ['as' => 'blog', 'uses' => 'BlogController@index']);
-                Route::get('/news/post/{id}/{slug}', ['as' => 'blog.post', 'uses' => 'BlogController@post']);
-                Route::get('/news/tagged/{id}/{slug}', ['as' => 'blog.tagged', 'uses' => 'BlogController@tagged']);
-                Route::get('/rss.xml', ['as' => 'rss', 'uses' => 'BlogController@rss']);
+
+                // blog frontend routes 
+                Route::get('/news', 'BlogController@index')->name('blog');
+                Route::get('/news/post/{id}/{slug}', 'BlogController@post')->name('blog.post');
+                Route::get('/news/tagged/{id}/{slug}', 'BlogController@tagged')->name('blog.tagged');
+                Route::get('/rss.xml', 'BlogController@rss')->name('rss');
 
                 //Blog Routes for 'Load More Post' Button
-                Route::get('/load-more-news', ['as' => 'blog.more', 'uses' => 'BlogController@loadMorePostIntoIndex']);
-                Route::get('/load-more-tagged-news/{id}/{slug}', [
-                    'as' => 'blog.moreTagged',
-                    'uses' => 'BlogController@loadMorePostIntoTagged'
-                ]);
-            });
+                Route::get('/load-more-news', 'BlogController@loadMorePostIntoIndex')->name('blog.more');
+                Route::get('/load-more-tagged-news/{id}/{slug}', 'BlogController@loadMorePostIntoTagged')
+                    ->name('blog.moreTagged');
 
-            // calendar routes
-            Route::group(['middleware' => ['pilot.module']], function () {
-                Route::get('/calendar', ['as' => 'calendar', 'uses' => 'CalendarController@index']);
-                Route::get('/calendar/month', ['as' => 'calendar.month', 'uses' => 'CalendarController@month']);
-                Route::get('/calendar/json', ['as' => 'calendar.json', 'uses' => 'CalendarController@json']);
-                Route::get('/calendar/event/{id}/{slug}', ['as' => 'calendar.event', 'uses' => 'CalendarController@event']);
-                Route::get('/calendar/tagged/{id}/{slug}', ['as' => 'calendar.tagged', 'uses' => 'CalendarController@tagged']);
+                // calendar frontend routes
+                Route::get('/calendar', 'CalendarController@index')->name('calendar');
+                Route::get('/calendar/month', 'CalendarController@month')->name('calendar.month');
+                Route::get('/calendar/json', 'CalendarController@json')->name('calendar.json');
+                Route::get('/calendar/event/{id}/{slug}', 'CalendarController@event')->name('calendar.event');
+                Route::get('/calendar/tagged/{id}/{slug}', 'CalendarController@tagged')->name('calendar.tagged');
+
+                // resource frontend routes
+                Route::get('/resources', 'ResourceController@index')->name('resource.index');
+
+                // employee frontend routes
+                Route::get('/employees', 'EmployeeController@index')->name('employee.index');
+                Route::get('/department/{department}/{slug}', 'EmployeeController@departmentLandingPage')->name('department.index');
             });
 
             // sitemap routes
-            Route::get('/sitemap', ['as' => 'sitemap', 'uses' => 'SitemapController@index']);
-            Route::get('/sitemap.xml', ['as' => 'sitemap.xml', 'uses' => 'SitemapController@xml']);
+            Route::get('/sitemap', 'SitemapController@index')->name('sitemap');
+            Route::get('/sitemap.xml', 'SitemapController@xml')->name('sitemap.xml');
 
             //wufoo confirmation page
-            Route::post('/wufoo/{hash}/confirm', [
-                'as' => 'wufoo.confirm',
-                'uses' => 'WufooInterceptorController@confirm'
-            ]);
+            Route::post('/wufoo/{hash}/confirm', 'WufooInterceptorController@confirm')->name('wufoo.confirm');
 
-            Route::post('/page/auth', ['as' => 'page.auth', 'uses' => 'SiteController@pageAuth']);
+            Route::post('/page/auth', 'SiteController@pageAuth')->name('page.auth');
 
             Route::post('/form-handler', 'FormController@handler')->name('form.handler');
         });

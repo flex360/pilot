@@ -54,16 +54,15 @@ class BlogController extends Controller
 
     public function tagged($id, $slug)
     {
-        $posts = Post::join('post_tag', 'posts.id', '=', 'post_tag.post_id')
-                ->where('post_tag.tag_id', '=', $id)
+        $posts = Post::join(config('pilot.table_prefix', '') . 'post_tag', config('pilot.table_prefix', '') . 'posts.id', '=', config('pilot.table_prefix', '') . 'post_tag.post_id')
+                ->where(config('pilot.table_prefix', '') . 'post_tag.tag_id', '=', $id)
                 ->published()
-                ->where('posts.status', '=', 30)
-                ->orderBy('posts.published_on', 'desc')
+                ->where(config('pilot.table_prefix', '') . 'posts.status', '=', 30)
+                ->orderBy(config('pilot.table_prefix', '') . 'posts.published_on', 'desc')
                 ->simplePaginate(9);
 
         $slug = str_replace('-', ' ', $slug);
         $slug = ucwords($slug);
-        //dd($slug);
 
         Page::mimic([
             'title' => 'Blog Posts: ' . $slug,
@@ -74,16 +73,15 @@ class BlogController extends Controller
 
     public function loadMorePostIntoTagged($id, $slug)
     {
-        $posts = Post::join('post_tag', 'posts.id', '=', 'post_tag.post_id')
-                ->where('post_tag.tag_id', '=', $id)
+        $posts = Post::join(config('pilot.table_prefix', '') . 'post_tag', config('pilot.table_prefix', '') . 'posts.id', '=', config('pilot.table_prefix', '') . 'post_tag.post_id')
+                ->where(config('pilot.table_prefix', '') . 'post_tag.tag_id', '=', $id)
                 ->published()
-                ->where('posts.status', '=', 30)
-                ->orderBy('posts.published_on', 'desc')
+                ->where(config('pilot.table_prefix', '') . 'posts.status', '=', 30)
+                ->orderBy(config('pilot.table_prefix', '') . 'posts.published_on', 'desc')
                 ->simplePaginate(6);
 
         $slug = str_replace('-', ' ', $slug);
         $slug = ucwords($slug);
-        //dd($slug);
 
         Page::mimic([
             'title' => 'Blog Posts: ' . $slug,

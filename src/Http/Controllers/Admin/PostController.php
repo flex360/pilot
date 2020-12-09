@@ -111,6 +111,35 @@ class PostController extends AdminController
          return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
     }
 
+    public function indexOfSticky()
+    {
+          $draftedPost = Post::withoutGlobalScopes()
+                              ->draft()
+                              ->where('deleted_at', null)
+                              ->orderBy('published_on', 'desc');
+
+          //To dynamically set notification of how many drafts there are.
+          $draftsCount = $draftedPost->count();
+
+          $draftedPost = $draftedPost->paginate(20);
+
+          $query = Post::withoutGlobalScopes()
+                              ->where('sticky', 1)
+                              ->where('deleted_at', null)
+                              ->orderBy('published_on', 'desc');
+
+
+         $query = Post::filter($query);
+
+         $posts = $query->paginate(20);
+
+         $tags = Tag::orderBy('name', 'asc')->get();
+
+         $view = 'sticky';
+
+         return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
+    }
+
     public function indexOfAll()
     {
          $draftedPost = Post::withoutGlobalScopes()
@@ -193,9 +222,9 @@ class PostController extends AdminController
         }
 
          // call media manager file handler
-        call_user_func_array($this->fileHandler, [&$item, &$data, 'horizontal_featured_image']);
-        call_user_func_array($this->fileHandler, [&$item, &$data, 'vertical_featured_image']);
-        call_user_func_array($this->fileHandler, [&$item, &$data, 'gallery', false]);
+        call_user_func_array($this->fileHandler, [&$item, &$input, 'horizontal_featured_image']);
+        call_user_func_array($this->fileHandler, [&$item, &$input, 'vertical_featured_image']);
+        call_user_func_array($this->fileHandler, [&$item, &$input, 'gallery', false]);
 
         // set success message
         session()->flash('alert-success', 'News post saved successfully!');
@@ -252,6 +281,11 @@ class PostController extends AdminController
             $item->slug = Str::slug($item->title);
         } else {
             $item->slug = Str::slug($item->slug);
+        }
+
+        // deal with if sticky box unchecked
+        if (!request()->has('sticky')) {
+            $item->sticky = 0;
         }
 
         $item->save();

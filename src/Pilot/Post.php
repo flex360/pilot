@@ -11,6 +11,7 @@ use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
@@ -23,7 +24,8 @@ class Post extends Model implements HasMedia
         UserHtmlTrait,
         HasMediaTrait,
         SoftDeletes,
-        HasEmptyStringAttributes;
+        HasEmptyStringAttributes,
+        PilotTablePrefix;
 
     protected $table = 'posts';
 
@@ -78,7 +80,7 @@ class Post extends Model implements HasMedia
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, $this->getPrefix() . 'post_tag');
     }
 
     /**

@@ -31,8 +31,6 @@ class BeforeBackendMiddleware
         // set current site in config
         $site = Site::setCurrent();
         
-        $site = Site::getCurrent();
-
         // only executed in the admin
         // get the root page (homepage)
         $root = Page::getRoot();

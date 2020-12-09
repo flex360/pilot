@@ -1,5 +1,6 @@
 <?php
 
+use Flex360\Pilot\Pilot\Post;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,7 +13,7 @@ class AddExternalLinkToPostsTable extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
+        Schema::table((new Post)->getTable(), function (Blueprint $table) {
             $table->string('external_link');
             $table->string('author');
         });
@@ -25,7 +26,7 @@ class AddExternalLinkToPostsTable extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
+        Schema::table((new Post)->getTable(), function (Blueprint $table) {
             $table->dropColumn(['external_link', 'author']);
         });
     }

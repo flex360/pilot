@@ -2,18 +2,19 @@
 
 namespace Flex360\Pilot\Pilot;
 
-use Spatie\Image\Manipulations;
 use Flex360\Pilot\Pilot\UrlHelper;
-use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Annoucement extends Model
 {
-    use SoftDeletes, HasEmptyStringAttributes;
+    use SoftDeletes, 
+        HasEmptyStringAttributes,
+        PilotTablePrefix;
+
+    protected $table = 'annoucements';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

@@ -306,23 +306,6 @@ function toggleOther(element) {
    */
   $(function () {
   
-    //   if ($('.datetimepicker').length > 0) {
-    //       $('.datetimepicker').datetimepicker();
-    //   }
-  
-    //   if ($('.datepicker').length > 0) {
-    //       $('.datepicker').datetimepicker({
-    //           pickTime: false,
-    //           format: "m-d-Y",
-    //       });
-    //   }
-  
-    //   if ($('.timepicker').length > 0) {
-    //       $('.timepicker').datetimepicker({
-    //           datepicker: false
-    //       });
-    //   }
-  
       /* dropzone */
       if ($('#template').length > 0) {
           // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
@@ -613,16 +596,6 @@ function toggleOther(element) {
       }
   
       /* end uploader code */
-  
-      // date time picker
-      if ($('.datetimepicker').length > 0) {
-          $('.datetimepicker').each(function () {
-              $('#' + this.id).datetimepicker({
-                  format: 'n/j/Y g:i a',
-                  formatTime: 'g:i a',
-              });
-          });
-      }
   
       // Chosen select
       if ($('.chosen-select').length > 0) {
