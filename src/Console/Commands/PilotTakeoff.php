@@ -68,6 +68,9 @@ class PilotTakeoff extends Command
 
         // this will ensure the backendMiddleWare reruns and creates the new Pages
         $this->call('cache:clear');
+
+        // this will ensure the Standard module routes are registered
+        $this->call('route:clear');
     }
 
     private function removeInitialLaravelFiles()
