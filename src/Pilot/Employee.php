@@ -123,6 +123,10 @@ class Employee extends Model implements HasMedia
         }
     }
 
+    public function ignoreStartDateMutator($value) {
+        $this->attributes['start_date'] = $value;
+    }
+
     public function getStartDateAttribute($value)
     {
         if (!empty($value)) {
@@ -141,6 +145,10 @@ class Employee extends Model implements HasMedia
         } else {
             $this->attributes['birth_date'] = '';
         }
+    }
+
+    public function ignoreBirthDateMutator($value) {
+        $this->attributes['birth_date'] = $value;
     }
 
     public function getBirthDateAttribute($value)
