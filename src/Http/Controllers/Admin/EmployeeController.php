@@ -56,7 +56,7 @@ class EmployeeController extends DynamoController
                         })
                         ->showCount()
                     )
-                    ->searchable('Name')
+                    ->searchable('first_name')
                     ->searchOptions([
                         'placeholder' => 'Search By Name',
                     ])
