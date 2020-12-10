@@ -16,7 +16,7 @@ return [
     'social_image_width' => env('SOCIAL_IMAGE_WIDTH'),
     'social_image_height' => env('SOCIAL_IMAGE_HEIGHT'),
 
-    'table_prefix' => env('PILOT_TABLE_PREFIX', ''),
+    'table_prefix' => env('PILOT_TABLE_PREFIX', 'pilot_'),
 
     'plugins' => [
         'pages' => [
