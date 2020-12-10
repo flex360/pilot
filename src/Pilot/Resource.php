@@ -69,6 +69,11 @@ class Resource extends Model implements HasMedia
         return $this->belongsToMany(ResourceCategory::class, $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('name');
     }
 
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('name');
+    }
+
     public static function getSelectList()
     {
         return static::orderBy('title')
