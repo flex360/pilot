@@ -163,6 +163,34 @@ class Employee extends Model implements HasMedia
 
     }
 
+    public static function getUpcomingBirthdays()
+	{
+		// start range 7 days ago
+		$start = date('z') + 1 - 7;
+
+		// end range 7 days from now
+		$end = date('z') + 1 + 7;
+
+		return Employee::whereRaw("DAYOFYEAR(birth_date) BETWEEN $start AND $end")
+						->orderBy(\DB::raw('DAYOFYEAR(birth_date)'))
+						->limit(5)
+						->get();
+	}
+
+	public static function getUpcomingAnniversaries()
+	{
+		// start range 7 days ago
+		$start = date('z') + 1 - 7;
+
+		// end range 7 days from now
+		$end = date('z') + 1 + 7;
+
+		return Employee::whereRaw("DAYOFYEAR(start_date) BETWEEN $start AND $end")
+						->orderBy(\DB::raw('DAYOFYEAR(start_date)'))
+						->limit(5)
+						->get();
+	}
+
     public static function getStatuses()
     {
         return [
