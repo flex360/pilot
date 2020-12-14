@@ -84,6 +84,16 @@ class Post extends Model implements HasMedia
     }
 
     /**
+     * Gets summary of body using helper function
+     *
+     * @return string
+     */
+    public function getSummaryBody()
+    {
+        return str_limit($this->body, 120, '...') ;
+    }
+
+    /**
      * Formats the published on date when it is accessed
      * @param string $value
      * @return string
