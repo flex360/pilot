@@ -10,6 +10,12 @@
 
 @import "sidebar";
 
+// stops the page from being able to scroll past the top of the content or below the footer and jerk back
+// like when you scroll down the top of the page on mobile phones to refresh the webpage.
+body {
+    overscroll-behavior-y: none;
+}
+
 //Fixes Wysiwyg Editor Icons ( first rule included here and in Dynamo scss)
 #dynamo-index-body td form {
   margin-bottom: 0;
