@@ -88,9 +88,15 @@ class Post extends Model implements HasMedia
      *
      * @return string
      */
-    public function getSummaryBody()
+    public function getSummary()
     {
-        return str_limit($this->body, 120, '...') ;
+        if ($this->summary != null) {
+            return str_limit($this->summary, 255, '...');
+        } else {
+            //stripe out html tags except links
+            $newBody = strip_tags($this->body);
+            return str_limit($newBody, 255, '...');
+        }
     }
 
     /**
