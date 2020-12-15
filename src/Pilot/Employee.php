@@ -165,8 +165,8 @@ class Employee extends Model implements HasMedia
 
     public static function getUpcomingBirthdays()
 	{
-		// start range 7 days ago
-		$start = date('z') + 1 - 7;
+		// start range 3 days ago
+		$start = date('z') + 1 - 3;
 
 		// end range 7 days from now
 		$end = date('z') + 1 + 7;
@@ -179,8 +179,8 @@ class Employee extends Model implements HasMedia
 
 	public static function getUpcomingAnniversaries()
 	{
-		// start range 7 days ago
-		$start = date('z') + 1 - 7;
+		// start range 3 days ago
+		$start = date('z') + 1 - 3;
 
 		// end range 7 days from now
 		$end = date('z') + 1 + 7;
