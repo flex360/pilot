@@ -138,6 +138,12 @@ class Employee extends Model implements HasMedia
 
     }
 
+    public function getServiceLength()
+    {
+        $startDateOriginal = Carbon::createFromFormat('m-d-Y', $this->start_date);
+        return str_replace(' ago', '', $startDateOriginal->diffForHumans());
+    }
+
     public function setBirthDateAttribute($value)
     {
         if (!empty($value)) {
