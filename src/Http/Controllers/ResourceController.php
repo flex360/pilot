@@ -16,7 +16,7 @@ class ResourceController extends Controller
     public function index()
     {
         //get all resource categories, order by name
-        $categories = ResourceCategory::with('resoures')->orderBy('name');
+        $categories = ResourceCategory::with('resources')->orderBy('name');
 
         Page::mimic([
             'title' => 'Resources'
