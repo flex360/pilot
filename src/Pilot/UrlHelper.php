@@ -24,14 +24,14 @@ class UrlHelper
 
     public static function isRoot()
     {
-        $uri = explode('?', $_SERVER['REQUEST_URI']);
+        $uri = explode('?', $_SERVER['REQUEST_URI'] ?? '');
 
         return $uri[0] === '/';
     }
 
     public static function getParts()
     {
-        $uri = explode('?', $_SERVER['REQUEST_URI']);
+        $uri = explode('?', $_SERVER['REQUEST_URI'] ?? '');
 
         return explode('/', $uri[0]);
     }
@@ -57,7 +57,7 @@ class UrlHelper
 
     public static function is($page)
     {
-        $uri = explode('?', $_SERVER['REQUEST_URI']);
+        $uri = explode('?', $_SERVER['REQUEST_URI'] ?? '');
 
         return fnmatch($page, $uri[0]);
     }
