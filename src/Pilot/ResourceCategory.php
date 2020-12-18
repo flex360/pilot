@@ -46,6 +46,7 @@ class ResourceCategory extends Model implements HasMedia
             ->get()
             ->pluck('name', 'id');
     }
+
     public function duplicate()
     {
         $model = $this;

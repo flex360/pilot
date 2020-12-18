@@ -1,7 +1,8 @@
 <?php
 
-namespace Flex360\Pilot\Http\Controllers\Admin; 
+namespace Flex360\Pilot\Http\Controllers\Admin;
 
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Jzpeepz\Dynamo\Dynamo;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Jzpeepz\Dynamo\IndexTab;
@@ -12,9 +13,9 @@ class ResourceController extends DynamoController
 {
     public function getDynamo()
     {
-        return Dynamo::make(Resource::class)
+        return Dynamo::make(get_class(ResourceFacade::getFacadeRoot()))
             ->auto()
-            
+
             ->removeBoth('featured_image')
             ->addIndexButton(function () {
                 return '<a href="/pilot/resourcecategory?view=all" class="btn btn-primary btn-sm">Resource Categories</a>';
@@ -51,7 +52,7 @@ class ResourceController extends DynamoController
                 },
             ])
             ->select('status', [
-                'options' => Resource::getStatuses(),
+                'options' => ResourceFacade::getStatuses(),
                 'help' => 'Save a draft to come back to this later. Published resources will be automatically displayed on the front-end of the website after you save.',
                 'position' => 500,
             ])
@@ -80,7 +81,7 @@ class ResourceController extends DynamoController
             ->clearIndexes()
             ->addIndex('title')
             ->addIndex('short_description', 'Short Description', function ($resource) {
-                return strlen($resource->short_description) > 50 ? substr($resource->short_description,0,50)."..." : $resource->short_description;
+                return strlen($resource->short_description) > 50 ? substr($resource->short_description, 0, 50) . '...' : $resource->short_description;
             })
             ->addIndex('category', 'Categories', function ($resource) {
                 return $resource->resource_categories()->get()->transform(function ($cat) {
@@ -89,7 +90,7 @@ class ResourceController extends DynamoController
                     ->implode(', ');
             })
             ->addIndex('updated_at', 'Last Edited')
-            ->addActionButton(function($item) {
+            ->addActionButton(function ($item) {
                 return '<a href="resource/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
             })
             ->addActionButton(function ($item) {
@@ -106,14 +107,14 @@ class ResourceController extends DynamoController
      */
     public function copy($id)
     {
-        $resource = Resource::find($id);
+        $resource = ResourceFacade::find($id);
 
         $newResource = $resource->duplicate();
 
         // set success message
         \Session::flash('alert-success', 'Resource copied successfully!');
 
-        return redirect()->route('admin.resource.edit', array($newResource->id));
+        return redirect()->route('admin.resource.edit', [$newResource->id]);
     }
 
     /**
@@ -124,7 +125,7 @@ class ResourceController extends DynamoController
      */
     public function destroy($id)
     {
-        $resource = Resource::find($id);
+        $resource = ResourceFacade::find($id);
 
         $resource->delete();
 

@@ -2,17 +2,17 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Dynamo;
 use Jzpeepz\Dynamo\IndexTab;
 use Flex360\Pilot\Pilot\Employee;
-use App\Http\Controllers\Controller;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 
 class EmployeeController extends DynamoController
 {
     public function getDynamo()
     {
-        $dynamo = Dynamo::make(Employee::class)
+        $dynamo = Dynamo::make(get_class(EmployeeFacade::getFacadeRoot()))
                     ->auto()
                     ->removeField('position')
                     ->removeField('deleted_at')
@@ -36,7 +36,7 @@ class EmployeeController extends DynamoController
                     ->text('email')
                     ->text('office_location')
                     ->select('status', [
-                        'options' => Employee::getStatuses(),
+                        'options' => EmployeeFacade::getStatuses(),
                         'help' => 'Save a draft to come back to this later. Published Employees will be automatically displayed on the front-end of the website after you save.',
                         'position' => 500,
                     ])
@@ -44,14 +44,16 @@ class EmployeeController extends DynamoController
                     //Set indexes for admin view
                     ->clearIndexes()
                     ->paginate(50)
-                    ->indexTab(IndexTab::make('Published', function ($query) {
+                    ->indexTab(
+                        IndexTab::make('Published', function ($query) {
                             return $query->where('status', 30)->whereNull('deleted_at');
                         })
                         ->setBadgeColor('blue') // default is red if you don't supply
                         ->showCount()
                     )
 
-                    ->indexTab(IndexTab::make('Drafts', function ($query) {
+                    ->indexTab(
+                        IndexTab::make('Drafts', function ($query) {
                             return $query->where('status', 10)->whereNull('deleted_at');
                         })
                         ->showCount()
@@ -64,14 +66,12 @@ class EmployeeController extends DynamoController
                         if (empty($item->photo)) {
                             return '';
                         }
-                        return '<img style="width: 100px  " src="' .$item->photo. '" class="" style="width: 60px;">';
+                        return '<img style="width: 100px  " src="' . $item->photo . '" class="" style="width: 60px;">';
                     })
                     ->addIndex('first_name')
                     ->addIndex('last_name')
-                    ->addIndex('departments', "Departments", function($item){
-
+                    ->addIndex('departments', 'Departments', function ($item) {
                         return $item->departments->implode('name', ', ');
-
                     })
 
                     ->addActionButton(function ($item) {
@@ -82,15 +82,15 @@ class EmployeeController extends DynamoController
                     })
                     ->indexOrderBy('last_name');
 
-            // if departments is enabled, include HasManySimple multi-selector
-            if (config('pilot.plugins.employees.children.departments.enabled')) {
-                $dynamo->hasManySimple('departments', [
-                    'modelClass' => 'Flex360\Pilot\Pilot\Department',
-                    'help' => 'Select the Departments this Employees belongs to. If you don\'t see the Department available, you will need to <a href="/pilot/department/create" target="_blank">create the Department</a>.'
-                ]);
-            }
+        // if departments is enabled, include HasManySimple multi-selector
+        if (config('pilot.plugins.employees.children.departments.enabled')) {
+            $dynamo->hasManySimple('departments', [
+                'modelClass' => 'Flex360\Pilot\Pilot\Department',
+                'help' => 'Select the Departments this Employees belongs to. If you don\'t see the Department available, you will need to <a href="/pilot/department/create" target="_blank">create the Department</a>.'
+            ]);
+        }
 
-            return $dynamo;
+        return $dynamo;
     }
 
     /**
@@ -101,14 +101,14 @@ class EmployeeController extends DynamoController
      */
     public function copy($id)
     {
-        $employee = Employee::find($id);
+        $employee = EmployeeFacade::find($id);
 
         $newEmployee = $employee->duplicate();
 
         // set success message
         \Session::flash('alert-success', 'Employee copied successfully!');
 
-        return redirect()->route('admin.employee.edit', array($newEmployee->id));
+        return redirect()->route('admin.employee.edit', [$newEmployee->id]);
     }
 
     /**
@@ -119,7 +119,7 @@ class EmployeeController extends DynamoController
      */
     public function destroy($id)
     {
-        $employee = Employee::find($id);
+        $employee = EmployeeFacade::find($id);
 
         $employee->delete();
 
@@ -128,4 +128,4 @@ class EmployeeController extends DynamoController
 
         return \Redirect::to('/pilot/employee?view=published');
     }
- }
+}

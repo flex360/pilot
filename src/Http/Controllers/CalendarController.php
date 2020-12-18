@@ -2,20 +2,21 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
-use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Event;
 use Illuminate\Support\Facades\Auth;
+use Flex360\Pilot\Facades\Event as EventFacade;
+use Flex360\Pilot\Facades\Page as PageFacade;
 
 class CalendarController extends Controller
 {
     public function index()
     {
-        $events = Event::whereRaw('events.end >= NOW()')
+        $events = EventFacade::whereRaw('events.end >= NOW()')
                 ->orderBy('events.start', 'asc')
                 ->limit(15)
                 ->get();
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'Upcoming Events'
         ]);
 
@@ -30,12 +31,12 @@ class CalendarController extends Controller
     public function event($id, $slug)
     {
         if (Auth::check()) {
-            $event = Event::withoutGlobalScopes()->findOrFail($id);
+            $event = EventFacade::withoutGlobalScopes()->findOrFail($id);
         } else {
-            $event = Event::findOrFail($id);
+            $event = EventFacade::findOrFail($id);
         }
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => $event->title
         ]);
 
@@ -44,13 +45,13 @@ class CalendarController extends Controller
 
     public function tagged($id, $tagged)
     {
-        $events = Event::join('event_tag', 'events.id', '=', 'event_tag.event_id')
+        $events = EventFacade::join('event_tag', 'events.id', '=', 'event_tag.event_id')
                 ->where('event_tag.tag_id', '=', $id)
                 ->whereRaw('events.end >= NOW()')
                 ->orderBy('events.start', 'asc')
                 ->simplePaginate(10);
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'Events tagged ' . $tagged
         ]);
 
@@ -63,7 +64,7 @@ class CalendarController extends Controller
 
         $end = request()->input('end') . ' 23:59:59';
 
-        $events = Event::whereBetween('start', [$start, $end])
+        $events = EventFacade::whereBetween('start', [$start, $end])
                     ->orderBy('start', 'asc')
                     ->limit(100)
                     ->get();

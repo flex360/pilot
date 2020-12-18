@@ -3,7 +3,6 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Tag;
 use Spatie\Image\Manipulations;
 use Flex360\Pilot\Pilot\Employee;
 use Flex360\Pilot\Facades\Employee as EmployeeFacade;
@@ -43,7 +42,7 @@ class Department extends Model implements HasMedia
     {
         parent::boot();
 
-        Department::saving(function ($department) {                        
+        static::saving(function ($department) {
             if (empty($department->slug)) {
                 $department->slug = Str::slug($department->name);
             }
@@ -67,11 +66,10 @@ class Department extends Model implements HasMedia
 
     public function getFullNameAttribute($value)
     {
-        if(isset($this->attributes['first_name'])) {
+        if (isset($this->attributes['first_name'])) {
             return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
         }
         return null;
-
     }
 
     public static function getSelectList()
@@ -124,7 +122,7 @@ class Department extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Department::getStatuses();
+        $status = static::getStatuses();
 
         return (object) [
             'id' => $this->status,

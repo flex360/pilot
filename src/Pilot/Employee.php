@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Flex360\Pilot\Pilot\Department;
 use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
@@ -34,7 +35,7 @@ class Employee extends Model implements HasMedia
 
     protected $emptyStrings = [
         'photo', 'first_name', 'last_name', 'start_date', 'birth_date', 'job_title', 'phone_number', 'extension',
-         'email', 'office_location',
+        'email', 'office_location',
     ];
 
     protected $mediaAttributes = ['photo'];
@@ -93,7 +94,8 @@ class Employee extends Model implements HasMedia
         }
     }
 
-    public function ignoreStartDateMutator($value) {
+    public function ignoreStartDateMutator($value)
+    {
         $this->attributes['start_date'] = $value;
     }
 
@@ -105,7 +107,6 @@ class Employee extends Model implements HasMedia
         } else {
             return '';
         }
-
     }
 
     public function getServiceLength()
@@ -123,49 +124,48 @@ class Employee extends Model implements HasMedia
         }
     }
 
-    public function ignoreBirthDateMutator($value) {
+    public function ignoreBirthDateMutator($value)
+    {
         $this->attributes['birth_date'] = $value;
     }
 
     public function getBirthDateAttribute($value)
     {
-        
         if (!empty($value)) {
             $createdAt = Carbon::parse($value);
             return $createdAt->format('m-d-Y');
         } else {
             return '';
         }
-
     }
 
     public static function getUpcomingBirthdays()
-	{
-		// start range 3 days ago
-		$start = date('z') + 1 - 3;
+    {
+        // start range 3 days ago
+        $start = date('z') + 1 - 3;
 
-		// end range 7 days from now
-		$end = date('z') + 1 + 7;
+        // end range 7 days from now
+        $end = date('z') + 1 + 7;
 
-		return static::whereRaw("DAYOFYEAR(birth_date) BETWEEN $start AND $end")
-						->orderBy(\DB::raw('DAYOFYEAR(birth_date)'))
-						->limit(5)
-						->get();
-	}
+        return static::whereRaw("DAYOFYEAR(birth_date) BETWEEN $start AND $end")
+                        ->orderBy(DB::raw('DAYOFYEAR(birth_date)'))
+                        ->limit(5)
+                        ->get();
+    }
 
-	public static function getUpcomingAnniversaries()
-	{
-		// start range 3 days ago
-		$start = date('z') + 1 - 3;
+    public static function getUpcomingAnniversaries()
+    {
+        // start range 3 days ago
+        $start = date('z') + 1 - 3;
 
-		// end range 7 days from now
-		$end = date('z') + 1 + 7;
+        // end range 7 days from now
+        $end = date('z') + 1 + 7;
 
-		return static::whereRaw("DAYOFYEAR(start_date) BETWEEN $start AND $end")
-						->orderBy(\DB::raw('DAYOFYEAR(start_date)'))
-						->limit(5)
-						->get();
-	}
+        return static::whereRaw("DAYOFYEAR(start_date) BETWEEN $start AND $end")
+                        ->orderBy(DB::raw('DAYOFYEAR(start_date)'))
+                        ->limit(5)
+                        ->get();
+    }
 
     public static function getStatuses()
     {

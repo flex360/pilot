@@ -87,4 +87,9 @@ class SettingController extends AdminController
         ])
         ->with('alert-success', 'Setting saved successfully!');
     }
+
+    protected function getClass()
+    {
+        return Setting::class;
+    }
 }

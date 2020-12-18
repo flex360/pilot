@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Providers;
 
+use Flex360\Pilot\Console\Commands\FixMedia;
 use Flex360\Pilot\Pilot\Nav;
 use Flex360\Pilot\Pilot\Tag;
 use Flex360\Pilot\Pilot\Page;
@@ -27,6 +28,7 @@ use Flex360\Pilot\Http\Middleware\BeforeMiddleware;
 use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
 use Flex360\Pilot\Http\Middleware\BeforeBackendMiddleware;
 use Flex360\Pilot\Http\Middleware\PilotModuleEnabledMiddleware;
+use Flex360\Pilot\Pilot\Contracts\Post as PostContract;
 
 class PilotServiceProvider extends ServiceProvider
 {
@@ -37,7 +39,7 @@ class PilotServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(PostContract::class, Post::class);
     }
 
     /**
@@ -84,6 +86,7 @@ class PilotServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                FixMedia::class,
                 PilotMakeUser::class,
                 PilotTakeoff::class,
                 SyncForms::class,

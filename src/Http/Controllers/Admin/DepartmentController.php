@@ -2,30 +2,27 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use App\Http\Requests;
-
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Dynamo;
 use Jzpeepz\Dynamo\FormTab;
 use Flex360\Pilot\Pilot\Tag;
 use Illuminate\Http\Request;
 use Flex360\Pilot\Pilot\Employee;
 use Flex360\Pilot\Pilot\Department;
-use App\Http\Controllers\Controller;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
-use Flex360\Pilot\Http\Controllers\Admin\EmployeeController;
 use Flex360\Pilot\Pilot\Resource;
 
 class DepartmentController extends DynamoController
 {
     public function getDynamo()
     {
-
         $departmentDeatilsFormTab = FormTab::make('Department Details')
         ->text('name')
         ->textarea('intro_text', [
             'class' => 'wysiwyg-editor',
         ])
-        ->singleImage("featured_image", [
+        ->singleImage('featured_image', [
             'maxWidth' => 1000,
             'label' => 'Featured Image',
             'help' => 'Upload featured image. Once selected, hover over the image and select the edit icon (paper & pencil) to manage metadata title, photo credit, and description.',
@@ -72,9 +69,7 @@ class DepartmentController extends DynamoController
             ]);
         }
 
-
-        
-        $dynamo = Dynamo::make(Department::class)
+        $dynamo = Dynamo::make(get_class(DepartmentFacade::getFacadeRoot()))
                     ->auto()
                     ->text('name')
                     ->removeField('position')
@@ -87,35 +82,30 @@ class DepartmentController extends DynamoController
                                 'help' => 'Customize the link for this department page. For example "Human Resources" could be "/human_resources" or just "/hr".'
                             ])
                             ->textarea('summary')
-        
                     ) // end of Upcoming Event Details FormTab
-
 
                       //clear indexes
                     ->clearIndexes()
                     // setup the index view
 
-                    ->addIndex('hamburger', 'Sort', function($item) {
+                    ->addIndex('hamburger', 'Sort', function ($item) {
                         return '<i class="fas fa-bars fa-2x" ></i>';
                     });
 
+        // if departments has resources_relationship enabled, include HasManySimple multi-selector
+        if (config('pilot.plugins.employees.children.departments.sort_employees_within_department')) {
+            $dynamo->addIndex('id', 'Order Staff', function ($item) {
+                //creates order staff button
+                //return '<a href="' . route('staffers.reorder') . '">Order</a>'
+                return '<a href="' . route('admin.department.staff', ['department' => $item->id]) . '" class="btn btn-success">Order</a>';
+            });
+        }
 
-                    
-
-                    // if departments has resources_relationship enabled, include HasManySimple multi-selector
-                    if (config('pilot.plugins.employees.children.departments.sort_employees_within_department')) {
-                        $dynamo->addIndex('id', 'Order Staff',function ($item) {
-                            //creates order staff button
-                            //return '<a href="' . route('staffers.reorder') . '">Order</a>'
-                            return '<a href="' . route('admin.department.staff', ['department' => $item->id]) . '" class="btn btn-success">Order</a>';
-                      });
-                    }
-
-                    $dynamo->addIndex('name')
+        $dynamo->addIndex('name')
                     ->addIndex('test', 'Published?', function ($item) {
                         return $item->status == 30 ? '<i class="far fa-check-circle fa-3x" style="color: green; padding-top: 10px;"></i>' : '<i class="far fa-times-circle fa-3x" style="color: red; padding-top: 10px;"></i>';
                     })
-                    ->addIndex('count','Number Of Employees In This Department', function($item) {
+                    ->addIndex('count', 'Number Of Employees In This Department', function ($item) {
                         return $item->employees->count();
                     })
                     ->addActionButton(function ($item) {
@@ -127,7 +117,6 @@ class DepartmentController extends DynamoController
                     ->indexOrderBy('position');
 
         return $dynamo;
-
     }
 
     /**
@@ -138,7 +127,7 @@ class DepartmentController extends DynamoController
     */
     public function copy($id)
     {
-        $department = Department::find($id);
+        $department = DepartmentFacade::find($id);
 
         $newDepartment = $department->duplicate();
 
@@ -148,27 +137,28 @@ class DepartmentController extends DynamoController
         return redirect()->route('admin.department.edit', [$newDepartment->id]);
     }
 
-    public function staffMembers(Department $department)
+    public function staffMembers($id)
     {
-      //runs on 'pilot/department/{id}/staffMembers'
-      //list all staff members in Department{id}
-      $items = $department->employees()->orderBy(config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee.position')->get();
-      $dynamo = (new EmployeeController)->getDynamo();
+        $department = DepartmentFacade::find($id);
+        //runs on 'pilot/department/{id}/staffMembers'
+        //list all staff members in Department{id}
+        $items = $department->employees()->orderBy(config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee.position')->get();
+        $dynamo = (new EmployeeController)->getDynamo();
 
-      return view('pilot::admin.dynamo.employees.reorder', compact('dynamo', 'items', 'department'));
+        return view('pilot::admin.dynamo.employees.reorder', compact('dynamo', 'items', 'department'));
     }
 
     public function reorderDepartments()
     {
-      //runs on 'pilot/department/{id}/staffMembers/reorder'
-      //runs when user changes the order via drag and drop of the staff members in the departments
-      //updates the position of that staff member within this department.
+        //runs on 'pilot/department/{id}/staffMembers/reorder'
+        //runs when user changes the order via drag and drop of the staff members in the departments
+        //updates the position of that staff member within this department.
 
         //$departmentID = $id;
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $departmentID) {
-            $department = Department::find($departmentID);
+            $department = DepartmentFacade::find($departmentID);
 
             $department->position = $position;
 
@@ -178,17 +168,19 @@ class DepartmentController extends DynamoController
         return $ids;
     }
 
-    public function reorderStaffWithinDepartment(Department $department)
+    public function reorderStaffWithinDepartment($id)
     {
-      //runs on 'pilot/department/{id}/staffMembers/reorderStaffWithDepartments'
-      //runs when user changes the order via drag and drop of the staff members in the departments
-      //updates the position of that staff member within this department.
+        //runs on 'pilot/department/{id}/staffMembers/reorderStaffWithDepartments'
+        //runs when user changes the order via drag and drop of the staff members in the departments
+        //updates the position of that staff member within this department.
+
+        $department = DepartmentFacade::find($id);
 
         //$staffMemberID = $id;
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $staffMemberID) {
-            $staffMember = Employee::find($staffMemberID);
+            $staffMember = EmployeeFacade::find($staffMemberID);
 
             //$staffMember->position = $position;
             $staffMember->departments()->updateExistingPivot($department->id, compact('position'));
@@ -197,5 +189,4 @@ class DepartmentController extends DynamoController
 
         return $ids;
     }
-
- }
+}

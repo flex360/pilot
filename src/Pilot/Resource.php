@@ -93,7 +93,7 @@ class Resource extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Resource::getStatuses();
+        $status = static::getStatuses();
 
         return (object) [
             'id' => $this->status,

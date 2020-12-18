@@ -74,7 +74,7 @@ class Pilot
                     return redirect('/pilot');
                 });
 
-                // Backend Routes for Routes for News module     
+                // Backend Routes for Routes for News module
                 Route::get('post/sticky', 'Admin\PostController@indexOfSticky')->name('post.sticky');
                 Route::get('post/scheduled', 'Admin\PostController@indexOfScheduled')->name('post.scheduled');
                 Route::get('post/drafts', 'Admin\PostController@indexOfDrafts')->name('post.draft');
@@ -114,13 +114,13 @@ class Pilot
                 Route::get('employee/{id}/delete', 'Admin\EmployeeController@destroy')
                     ->name('employee.destroy');
                 Route::resource('employee', 'Admin\EmployeeController');
-                
+
                 Route::get('department/{id}/copy', 'Admin\DepartmentController@copy')->name('department.copy');
                 Route::get('department/{id}/delete', 'Admin\DepartmentController@destroy')
                     ->name('department.destroy');
-                Route::get('/department-employees/{department}/staffers', 'Admin\DepartmentController@staffMembers')->name('department.staff');
+                Route::get('/department-employees/{id}/staffers', 'Admin\DepartmentController@staffMembers')->name('department.staff');
                 Route::post('/department/reorderDepartments', 'Admin\DepartmentController@reorderDepartments')->name('department.reorder');
-                Route::post('/department-employees/{department}/staffers/reorderStaffWithinDepartments', 'Admin\DepartmentController@reorderStaffWithinDepartment')->name('departmentStaff.reorder');
+                Route::post('/department-employees/{id}/staffers/reorderStaffWithinDepartments', 'Admin\DepartmentController@reorderStaffWithinDepartment')->name('departmentStaff.reorder');
                 Route::resource('department', 'Admin\DepartmentController');
 
                 // Backend Routes for Routes for Settings module
@@ -175,12 +175,10 @@ class Pilot
 
             // Route::post('/webhook/wufoo/{hash}', ['as' => 'form.webhook', 'uses' => 'Admin\FormController@webhook']);
 
-            
             // - note that all pilot module routes must be wrapped in the pilot.module middleware to check if this route
             // should be available on the frontend
             Route::group(['middleware' => ['pilot.module']], function () {
-
-                // blog frontend routes 
+                // blog frontend routes
                 Route::get('/news', 'BlogController@index')->name('blog');
                 Route::get('/news/post/{id}/{slug}', 'BlogController@post')->name('blog.post');
                 Route::get('/news/tagged/{id}/{slug}', 'BlogController@tagged')->name('blog.tagged');
