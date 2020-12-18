@@ -3,9 +3,7 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Tag;
 use Spatie\Image\Manipulations;
-use Flex360\Pilot\Pilot\Employee;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
@@ -16,6 +14,8 @@ use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
 
 class Department extends Model implements HasMedia
 {
@@ -50,7 +50,7 @@ class Department extends Model implements HasMedia
     {
         parent::boot();
 
-        Department::saving(function ($department) {                        
+        static::saving(function ($department) {
             if (empty($department->slug)) {
                 $department->slug = Str::slug($department->name);
             }
@@ -59,7 +59,7 @@ class Department extends Model implements HasMedia
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
+        return $this->belongsToMany(root_class(EmployeeFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
     }
 
     public function tags()
@@ -69,16 +69,15 @@ class Department extends Model implements HasMedia
 
     public function resources()
     {
-        return $this->belongsToMany(Resource::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('title');
+        return $this->belongsToMany(root_class(ResourceFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('title');
     }
 
     public function getFullNameAttribute($value)
     {
-        if(isset($this->attributes['first_name'])) {
+        if (isset($this->attributes['first_name'])) {
             return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
         }
         return null;
-
     }
 
     public function getFeaturedImageAttribute($value)
@@ -153,7 +152,7 @@ class Department extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Department::getStatuses();
+        $status = static::getStatuses();
 
         return (object) [
             'id' => $this->status,

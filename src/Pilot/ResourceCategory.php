@@ -2,7 +2,6 @@
 
 namespace Flex360\Pilot\Pilot;
 
-use Flex360\Pilot\Pilot\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
@@ -13,6 +12,7 @@ use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Illuminate\Support\Str;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
 
 class ResourceCategory extends Model implements HasMedia
 {
@@ -31,11 +31,10 @@ class ResourceCategory extends Model implements HasMedia
     protected $emptyStrings = [
         'name',
     ];
-    
 
     public function resources()
     {
-        return $this->belongsToMany(Resource::class, $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('title');
+        return $this->belongsToMany(root_class(ResourceFacade::class), $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('title');
     }
 
     public static function getSelectList()
@@ -44,6 +43,7 @@ class ResourceCategory extends Model implements HasMedia
             ->get()
             ->pluck('name', 'id');
     }
+
     public function duplicate()
     {
         $model = $this;

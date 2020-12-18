@@ -3,7 +3,6 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\ResourceCategory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\Models\Media;
@@ -14,6 +13,8 @@ use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Flex360\Pilot\Facades\ResourceCategory as ResourceCategoryFacade;
 
 class Resource extends Model implements HasMedia
 {
@@ -66,12 +67,12 @@ class Resource extends Model implements HasMedia
 
     public function resource_categories()
     {
-        return $this->belongsToMany(ResourceCategory::class, $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('name');
+        return $this->belongsToMany(root_class(ResourceCategoryFacade::class), $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('name');
     }
 
     public function departments()
     {
-        return $this->belongsToMany(Department::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('name');
+        return $this->belongsToMany(root_class(DepartmentFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('name');
     }
 
     public static function getSelectList()
@@ -119,7 +120,7 @@ class Resource extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Resource::getStatuses();
+        $status = static::getStatuses();
 
         return (object) [
             'id' => $this->status,

@@ -7,6 +7,7 @@ use Flex360\Pilot\Pilot\Page;
 use Illuminate\Support\Facades\DB;
 use Flex360\Pilot\Pilot\Publish\Article;
 use Flex360\Pilot\Pilot\PageAuthenticator;
+use Flex360\Pilot\Facades\Page as PageFacade;
 
 class SiteController extends Controller
 {
@@ -25,7 +26,7 @@ class SiteController extends Controller
 
     public function index($slug = null)
     {
-        $page = Page::getRoot();
+        $page = PageFacade::getRoot();
 
         if (!$page->exists) {
             $page->layout = 'layouts.home';
@@ -41,11 +42,11 @@ class SiteController extends Controller
 
     public function view($slug = null)
     {
-        $page = Page::getCurrent();
+        $page = PageFacade::getCurrent();
 
         // display 404
         if (empty($page)) {
-            Page::mimic([
+            PageFacade::mimic([
                 'title' => 'Page Not Found',
                 'body' => '<p>The page you are looking for has been moved or deleted.</p>',
                 'layout' => 'layouts.internal'
@@ -77,7 +78,7 @@ class SiteController extends Controller
     {
         $id = request()->get('page');
 
-        $page = Page::find($id);
+        $page = PageFacade::find($id);
 
         $authenticator = new PageAuthenticator($page);
 

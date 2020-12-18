@@ -27,7 +27,7 @@ class SitemapController extends Controller
     public function xml()
     {
         $root = Page::getRoot();
-        
+
         return view('pilot::frontend.sitemap.xml', compact('root'));
     }
 }

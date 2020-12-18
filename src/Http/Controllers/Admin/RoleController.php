@@ -2,6 +2,8 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
+use Flex360\Pilot\Pilot\Role;
+
 class RoleController extends AdminController
 {
     public static $namespace = '\Flex360\Pilot\Pilot\\';
@@ -20,5 +22,10 @@ class RoleController extends AdminController
         $items = $className::all();
 
         return view('pilot::admin.' . static::$viewFolder . '.index', compact('items'));
+    }
+
+    protected function getClass()
+    {
+        return Role::class;
     }
 }

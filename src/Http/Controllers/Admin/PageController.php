@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Block;
 use Flex360\Pilot\Pilot\MediaHandler;
+use Flex360\Pilot\Facades\Page as PageFacade;
 
 class PageController extends AdminController
 {
@@ -25,7 +26,7 @@ class PageController extends AdminController
      */
     public function index()
     {
-        $root = Page::getAdminRoot();
+        $root = PageFacade::getAdminRoot();
 
         return view('pilot::admin.pages.index', compact('root'));
     }
@@ -42,7 +43,7 @@ class PageController extends AdminController
         $page = new Page;
 
         // set parent
-        $page->parent_id = request()->input('parent_id', Page::getRoot()->id);
+        $page->parent_id = request()->input('parent_id', PageFacade::getRoot()->id);
 
         // set default layout
         $page->layout = $page->getLayout();
@@ -51,7 +52,7 @@ class PageController extends AdminController
 
         $parent_id = $page->parent_id ;
 
-        $parent = Page::find($parent_id);
+        $parent = PageFacade::find($parent_id);
 
         $page->status = optional($parent)->status;
 
@@ -77,7 +78,7 @@ class PageController extends AdminController
             $data['slug'] = Str::slug($data['title']);
         }
 
-        $page = Page::create($data);
+        $page = PageFacade::create($data);
 
         // call media manager file handler
         call_user_func_array($this->fileHandler, [&$page, &$data, 'featured_image']);
@@ -110,7 +111,7 @@ class PageController extends AdminController
      */
     public function edit($id)
     {
-        $page = Page::find($id);
+        $page = PageFacade::find($id);
 
         // set default layout
         $page->layout = $page->getLayout();
@@ -131,7 +132,7 @@ class PageController extends AdminController
      */
     public function update($id)
     {
-        $page = Page::find($id);
+        $page = PageFacade::find($id);
 
         $this->validate(request(), [
             'title' => 'required|max:255'
@@ -166,7 +167,7 @@ class PageController extends AdminController
     public function destroy($id)
     {
         // check to see if there is any Menu builder referencing this page or children of this page
-        $page = Page::find($id);
+        $page = PageFacade::find($id);
 
         $dontDestroyChildren = false;
         foreach ($page->getChildren() as $child) {
@@ -180,13 +181,12 @@ class PageController extends AdminController
         //if parent or child is used by a menu, don't destroy the page and tell the user they can't delete page
         // because a menuBuilder is using this page or one of its children
         if ($dontDestroyChildrenParent || $dontDestroyChildren) {
-            
             session()->flash('alert-warning', self::$model . ' cannot be deleted while it or one of it\'s child pages are being referenced by a MenuBuilder.');
 
             return redirect()->route('admin.page.index');
         }
 
-        Page::destroy($id);
+        PageFacade::destroy($id);
 
         // set success message
         session()->flash('alert-success', self::$model . ' deleted successfully!');
@@ -201,16 +201,16 @@ class PageController extends AdminController
      */
     public function reorder()
     {
-        Page::reorder(request()->input('ids'));
+        PageFacade::reorder(request()->input('ids'));
 
         return response()->json(request()->input('ids'));
     }
 
     public function syncType($id)
     {
-        $page = Page::find($id);
+        $page = PageFacade::find($id);
 
-        $typePage = Page::find($page->type->page_id);
+        $typePage = PageFacade::find($page->type->page_id);
 
         // $data = $order = $settings = [];
 
@@ -233,7 +233,7 @@ class PageController extends AdminController
 
     public function selectList()
     {
-        return Page::selectList();
+        return PageFacade::selectList();
     }
 
     public function updateParent(Page $page, $newParentPageId)

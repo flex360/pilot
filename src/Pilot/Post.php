@@ -2,9 +2,8 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Flex360\Pilot\Contracts\Post as PostContract;
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Tag;
-use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\Models\Media;
@@ -17,7 +16,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 
-class Post extends Model implements HasMedia
+class Post extends Model implements HasMedia, PostContract
 {
     use PresentableTrait,
         SocialMetadataTrait,
@@ -157,7 +156,7 @@ class Post extends Model implements HasMedia
     public function url()
     {
         $title = $this->title ?: 'New Post';
-        
+
         return route('blog.post', [
             'id' => $this->id,
             'slug' => empty($this->slug) ? Str::slug($title) : $this->slug

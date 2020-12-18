@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
+use Flex360\Pilot\Facades\Post as PostFacade;
 use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Tag;
 use Flex360\Pilot\Pilot\Post;
@@ -10,7 +11,6 @@ use Flex360\Pilot\Pilot\MediaHandler;
 
 class PostController extends AdminController
 {
-
     public static $model = 'Post';
     public static $viewFolder = 'posts';
 
@@ -26,138 +26,134 @@ class PostController extends AdminController
      */
     public function index()
     {
+        $draftedPost = PostFacade::withoutGlobalScopes()
+            ->draft()
+            ->where('deleted_at', null)
+            ->orderBy('published_on', 'desc')
+            ->get();
 
-          $draftedPost = Post::withoutGlobalScopes()
-                              ->draft()
-                              ->where('deleted_at', null)
-                              ->orderBy('published_on', 'desc')
-                              ->get();
+        //To dynamically set notification of how many drafts there are.
+        $draftsCount = $draftedPost->count();
 
-          //To dynamically set notification of how many drafts there are.
-          $draftsCount = $draftedPost->count();
+        $scheduled = PostFacade::withoutGlobalScopes()->Scheduled()->get();
 
-          $scheduled = Post::withoutGlobalScopes()->Scheduled()->get();
-
-          $query = Post::withoutGlobalScopes()
+        $query = PostFacade::withoutGlobalScopes()
                       //->whereRaw('end >= NOW()')
                       ->whereNotIn('id', $draftedPost->pluck('id'))
                       ->whereNotIn('id', $scheduled->pluck('id'))
                       ->where('deleted_at', null)
                       ->orderBy('published_on', 'desc');
 
-          $query = Post::filter($query);
+        $query = PostFacade::filter($query);
 
-          $posts = $query->paginate(20);
+        $posts = $query->paginate(20);
 
-          $tags = Tag::orderBy('name', 'asc')->get();
+        $tags = Tag::orderBy('name', 'asc')->get();
 
-          $view = 'published';
+        $view = 'published';
 
-          return view('pilot::admin.posts.index', compact('posts', 'tags', 'draftsCount', 'view'));
+        return view('pilot::admin.posts.index', compact('posts', 'tags', 'draftsCount', 'view'));
     }
 
     public function indexOfScheduled()
     {
-          $draftedPost = Post::withoutGlobalScopes()
+        $draftedPost = PostFacade::withoutGlobalScopes()
                               ->draft()
                               ->where('deleted_at', null)
                               ->orderBy('published_on', 'desc')
                               ->get();
-          //To dynamically set notification of how many drafts there are.
-          $draftsCount = $draftedPost->count();
+        //To dynamically set notification of how many drafts there are.
+        $draftsCount = $draftedPost->count();
 
-          $query = Post::withoutGlobalScopes()
+        $query = PostFacade::withoutGlobalScopes()
                                   ->scheduled()
                                   ->where('deleted_at', null)
                                   ->orderBy('published_on', 'desc');
 
-         $query = Post::filter($query);
+        $query = PostFacade::filter($query);
 
-         $posts = $query->paginate(20);
+        $posts = $query->paginate(20);
 
-         $tags = Tag::orderBy('name', 'asc')->get();
+        $tags = Tag::orderBy('name', 'asc')->get();
 
-         $view = 'scheduled';
+        $view = 'scheduled';
 
-         return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
     }
 
     public function indexOfDrafts()
     {
-          $draftedPost = Post::withoutGlobalScopes()
+        $draftedPost = PostFacade::withoutGlobalScopes()
                               ->draft()
                               ->where('deleted_at', null)
                               ->orderBy('published_on', 'desc');
 
-          //To dynamically set notification of how many drafts there are.
-          $draftsCount = $draftedPost->count();
+        //To dynamically set notification of how many drafts there are.
+        $draftsCount = $draftedPost->count();
 
-          $draftedPost = $draftedPost->paginate(20);
+        $draftedPost = $draftedPost->paginate(20);
 
-          $query = Post::withoutGlobalScopes()
+        $query = PostFacade::withoutGlobalScopes()
                               ->draft()
                               ->where('deleted_at', null)
                               ->orderBy('published_on', 'desc');
 
+        $query = PostFacade::filter($query);
 
-         $query = Post::filter($query);
+        $posts = $query->paginate(20);
 
-         $posts = $query->paginate(20);
+        $tags = Tag::orderBy('name', 'asc')->get();
 
-         $tags = Tag::orderBy('name', 'asc')->get();
+        $view = 'drafts';
 
-         $view = 'drafts';
-
-         return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
     }
 
     public function indexOfSticky()
     {
-          $draftedPost = Post::withoutGlobalScopes()
+        $draftedPost = PostFacade::withoutGlobalScopes()
                               ->draft()
                               ->where('deleted_at', null)
                               ->orderBy('published_on', 'desc');
 
-          //To dynamically set notification of how many drafts there are.
-          $draftsCount = $draftedPost->count();
+        //To dynamically set notification of how many drafts there are.
+        $draftsCount = $draftedPost->count();
 
-          $draftedPost = $draftedPost->paginate(20);
+        $draftedPost = $draftedPost->paginate(20);
 
-          $query = Post::withoutGlobalScopes()
+        $query = PostFacade::withoutGlobalScopes()
                               ->where('sticky', 1)
                               ->where('deleted_at', null)
                               ->orderBy('published_on', 'desc');
 
+        $query = PostFacade::filter($query);
 
-         $query = Post::filter($query);
+        $posts = $query->paginate(20);
 
-         $posts = $query->paginate(20);
+        $tags = Tag::orderBy('name', 'asc')->get();
 
-         $tags = Tag::orderBy('name', 'asc')->get();
+        $view = 'sticky';
 
-         $view = 'sticky';
-
-         return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
     }
 
     public function indexOfAll()
     {
-         $draftedPost = Post::withoutGlobalScopes()
+        $draftedPost = PostFacade::withoutGlobalScopes()
                              ->draft()
                              ->where('deleted_at', null)
                              ->orderBy('published_on', 'desc');
 
-         //To dynamically set notification of how many drafts there are.
-         $draftsCount = $draftedPost->count();
+        //To dynamically set notification of how many drafts there are.
+        $draftsCount = $draftedPost->count();
 
-         $draftedPost = $draftedPost->paginate(20);
+        $draftedPost = $draftedPost->paginate(20);
 
-         $query = Post::withoutGlobalScopes()
+        $query = PostFacade::withoutGlobalScopes()
                              ->where('deleted_at', null)
                              ->orderBy('published_on', 'desc');
 
-
-        $query = Post::filter($query);
+        $query = PostFacade::filter($query);
 
         $posts = $query->paginate(20);
 
@@ -175,14 +171,14 @@ class PostController extends AdminController
      */
     public function create()
     {
-        $item = new Post;
+        $item = PostFacade::getFacadeRoot();
 
         // set default publish on date
         $item->published_on = date('n/j/Y g:i a');
 
         $tags = Tag::orderBy('name', 'asc')->pluck('name', 'id');
 
-        $formOptions = array('route' => 'admin.post.store');
+        $formOptions = ['route' => 'admin.post.store'];
 
         return view('pilot::admin.posts.form', compact('item', 'tags', 'formOptions'));
     }
@@ -195,33 +191,33 @@ class PostController extends AdminController
     public function store()
     {
         //create new post and attach input
-        $newPost = new Post;
+        $newPost = PostFacade::getFacadeRoot();
         $input = request()->except('tags', 'horizontal_featured_image', 'vertical_featured_image', 'gallery');
 
-        $newPost->title = $input["title"];
-        $newPost->body = $input["body"];
-        $newPost->published_on = $input["published_on"];
-        $newPost->status = $input["status"];
-        $newPost->slug = $input["slug"];
-        $newPost->summary = $input["summary"];
+        $newPost->title = $input['title'];
+        $newPost->body = $input['body'];
+        $newPost->published_on = $input['published_on'];
+        $newPost->status = $input['status'];
+        $newPost->slug = $input['slug'];
+        $newPost->summary = $input['summary'];
 
         //Change input of slug to make sure its URL friendly
         if (empty($newPost->slug)) {
             $newPost->slug = Str::slug($newPost->title);
         } else {
-            $newPost->slug  = Str::slug($newPost->slug);
+            $newPost->slug = Str::slug($newPost->slug);
         }
 
-         $item = Post::create($newPost->toArray());
+        $item = PostFacade::create($newPost->toArray());
 
-         // deal with post tags
+        // deal with post tags
         if (request()->has('tags')) {
             $tags = request()->input('tags');
 
             $item->addTags($tags);
         }
 
-         // call media manager file handler
+        // call media manager file handler
         call_user_func_array($this->fileHandler, [&$item, &$input, 'horizontal_featured_image']);
         call_user_func_array($this->fileHandler, [&$item, &$input, 'vertical_featured_image']);
         call_user_func_array($this->fileHandler, [&$item, &$input, 'gallery', false]);
@@ -240,19 +236,18 @@ class PostController extends AdminController
      */
     public function edit($id)
     {
-        $item = Post::find($id);
+        $item = PostFacade::find($id);
 
         $tags = Tag::orderBy('name', 'asc')->pluck('name', 'id');
 
-        $formOptions = array(
-            'route' => array('admin.post.update', $id),
+        $formOptions = [
+            'route' => ['admin.post.update', $id],
             'method' => 'put',
             'files' => true,
-        );
+        ];
 
         return view('pilot::admin.posts.form', compact('item', 'tags', 'formOptions'));
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -262,7 +257,7 @@ class PostController extends AdminController
      */
     public function update($id)
     {
-        $item = Post::find($id);
+        $item = PostFacade::find($id);
 
         $data = request()->except('image', 'gallery', 'tags');
 
@@ -293,7 +288,7 @@ class PostController extends AdminController
         // set success message
         session()->flash('alert-success', 'News post saved successfully!');
 
-        return redirect()->route('admin.post.edit', array($id));
+        return redirect()->route('admin.post.edit', [$id]);
     }
 
     /**
@@ -309,7 +304,7 @@ class PostController extends AdminController
             return redirect()->route('auth.denied');
         }
 
-        $post = Post::find($id);
+        $post = PostFacade::find($id);
 
         $post->tags()->detach();
 

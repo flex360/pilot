@@ -25,7 +25,7 @@ class AdminController extends Controller
     public function index()
     {
         $model = static::$model;
-        $className = static::$namespace . $model;
+        $className = $this->getClass(); //static::$namespace . $model;
 
         // get index columns
         $object = new $className();
@@ -48,7 +48,7 @@ class AdminController extends Controller
     public function create()
     {
         $model = static::$model;
-        $className = static::$namespace . $model;
+        $className = $this->getClass();
 
         $item = new $className;
 
@@ -66,7 +66,7 @@ class AdminController extends Controller
      */
     public function store()
     {
-        $className = static::$namespace . static::$model;
+        $className = $this->getClass();
 
         $item = $className::create(request()->except('fake_username_remembered', 'fake_password_remembered', 'redirect_to_route', 'flex_data'));
 
@@ -106,7 +106,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         $model = static::$model;
-        $className = static::$namespace . $model;
+        $className = $this->getClass();
 
         $item = $className::find($id);
 
@@ -126,7 +126,7 @@ class AdminController extends Controller
      */
     public function update($id)
     {
-        $className = static::$namespace . static::$model;
+        $className = $this->getClass();
 
         $item = $className::find($id);
         $item->fill(request()->except('fake_username_remembered', 'fake_password_remembered', 'redirect_to_route', 'flex_data'));
@@ -161,7 +161,7 @@ class AdminController extends Controller
             return redirect()->route('auth.denied');
         }
 
-        $className = static::$namespace . static::$model;
+        $className = $this->getClass();
 
         $className::destroy($id);
 
@@ -178,5 +178,10 @@ class AdminController extends Controller
         $parts = explode('\\', $model);
 
         return isset($parts[count($parts) - 1]) ? $parts[count($parts) - 1] : null;
+    }
+
+    protected function getClass()
+    {
+        throw new \Exception('This class must define a custom getClass() method.', 1);
     }
 }

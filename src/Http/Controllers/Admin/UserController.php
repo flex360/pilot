@@ -115,4 +115,9 @@ class UserController extends AdminController
 
         return redirect()->route('admin.user.edit', [$id]);
     }
+
+    protected function getClass()
+    {
+        return User::class;
+    }
 }

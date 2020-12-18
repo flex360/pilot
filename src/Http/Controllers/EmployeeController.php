@@ -2,24 +2,24 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
+use Flex360\Pilot\Facades\Page as PageFacade;
 use Flex360\Pilot\Pilot\Department;
-use Flex360\Pilot\Pilot\Employee;
 use Flex360\Pilot\Pilot\Page;
-use Flex360\Pilot\Pilot\ResourceCategory;
 
 class EmployeeController extends Controller
 {
     /**
      * Load /employees page;
      *
-     * @return View 
+     * @return View
      */
     public function index()
     {
         //get all resource categories, order by name
-        $employees = Employee::with('departments')->orderBy('first_name');
+        $employees = EmployeeFacade::with('departments')->orderBy('first_name');
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'Employees'
         ]);
 
@@ -29,7 +29,7 @@ class EmployeeController extends Controller
     /**
      * Load /department/{department}/{slug} page;
      *
-     * @return View 
+     * @return View
      */
     public function departmentLandingPage(Department $department)
     {
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
         $tags = $department->tags();
         $resources = $department->resources();
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => $department->name . 'Department'
         ]);
 

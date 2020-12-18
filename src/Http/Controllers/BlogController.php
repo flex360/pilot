@@ -2,20 +2,20 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
-use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Post;
 use Illuminate\Support\Facades\Auth;
+use Flex360\Pilot\Facades\Post as PostFacade;
+use Flex360\Pilot\Facades\Page as PageFacade;
 
 class BlogController extends Controller
 {
-    
     public function index()
     {
-        $posts = Post::published()
+        $posts = PostFacade::published()
                 ->orderBy('published_on', 'desc')
                 ->simplePaginate(10);
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'News'
         ]);
 
@@ -24,11 +24,11 @@ class BlogController extends Controller
 
     public function loadMorePostIntoIndex()
     {
-        $posts = Post::published()
+        $posts = PostFacade::published()
                 ->orderBy('published_on', 'desc')
                 ->simplePaginate(10);
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'News'
         ]);
 
@@ -37,7 +37,7 @@ class BlogController extends Controller
 
     public function post($id, $slug)
     {
-        $query = Post::where('id', '=', $id);
+        $query = PostFacade::where('id', '=', $id);
 
         if (Auth::guest()) {
             $query = $query->where('status', '=', 30);
@@ -54,7 +54,7 @@ class BlogController extends Controller
 
     public function tagged($id, $slug)
     {
-        $posts = Post::join(config('pilot.table_prefix', '') . 'post_tag', config('pilot.table_prefix', '') . 'posts.id', '=', config('pilot.table_prefix', '') . 'post_tag.post_id')
+        $posts = PostFacade::join(config('pilot.table_prefix', '') . 'post_tag', config('pilot.table_prefix', '') . 'posts.id', '=', config('pilot.table_prefix', '') . 'post_tag.post_id')
                 ->where(config('pilot.table_prefix', '') . 'post_tag.tag_id', '=', $id)
                 ->published()
                 ->where(config('pilot.table_prefix', '') . 'posts.status', '=', 30)
@@ -64,7 +64,7 @@ class BlogController extends Controller
         $slug = str_replace('-', ' ', $slug);
         $slug = ucwords($slug);
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'Blog Posts: ' . $slug,
         ]);
 
@@ -73,7 +73,7 @@ class BlogController extends Controller
 
     public function loadMorePostIntoTagged($id, $slug)
     {
-        $posts = Post::join(config('pilot.table_prefix', '') . 'post_tag', config('pilot.table_prefix', '') . 'posts.id', '=', config('pilot.table_prefix', '') . 'post_tag.post_id')
+        $posts = PostFacade::join(config('pilot.table_prefix', '') . 'post_tag', config('pilot.table_prefix', '') . 'posts.id', '=', config('pilot.table_prefix', '') . 'post_tag.post_id')
                 ->where(config('pilot.table_prefix', '') . 'post_tag.tag_id', '=', $id)
                 ->published()
                 ->where(config('pilot.table_prefix', '') . 'posts.status', '=', 30)
@@ -83,7 +83,7 @@ class BlogController extends Controller
         $slug = str_replace('-', ' ', $slug);
         $slug = ucwords($slug);
 
-        Page::mimic([
+        PageFacade::mimic([
             'title' => 'Blog Posts: ' . $slug,
         ]);
 
@@ -92,7 +92,7 @@ class BlogController extends Controller
 
     public function rss()
     {
-        $posts = Post::latest(20);
+        $posts = PostFacade::latest(20);
 
         return response()
             ->view('pilot::frontend.blog.rss', compact('posts'))

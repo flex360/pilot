@@ -1,5 +1,5 @@
 <?php
-if (! function_exists('str_limit')) {
+if (!function_exists('str_limit')) {
     /**
      * Limit the number of characters in a string.
      *
@@ -62,4 +62,9 @@ function pilotNav()
 function pilotNavItem($name, $url)
 {
     return new \Flex360\Pilot\Pilot\NavItem($name, $url);
+}
+
+function root_class($facade)
+{
+    return get_class($facade::getFacadeRoot());
 }
