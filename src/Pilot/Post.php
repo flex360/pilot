@@ -37,7 +37,7 @@ class Post extends Model implements HasMedia, PostContract
         'external_link', 'author'
     ];
 
-    protected $mediaAttributes = ['horizontal_featured_imge', 'vertical_featured_image'];
+    protected $mediaAttributes = ['horizontal_featured_image', 'vertical_featured_image'];
 
     public function getDates()
     {
