@@ -17,6 +17,7 @@ use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 
 class Event extends Model implements HasMedia
