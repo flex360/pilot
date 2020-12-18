@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Flex360\Pilot\Pilot\Department;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
@@ -16,16 +17,16 @@ use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 
 class Employee extends Model implements HasMedia
 {
-    use PresentableTrait,
-        SocialMetadataTrait,
-        UserHtmlTrait,
-        HasMediaTrait,
-        SoftDeletes,
-        HasEmptyStringAttributes,
-        PilotTablePrefix;
+    use PresentableTrait, HasMediaTrait, 
+        SoftDeletes, HasMediaAttributes,
+        SocialMetadataTrait, UserHtmlTrait,
+        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
+    }
 
     protected $table = 'employee';
 
@@ -36,47 +37,16 @@ class Employee extends Model implements HasMedia
          'email', 'office_location',
     ];
 
-    public function registerMediaConversions(Media $media = null)
-    {
-        // let's always use standard names like thumb, xsmall, small, medium, large, xlarge
-        $this->addMediaConversion('thumb')
-        ->crop(Manipulations::CROP_TOP_RIGHT, 300, 300);
-
-        $this->addMediaConversion('small')
-            ->width(300)
-            ->height(300);
-    }
+    protected $mediaAttributes = ['photo'];
 
     public function departments()
     {
-        return $this->belongsToMany(Department::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
+        return $this->belongsToMany(root_class(DepartmentFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
     }
 
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function getPhotoAttribute($value)
-    {
-        $mediaItem = $this->getFirstMedia('photo');
-
-        if (!empty($mediaItem)) {
-            return $mediaItem->getUrl();
-        }
-
-        return $value;
-    }
-
-    public function getPhotoThumbAttribute($value)
-    {
-        $mediaItem = $this->getFirstMedia('photo');
-
-        if (!empty($mediaItem)) {
-            return $mediaItem->getUrl('thumb');
-        }
-
-        return $value;
     }
 
     public static function getSelectList()
@@ -177,7 +147,7 @@ class Employee extends Model implements HasMedia
 		// end range 7 days from now
 		$end = date('z') + 1 + 7;
 
-		return Employee::whereRaw("DAYOFYEAR(birth_date) BETWEEN $start AND $end")
+		return static::whereRaw("DAYOFYEAR(birth_date) BETWEEN $start AND $end")
 						->orderBy(\DB::raw('DAYOFYEAR(birth_date)'))
 						->limit(5)
 						->get();
@@ -191,7 +161,7 @@ class Employee extends Model implements HasMedia
 		// end range 7 days from now
 		$end = date('z') + 1 + 7;
 
-		return Employee::whereRaw("DAYOFYEAR(start_date) BETWEEN $start AND $end")
+		return static::whereRaw("DAYOFYEAR(start_date) BETWEEN $start AND $end")
 						->orderBy(\DB::raw('DAYOFYEAR(start_date)'))
 						->limit(5)
 						->get();
@@ -207,7 +177,7 @@ class Employee extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Employee::getStatuses();
+        $status = static::getStatuses();
 
         return (object) [
             'id' => $this->status,

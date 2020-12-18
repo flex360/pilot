@@ -16,16 +16,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 
 class Post extends Model implements HasMedia
 {
-    use PresentableTrait,
-        SocialMetadataTrait,
-        UserHtmlTrait,
-        HasMediaTrait,
-        SoftDeletes,
-        HasEmptyStringAttributes,
-        PilotTablePrefix;
+    use PresentableTrait, HasMediaTrait, 
+        SoftDeletes, HasMediaAttributes,
+        SocialMetadataTrait, UserHtmlTrait,
+        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
+    }
 
     protected $table = 'posts';
 
@@ -37,6 +37,8 @@ class Post extends Model implements HasMedia
         'title', 'body', 'summary', 'horizontal_featured_image', 'vertical_featured_image', 'gallery',
         'external_link', 'author'
     ];
+
+    protected $mediaAttributes = ['horizontal_featured_imge', 'vertical_featured_image'];
 
     public function getDates()
     {
@@ -224,28 +226,5 @@ class Post extends Model implements HasMedia
         }
 
         return $query;
-    }
-
-    public function registerMediaConversions(Media $media = null)
-    {
-        // let's always use standard names like thumb, xsmall, small, medium, large, xlarge
-
-        $this->addMediaConversion('thumb')
-             ->crop(Manipulations::CROP_TOP_RIGHT, 300, 300);
-
-        $this->addMediaConversion('small')
-             ->width(300)
-             ->height(300);
-    }
-
-    public function getImageAttribute($value)
-    {
-        $mediaItem = $this->getFirstMedia('image');
-
-        if (!empty($mediaItem)) {
-            return $mediaItem->getUrl();
-        }
-
-        return $value;
     }
 }

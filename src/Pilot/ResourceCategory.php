@@ -3,6 +3,7 @@
 namespace Flex360\Pilot\Pilot;
 
 use Flex360\Pilot\Pilot\Resource;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
@@ -12,17 +13,17 @@ use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Illuminate\Support\Str;
 
 class ResourceCategory extends Model implements HasMedia
 {
-    use PresentableTrait,
-        SocialMetadataTrait,
-        UserHtmlTrait,
-        HasMediaTrait,
-        SoftDeletes,
-        HasEmptyStringAttributes,
-        PilotTablePrefix;
+    use PresentableTrait, HasMediaTrait, 
+        SoftDeletes, HasMediaAttributes,
+        SocialMetadataTrait, UserHtmlTrait,
+        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
+    }
 
     protected $table = 'resource_categories';
 
@@ -31,11 +32,12 @@ class ResourceCategory extends Model implements HasMedia
     protected $emptyStrings = [
         'name',
     ];
-    
+
+    protected $mediaAttributes = [];
 
     public function resources()
     {
-        return $this->belongsToMany(Resource::class, $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('title');
+        return $this->belongsToMany(root_class(ResourceFacade::class), $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')->orderBy('title');
     }
 
     public static function getSelectList()

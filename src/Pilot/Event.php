@@ -17,15 +17,16 @@ use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 
 class Event extends Model implements HasMedia
 {
-    use PresentableTrait,
-        UserHtmlTrait,
-        HasMediaTrait,
-        SoftDeletes,
-        HasEmptyStringAttributes,
-        PilotTablePrefix;
+    use PresentableTrait, HasMediaTrait, 
+        SoftDeletes, HasMediaAttributes,
+        SocialMetadataTrait, UserHtmlTrait,
+        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
+    }
 
     protected $table = 'events';
 
@@ -34,6 +35,8 @@ class Event extends Model implements HasMedia
     protected $html = ['body'];
 
     protected $emptyStrings = ['title', 'body', 'short_description', 'gallery', 'image'];
+
+    protected $mediaAttributes = ['image', 'gallery'];
 
     public function getDates()
     {
@@ -113,15 +116,6 @@ class Event extends Model implements HasMedia
     public function setPublishedAtAttribute($value)
     {
         $this->attributes['published_at'] = date('Y-m-d H:i:s', strtotime($value));
-    }
-
-    /**
-     * Converts the gallery property to a JSON string when set
-     * @param array $value
-     */
-    public function setGalleryAttribute($value)
-    {
-        $this->attributes['gallery'] = serialize($value);
     }
 
     public function addTags($tags)
@@ -302,29 +296,6 @@ class Event extends Model implements HasMedia
         }
 
         return $this->start->format($startFormat) . $separator . $this->end->format($endFormat);
-    }
-
-    public function registerMediaConversions(Media $media = null)
-    {
-        // let's always use standard names like thumb, xsmall, small, medium, large, xlarge
-
-        $this->addMediaConversion('thumb')
-             ->crop(Manipulations::CROP_TOP_RIGHT, 300, 300);
-
-        $this->addMediaConversion('small')
-             ->width(300)
-             ->height(300);
-    }
-
-    public function getImageAttribute($value)
-    {
-        $mediaItem = $this->getFirstMedia('image');
-
-        if (! empty($mediaItem)) {
-            return $mediaItem->getUrl();
-        }
-
-        return $value;
     }
 
     public function hasImage()

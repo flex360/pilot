@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Tag;
 use Spatie\Image\Manipulations;
 use Flex360\Pilot\Pilot\Employee;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
@@ -16,16 +18,16 @@ use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 
 class Department extends Model implements HasMedia
 {
-    use PresentableTrait,
-        SocialMetadataTrait,
-        UserHtmlTrait,
-        HasMediaTrait,
-        SoftDeletes,
-        HasEmptyStringAttributes,
-        PilotTablePrefix;
+    use PresentableTrait, HasMediaTrait, 
+        SoftDeletes, HasMediaAttributes,
+        SocialMetadataTrait, UserHtmlTrait,
+        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
+    }
 
     protected $table = 'department';
 
@@ -35,16 +37,7 @@ class Department extends Model implements HasMedia
         'name', 'intro_text', 'featured_image', 'slug', 'summary',
     ];
 
-    public function registerMediaConversions(Media $media = null)
-    {
-        // let's always use standard names like thumb, xsmall, small, medium, large, xlarge
-        $this->addMediaConversion('thumb')
-        ->crop(Manipulations::CROP_TOP_RIGHT, 300, 300);
-
-        $this->addMediaConversion('small')
-            ->width(300)
-            ->height(300);
-    }
+    protected $mediaAttributes = ['featured_image'];
 
     public static function boot()
     {
@@ -59,7 +52,7 @@ class Department extends Model implements HasMedia
 
     public function employees()
     {
-        return $this->belongsToMany(Employee::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
+        return $this->belongsToMany(root_class(EmployeeFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
     }
 
     public function tags()
@@ -69,7 +62,7 @@ class Department extends Model implements HasMedia
 
     public function resources()
     {
-        return $this->belongsToMany(Resource::class, config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('title');
+        return $this->belongsToMany(root_class(ResourceFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')->orderBy('title');
     }
 
     public function getFullNameAttribute($value)
@@ -79,28 +72,6 @@ class Department extends Model implements HasMedia
         }
         return null;
 
-    }
-
-    public function getFeaturedImageAttribute($value)
-    {
-        $mediaItem = $this->getFirstMedia('featured_image');
-
-        if (!empty($mediaItem)) {
-            return $mediaItem->getUrl();
-        }
-
-        return $value;
-    }
-
-    public function getFeaturedImageThumbAttribute($value)
-    {
-        $mediaItem = $this->getFirstMedia('featured_image');
-
-        if (!empty($mediaItem)) {
-            return $mediaItem->getUrl('thumb');
-        }
-
-        return $value;
     }
 
     public static function getSelectList()
