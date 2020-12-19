@@ -165,9 +165,14 @@ class Post extends Model implements HasMedia, PostContract
         ]);
     }
 
-    public function hasImage()
+    public function hasHorizontalImage()
     {
-        return !empty($this->image);
+        return !empty($this->horizontal_featured_image);
+    }
+
+    public function hasVerticalImage()
+    {
+        return !empty($this->vertical_featured_image);
     }
 
     public function getGalleryAttribute($value)
