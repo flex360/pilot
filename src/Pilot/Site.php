@@ -472,6 +472,10 @@ class Site extends Model implements HasMedia
                     [
                         'view' => 'style',
                         'title' => 'Internal Page Layout',
+                    ],
+                    [
+                        'view' => 'alert-module-test',
+                        'title' => 'Alert Module Test',
                     ]
                 ];
 
@@ -491,6 +495,9 @@ class Site extends Model implements HasMedia
                     }
                     if ($page->title == 'Internal Page Layout') {
                         $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
+                    }
+                    if ($page->title == 'Alert Module Test') {
+                        $page->addMedia(public_path('pilot-assets/img/alertModuleTest.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
                     }
                     $page->save();
                 }

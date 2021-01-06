@@ -5,7 +5,7 @@ return [
 
     'default_layout' => 'layouts.internal',
 
-    'backend_side_bar_layout' => false,
+    'backend_side_bar_layout' => true,
 
     'pilot_color' => '#43379D',
     'pilot_color_dark' => '#322975',
@@ -26,7 +26,35 @@ return [
             'routePattern' => 'admin.page.*',
             'view' => null,
             'target' => '_self',
-            'children' => null
+            'children' => [
+                'manage_pages' => [
+                    'name' => 'Manage Pages',
+                    'enabled' => true,
+                    'url' => ['admin.page.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_page' => [
+                    'name' => 'Add New Page',
+                    'enabled' => true,
+                    'url' => ['admin.page.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'manage_menus' => [
+                    'name' => 'Manage Menus',
+                    'enabled' => true,
+                    'url' => ['admin.menu.index'],
+                    'routePattern' => 'admin.menu.*',
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ],
         ],
         'news' => [
             'name' => 'News',
@@ -91,7 +119,26 @@ return [
             'routePattern' => 'admin.annoucement.*',
             'view' => null,
             'target' => '_self',
-            'children' => null
+            'children' => [
+                'manage_alerts' => [
+                    'name' => 'Manage Alerts',
+                    'enabled' => true,
+                    'url' => ['admin.annoucement.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_alert' => [
+                    'name' => 'Add New Alert',
+                    'enabled' => true,
+                    'url' => ['admin.annoucement.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ]
         ],
         'resources' => [
             'name' => 'Resources',

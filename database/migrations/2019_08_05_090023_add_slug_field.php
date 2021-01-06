@@ -27,6 +27,7 @@ class AddSlugField extends Migration
              'horizontal_featured_image' => '',
              'vertical_featured_image' => '',
              'gallery' => '',
+             'external_link' => '',
              'status' => 10,
              'published_on' => Carbon::now(),
              'created_at' => Carbon::now(),
