@@ -154,7 +154,7 @@ window.addEventListener('load', (event) => {
     });
 
     // date pickr
-    const flatpickr = require("flatpickr");
+    const flatpickr = require("flatpickr").default;
 
     // standard dateTimePicker used on Events and News modules
     flatpickr('.datetimepicker', {
@@ -178,14 +178,14 @@ window.addEventListener('load', (event) => {
         key: key,
         toolbarButtons: {
             'moreText': {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['paragraphFormat', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineStyle', 'clearFormatting'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 4
             },
             'moreParagraph': {
-                buttons: ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'formatOLSimple',   'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
+                buttons: ['formatUL', 'formatOL', 'alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'lineHeight', 'outdent', 'indent'],
                 align: 'left',
-                buttonsVisible: 0
+                buttonsVisible: 2
             },
             'moreRich': {
                 buttons: ['bootstrapButtonsDropdown', 'insertLink',  'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR'],
