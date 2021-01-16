@@ -5,7 +5,6 @@ namespace Flex360\Pilot\Http\Controllers;
 use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Flex360\Pilot\Facades\Page as PageFacade;
 use Flex360\Pilot\Pilot\Department;
-use Flex360\Pilot\Pilot\Page;
 
 class EmployeeController extends Controller
 {

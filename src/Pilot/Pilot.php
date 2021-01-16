@@ -123,6 +123,12 @@ class Pilot
                 Route::post('/department-employees/{id}/staffers/reorderStaffWithinDepartments', 'Admin\DepartmentController@reorderStaffWithinDepartment')->name('departmentStaff.reorder');
                 Route::resource('department', 'Admin\DepartmentController');
 
+                // Backend Routes for Standard Testimonials Module
+                Route::get('testimonial/{id}/copy', 'Admin\TestimonialController@copy')->name('testimonial.copy');
+                Route::get('testimonial/{id}/delete', 'Admin\TestimonialController@destroy')
+                    ->name('testimonial.destroy');
+                Route::resource('testimonial', 'Admin\TestimonialController');
+
                 // Backend Routes for Routes for Settings module
                 Route::resource('setting', 'Admin\SettingController');
                 Route::get('setting/{setting}', 'Admin\SettingController@settings')->name('setting.default');
@@ -202,6 +208,9 @@ class Pilot
                 // employee frontend routes
                 Route::get('/employees', 'EmployeeController@index')->name('employee.index');
                 Route::get('/department/{department}/{slug}', 'EmployeeController@departmentLandingPage')->name('department.index');
+
+                // testimonial frontend routes
+                Route::get('/testimonials', 'TestimonialController@index')->name('testimonial.index');
             });
 
             // sitemap routes

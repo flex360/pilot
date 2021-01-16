@@ -1,0 +1,1 @@
+var quoteLabel = document.querySelector('.form-group-quote label[title="Position: 10"]').innerHTML = '<div class="required">Quote</div>';

@@ -58,7 +58,7 @@ return [
         ],
         'news' => [
             'name' => 'News',
-            'enabled' => true,
+            'enabled' => false,
             'url' => ['admin.post.index'],
             'routePattern' => 'admin.post.*',
             'view' => null,
@@ -114,7 +114,7 @@ return [
         ],
         'annoucements' => [
             'name' => 'Alerts',
-            'enabled' => true,
+            'enabled' => false,
             'url' => ['admin.annoucement.index'],
             'routePattern' => 'admin.annoucement.*',
             'view' => null,
@@ -142,7 +142,7 @@ return [
         ],
         'resources' => [
             'name' => 'Resources',
-            'enabled' => true,
+            'enabled' => false,
             'url' => ['admin.resource.index'],
             'routePattern' => 'admin.resource.*',
             'view' => 'published',
@@ -188,7 +188,7 @@ return [
         ],
         'employees' => [
             'name' => 'Employees',
-            'enabled' => true,
+            'enabled' => false,
             'url' => ['admin.employee.index'],
             'routePattern' => 'admin.employee.*',
             'view' => 'published',
@@ -236,6 +236,16 @@ return [
                     'resources_relationship' => true,
                 ]
             ],
+        ],
+        'testimonials' => [
+            'name' => 'Testimonials',
+            'enabled' => false,
+            'url' => ['admin.testimonial.index'],
+            'routePattern' => 'admin.testimonial.*',
+            'view' => 'published',
+            'target' => '_self',
+            'international-testimonials' => false,
+            'children' => null
         ],
         'forms' => [
             'name' => 'Forms',
