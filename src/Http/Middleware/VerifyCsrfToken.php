@@ -20,6 +20,8 @@ class VerifyCsrfToken extends BaseVerifier
         'pilot/post/*',
         'pilot/resource/*',
         'pilot/resourcecategory/*',
+        'pilot/faq/*',
+        'pilot/faqcategory/*',
         'pilot/employee/*',
         'pilot/department/*',
         'pilot/department-employees/*',

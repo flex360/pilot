@@ -245,7 +245,73 @@ return [
             'view' => 'published',
             'target' => '_self',
             'international-testimonials' => false,
-            'children' => null
+            'children' => [
+                'manage_testimonial' => [
+                    'name' => 'Manage Testimonials',
+                    'enabled' => true,
+                    'url' => ['admin.testimonial.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_testimonial' => [
+                    'name' => 'Add New Testimonial',
+                    'enabled' => true,
+                    'url' => ['admin.testimonial.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ]
+        ],
+        'faqs' => [
+            'name' => 'FAQs',
+            'enabled' => true,
+            'url' => ['admin.faq.index'],
+            'routePattern' => 'admin.faq.*',
+            'view' => 'published',
+            'target' => '_self',
+            'uses-long-answers' => false,
+            'children' => [
+                'manage_employee' => [
+                    'name' => 'Manage FAQs',
+                    'enabled' => true,
+                    'url' => ['admin.faq.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_employee' => [
+                    'name' => 'Add New FAQ',
+                    'enabled' => true,
+                    'url' => ['admin.faq.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'manage_faq_categories' => [
+                    'name' => 'Manage FAQ Categories',
+                    'enabled' => true,
+                    'url' => ['admin.faqcategory.index'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null
+                ],
+                'add_faq_category' => [
+                    'name' => 'Add New FAQ Category',
+                    'enabled' => true,
+                    'url' => ['admin.faqcategory.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ]
         ],
         'forms' => [
             'name' => 'Forms',

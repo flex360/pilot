@@ -3,23 +3,23 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\ResourceCategory;
-use Flex360\Pilot\Facades\ResourceCategory as ResourceCategoryFacade;
-use Flex360\Pilot\Pilot\Department;
-use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Spatie\Image\Manipulations;
+use Illuminate\Support\Facades\DB;
+use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
-use Spatie\MediaLibrary\Models\Media;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
-use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Facades\Faq as FaqFacade;
+use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
 
-class Resource extends Model implements HasMedia
+class Faq extends Model implements HasMedia
 {
     use PresentableTrait, HasMediaTrait, 
         SoftDeletes, HasMediaAttributes,
@@ -28,34 +28,27 @@ class Resource extends Model implements HasMedia
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
-    protected $table = 'resources';
+    protected $table = 'faqs';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'title', 'short_description', 'link'
+        'question', 'answer'
     ];
 
-    protected $mediaAttributes = ['link'];
-
-    public function resource_categories()
+    public function getShortAnswerBackend()
     {
-        return $this->belongsToMany(root_class(ResourceCategoryFacade::class), $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')
-                    ->orderBy('name');
+        if ($this->answer != null) {
+            return substr(strip_tags($this->answer), 0, 60) . '...';
+        } else {
+            return 'N/A';
+        }
     }
 
-    public function departments()
+    public function faq_categories()
     {
-        return $this->belongsToMany(root_class(DepartmentFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'resource')
+        return $this->belongsToMany(root_class(FaqCategoryFacade::class), $this->getPrefix() . 'faq_' . config('pilot.table_prefix') . 'faq_category')
                     ->orderBy('name');
-    }
-
-    public static function getSelectList()
-    {
-        return static::orderBy('title')
-            ->get()
-            ->prepend(['id' => '', 'title' => '[No Category Selected]'])
-            ->pluck('title', 'id');
     }
 
     public function duplicate()
@@ -65,12 +58,7 @@ class Resource extends Model implements HasMedia
         $newModel = $model->replicate();
 
         // append to the title to designate a copy
-        $newModel->title .= ' (Copy)';
-
-        // copy media items
-        foreach ($model->media as $media) {
-            $media->copyTo($newModel);
-        }
+        $newModel->question .= ' (Copy)';
 
         // make new copy a draft
         $newModel->status = 10;
@@ -78,8 +66,8 @@ class Resource extends Model implements HasMedia
         $newModel->push();
 
         // copy all attached categories over to new model
-        foreach ($model->resource_categories as $cat) {
-            $newModel->resource_categories()->attach($cat);
+        foreach ($model->faq_categories as $cat) {
+            $newModel->faq_categories()->attach($cat);
         }
 
         return $newModel;
@@ -87,26 +75,26 @@ class Resource extends Model implements HasMedia
 
     public static function getStatuses()
     {
-        return [
+        return array(
             10 => 'Draft',
             30 => 'Published'
-        ];
+        );
     }
 
     public function getStatus()
     {
-        $status = static::getStatuses();
+        $status = \Faq::getStatuses();
 
-        return (object) [
+        return (object) array(
             'id' => $this->status,
             'name' => $status[$this->status],
-        ];
+        );
     }
 
     public function url()
     {
-        return route('resource.index', [
-            'resource' => $this->id,
+        return route('faq.index', [
+            'faq' => $this->id,
             'slug' => $this->getSlug(),
         ]);
     }
@@ -118,6 +106,15 @@ class Resource extends Model implements HasMedia
 
     public function getSlug()
     {
-        return Str::slug($this->title);
+        return Str::slug($this->question);
     }
+
+    public function getCategoryUrl($categoryId)
+    {
+        return route('faq.index', [
+            'cat' => $categoryId,
+            'faq' => $this->id,
+        ]) . '#cat-' . $categoryId . '-faq-' . $this->id;
+    }
+
 }

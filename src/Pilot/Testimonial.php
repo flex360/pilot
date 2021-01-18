@@ -4,7 +4,6 @@ namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
-use Flex360\Pilot\Facades\Department as DepartmentFacade;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +16,7 @@ use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Flex360\Pilot\Pilot\Scopes\TestimonialsWithMediaScope;
+use Flex360\Pilot\Scopes\TestimonialsWithMediaScope;
 
 class Testimonial extends Model implements HasMedia
 {

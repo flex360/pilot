@@ -1,6 +1,6 @@
 <?php
 
-namespace Flex360\Pilot\Pilot\Scopes;
+namespace Flex360\Pilot\Scopes;
 
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Model;

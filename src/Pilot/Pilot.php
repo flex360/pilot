@@ -129,6 +129,20 @@ class Pilot
                     ->name('testimonial.destroy');
                 Route::resource('testimonial', 'Admin\TestimonialController');
 
+                // Backend Routes for Standard FAQ & FAQ Categories Modules
+                Route::get('/faqcategory/{id}/faqs', 'Admin\FaqCategoryController@faqs')
+                ->name('faqcategory.faqs');
+                Route::post(
+                    '/faqcategory/{faqcategory}/faqs/reorderFaqsWithinCategory',
+                    'Admin\FaqCategoryController@reorderFaqsWithinCategory'
+                )->name('faqcategoryFaqs.reorder');
+                Route::resource('faqcategory', 'Admin\FaqCategoryController');
+                Route::get('/faq/{id}/copy', 'Admin\FaqController@copy')
+                    ->name('faq.copy');
+                Route::get('/faq/{id}/delete', 'Admin\FaqController@destroy')
+                    ->name('faq.destroy');
+                Route::resource('faq', 'Admin\FaqController');
+
                 // Backend Routes for Routes for Settings module
                 Route::resource('setting', 'Admin\SettingController');
                 Route::get('setting/{setting}', 'Admin\SettingController@settings')->name('setting.default');
@@ -211,6 +225,10 @@ class Pilot
 
                 // testimonial frontend routes
                 Route::get('/testimonials', 'TestimonialController@index')->name('testimonial.index');
+
+                // faq frontend routes
+                Route::get('/faqs', 'FaqController@index')->name('faq.index');
+                Route::get('/faqs/{faq}/{slug}', 'FaqController@detail')->name('faq.detail');
             });
 
             // sitemap routes

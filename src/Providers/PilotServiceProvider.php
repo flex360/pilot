@@ -2,6 +2,12 @@
 
 namespace Flex360\Pilot\Providers;
 
+use Flex360\Pilot\View\Components\Admin\Input;
+use Flex360\Pilot\View\Components\Admin\Panel;
+use Flex360\Pilot\View\Components\Admin\TabContent;
+use Flex360\Pilot\View\Components\Admin\Table;
+use Flex360\Pilot\View\Components\Admin\TabPane;
+use Flex360\Pilot\View\Components\Img;
 use Flex360\Pilot\Console\Commands\FixMedia;
 use Flex360\Pilot\Pilot\Nav;
 use Flex360\Pilot\Pilot\Tag;
@@ -116,6 +122,19 @@ class PilotServiceProvider extends ServiceProvider
         class_alias(Pilot::class, 'Pilot');
         class_alias(Nav::class, 'PilotNav');
         class_alias(NavItem::class, 'PilotNavItem');
+
+
+        // Load Standard View/Blade components
+        $this->loadViewComponentsAs('pilot', [
+            Img::class,
+            Input::class,
+            Panel::class,
+            Tab::class,
+            TabContent::class,
+            Table::class,
+            TabPane::class,
+            Tabs::class
+        ]);
 
         MediaHandler::register();
     }

@@ -5,7 +5,6 @@ namespace Flex360\Pilot\Http\Controllers\Admin;
 use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Dynamo;
 use Jzpeepz\Dynamo\IndexTab;
-use Flex360\Pilot\Pilot\Employee;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 
 class EmployeeController extends DynamoController
