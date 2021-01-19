@@ -84,6 +84,34 @@ class Post extends Model implements HasMedia, PostContract
         return $this->belongsToMany(Tag::class, $this->getPrefix() . 'post_tag');
     }
 
+    public function duplicate()
+    {
+        $model = $this;
+
+        $newModel = $model->replicate();
+    
+        // append to the title to designate a copy
+        $newModel->title .= ' (Copy)';
+
+        // copy media items
+        foreach ($model->media as $media) {
+            $media->copyTo($newModel);
+        }
+
+        // make new copy a draft
+        $newModel->status = 10;
+
+
+        $newModel->push();
+
+        // copy all attached categories over to new model
+        foreach ($model->tags as $tag) {
+            $newModel->tags()->attach($tag);
+        }
+
+        return $newModel;
+    }
+
     /**
      * Gets summary of body using helper function
      *
@@ -173,6 +201,16 @@ class Post extends Model implements HasMedia, PostContract
     public function hasVerticalImage()
     {
         return !empty($this->vertical_featured_image);
+    }
+
+    public function hasImage()
+    {
+        return $this->hasHorizontalImage() || $this->hasVerticalImage();
+    }
+
+    public function getImageBackgroundColor()
+    {
+        return $this->fi_background_color;
     }
 
     public function getGalleryAttribute($value)

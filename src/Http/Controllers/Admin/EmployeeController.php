@@ -2,9 +2,10 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Dynamo;
+use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 
 class EmployeeController extends DynamoController
@@ -12,7 +13,6 @@ class EmployeeController extends DynamoController
     public function getDynamo()
     {
         $dynamo = Dynamo::make(get_class(EmployeeFacade::getFacadeRoot()))
-                    ->auto()
                     ->removeField('position')
                     ->removeField('deleted_at')
                     ->applyScopes()
@@ -25,16 +25,44 @@ class EmployeeController extends DynamoController
                     ->text('last_name')
                     ->text('start_date', [
                         'class' => 'datepicker'
-                    ])
-                    ->text('birth_date', [
-                        'class' => 'datepicker'
-                    ])
-                    ->text('job_title')
-                    ->text('phone_number')
-                    ->text('extension')
-                    ->text('email')
-                    ->text('office_location')
-                    ->select('status', [
+                    ]);
+
+                    // if birth_date is enabled, include datetimepicker for it
+                    if (config('pilot.plugins.employees.birth_date', false)) {
+                        $dynamo->text('birth_date', [
+                            'class' => 'datepicker'
+                        ]);
+                    }
+
+                    
+                    $dynamo->text('job_title')
+                    ->text('phone_number');
+
+                    // if extension is enabled, include datetimepicker for it
+                    if (config('pilot.plugins.employees.extension', false)) {
+                        $dynamo->text('extension');
+                    }
+
+                    
+                    $dynamo->text('email')
+                    ->text('office_location');
+
+                     // if extension is enabled, include datetimepicker for it
+                     if (config('pilot.plugins.employees.bio', false)) {
+                        $dynamo->textarea('bio', [
+                            'class' => 'wysiwyg-editor'
+                        ]);
+                    }
+
+                    // if departments is enabled, include HasManySimple multi-selector
+                    if (config('pilot.plugins.employees.children.departments.enabled', false)) {
+                        $dynamo->hasManySimple('departments', [
+                            'modelClass' => 'Flex360\Pilot\Pilot\Department',
+                            'help' => 'Select the Departments this Employees belongs to. If you don\'t see the Department available, you will need to <a href="/pilot/department/create" target="_blank">create the Department</a>.'
+                        ]);
+                    }
+
+                    $dynamo->select('status', [
                         'options' => EmployeeFacade::getStatuses(),
                         'help' => 'Save a draft to come back to this later. Published Employees will be automatically displayed on the front-end of the website after you save.',
                         'position' => 500,
@@ -80,14 +108,6 @@ class EmployeeController extends DynamoController
                         return '<a href="employee/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever. ( FLEX360 can bring it back for you )\')" class="btn btn-secondary btn-sm">Delete</a>';
                     })
                     ->indexOrderBy('last_name');
-
-        // if departments is enabled, include HasManySimple multi-selector
-        if (config('pilot.plugins.employees.children.departments.enabled')) {
-            $dynamo->hasManySimple('departments', [
-                'modelClass' => 'Flex360\Pilot\Pilot\Department',
-                'help' => 'Select the Departments this Employees belongs to. If you don\'t see the Department available, you will need to <a href="/pilot/department/create" target="_blank">create the Department</a>.'
-            ]);
-        }
 
         return $dynamo;
     }

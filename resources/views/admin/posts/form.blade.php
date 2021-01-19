@@ -60,6 +60,34 @@
                                 Horizontal Featured Image
                             </label>
 
+                            <!-- Background Color Swatch Radio Button Selector -->
+                            @if (config('pilot.plugins.news.image_background_swatch_picker', false))
+
+                            <div class="help-block">
+                                Select a background color if you don't have an image, and your logo in will 
+                                automatically display in front of this background color. Or upload your own image to show up at the top of this post.<br>
+                            </div>
+
+                            <div class="color-swatch-picker">
+                                <ul>
+                                @foreach (config('pilot.plugins.news.background-color-options') as $color)
+                               
+                                    <li>
+                                        <label>
+                                            {!! Form::radio('fi_background_color', $color, $item->fi_background_color == $color || (UrlHelper::getPart(3) == 'create' && $loop->first) ? true : false) !!}
+                                            {{-- <input type="radio" name="fi_background_color" value="black" {{ UrlHelper::getPart(3) == 'create' && $loop->first ? 'checked' : '' }}> --}}
+                                            <span class="swatch" style="background-color: {{ $color }}"></span> 
+                                        </label>
+                                    </li>
+                                @endforeach
+                                </ul> 
+                            </div> 
+                            @endif
+
+                            <div class="help-block">
+                                For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 1600:640px for quality.
+                            </div>
+
                             <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'horizontal_featured_image', 'options' => ['maxWidth' => 1600]]); ?>
 
                             @include('dynamo::bootstrap4.partials.fields.singleImage', ['display' => true, 'field' => $field])
@@ -75,6 +103,10 @@
                             <label for="" title="">
                                 Vertical Featured Image
                             </label>
+
+                            <div class="help-block">
+                                For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 1600:640px for quality.
+                            </div>
 
                             <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'vertical_featured_image', 'options' => ['maxWidth' => 1600]]); ?>
 

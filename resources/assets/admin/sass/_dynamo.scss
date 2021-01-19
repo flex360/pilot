@@ -74,6 +74,26 @@
     color: red;
 }
 
+//Styling for color Swatch picker on News module for background-color on images
+.color-swatch-picker ul{list-style:none; padding:0; margin: 0;}
+
+.color-swatch-picker li{margin: 0 20px 0 0; display: inline-block;}
+
+.color-swatch-picker label{cursor: pointer;}
+
+.color-swatch-picker input{display:none;}
+
+.color-swatch-picker input[type="radio"]:checked + .swatch{box-shadow: inset 0 0 0 4px white;}
+
+.swatch{
+  display:inline-block;
+  vertical-align: middle;
+  height: 30px;
+  width:30px;
+  margin: 0 5px 0 0 ;
+  border: 1px solid #d4d4d4;
+}
+
 //Styling for dynamo search label, panel-bodys, tables, and nav
 .panel-body .table {
     margin-bottom: 0;

@@ -17,6 +17,7 @@ class DepartmentController extends DynamoController
 {
     public function getDynamo()
     {
+
         $departmentDeatilsFormTab = FormTab::make('Department Details')
         ->text('name')
         ->textarea('intro_text', [
@@ -35,7 +36,7 @@ class DepartmentController extends DynamoController
         ]);
 
         // if departments has tags_relationship enabled, include HasManySimple multi-selector
-        if (config('pilot.plugins.employees.children.departments.tags_relationship')) {
+        if (config('pilot.plugins.employees.children.departments.tags_relationship', false)) {
             // $departmentDeatilsFormTab->hasManySimple('tags', [
             //     'modelClass' => 'Flex360\Pilot\Pilot\Tag',
             //     'help' => 'Select the relevant Tags for this Department. Tags let this Department become connected and display the most recentt News post and Events that have that
@@ -52,7 +53,7 @@ class DepartmentController extends DynamoController
             ]);
         }
         // if departments has resources_relationship enabled, include HasManySimple multi-selector
-        if (config('pilot.plugins.employees.children.departments.resources_relationship')) {
+        if (config('pilot.plugins.employees.children.departments.resources_relationship', false)) {
             // $departmentDeatilsFormTab->hasManySimple('resources', [
             //     'modelClass' => 'Flex360\Pilot\Pilot\Resource',
             //     'nameField' => 'title',
@@ -68,6 +69,12 @@ class DepartmentController extends DynamoController
                             create & publish Resources</a> before they will be available here.',
             ]);
         }
+
+        $departmentDeatilsFormTab->select('status', [
+            'options' => DepartmentFacade::getStatuses(),
+            'help' => 'Save a draft to come back to this later. Published departments will be automatically displayed on the front-end of the website after you save.',
+            'position' => 10,
+        ]);
 
         $dynamo = Dynamo::make(get_class(DepartmentFacade::getFacadeRoot()))
                     ->auto()
@@ -93,11 +100,11 @@ class DepartmentController extends DynamoController
                     });
 
         // if departments has resources_relationship enabled, include HasManySimple multi-selector
-        if (config('pilot.plugins.employees.children.departments.sort_employees_within_department')) {
+        if (config('pilot.plugins.employees.children.departments.sort_employees_within_department', false)) {
             $dynamo->addIndex('id', 'Order Staff', function ($item) {
                 //creates order staff button
                 //return '<a href="' . route('staffers.reorder') . '">Order</a>'
-                return '<a href="' . route('admin.department.staff', ['department' => $item->id]) . '" class="btn btn-success">Order</a>';
+                return '<a href="' . route('admin.department.staff', ['id' => $item->id]) . '" class="btn btn-success">Order</a>';
             });
         }
 

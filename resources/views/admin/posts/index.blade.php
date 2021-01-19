@@ -80,21 +80,25 @@
                         <tr>
                             <th>Date</th>
                             <th>Title</th>
+                            <th>Summary</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody class="dynamo-index-body">
                         @foreach ($posts as $post)
-                        <tr>
+                        <tr class="dynamo-index-row">
                             <td>{{ $post->published_on->format('n/j/Y g:i a') }}</td>
                             <td>{{ $post->title }}</td>
+                            <td>{{ $post->getSummary() }}</td>
                             <td>{{ $post->getStatus()->name }}</td>
-                            <td>
-                                {!! link_to_route('admin.post.edit', 'Edit', $post->id) !!}
-                                &nbsp;|&nbsp;
-                                <a href="{{ $post->url() }}" target="_blank">View</a>
+                            <td class="dynamo-width-of-action-row">
+                                <div style="display: flex; gap: 5px;">
+                                    <a href="{{ route('admin.post.edit', $post->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                    <a href="{{ route('admin.post.copy', $post->id) }}" class="btn btn-secondary btn-sm">Copy</a>
+                                    <a href="/pilot/post/{{ $post->id }}/delete" onclick="return confirm('Are you sure you want to delete this? This action cannot be undone and will be deleted forever. ( FLEX360 can bring it back for you )')" class="btn btn-secondary btn-sm">Delete</a>
+                                </div>
                             </td>
                         </tr>
                         @endforeach

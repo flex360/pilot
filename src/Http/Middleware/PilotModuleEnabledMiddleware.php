@@ -24,6 +24,8 @@ class PilotModuleEnabledMiddleware
         $resourceRoutes = ['resource.index'];
         $employeeRoutes = ['employee.index'];
         $departmentRoutes = ['department.index'];
+        $testimonialRoutes = ['testimonial.index'];
+        $faqRoutes  = ['faq.index', 'faq.detail'];
         // if the current route is a Pilot module route, but that module is disabled,
         // abort this request and return 404 response
         
@@ -58,6 +60,20 @@ class PilotModuleEnabledMiddleware
         // Department module check
         if (in_array($currentRouteName, $departmentRoutes)) {
             if (!config('pilot.plugins')['employees']['children']['departments']['enabled'] === true){
+                abort(404);
+            }
+        }
+
+        // Testimonial module check
+        if (in_array($currentRouteName, $testimonialRoutes)) {
+            if (!config('pilot.plugins')['testimonials']['enabled'] === true){
+                abort(404);
+            }
+        }
+
+        // Faq module check
+        if (in_array($currentRouteName, $faqRoutes)) {
+            if (!config('pilot.plugins')['faqs']['enabled'] === true){
                 abort(404);
             }
         }

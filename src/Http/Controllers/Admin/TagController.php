@@ -83,7 +83,7 @@ class TagController extends Controller
         // set success message
         session()->flash('alert-success', 'Tag deleted successfully!');
 
-        return redirect()->route('pilot::admin.tag.index');
+        return redirect()->route('admin.tag.index');
     }
 
     public function mergeTags()

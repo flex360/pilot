@@ -164,6 +164,20 @@ class PostController extends AdminController
         return view('pilot::admin.posts.index', compact('posts', 'draftsCount', 'tags', 'view'));
     }
 
+    public function copy($id)
+    {
+        $post = PostFacade::find($id);
+
+        $newModal = $post->duplicate();
+
+         // set success message
+         \Session::flash('alert-success', 'Post copied successfully!');
+
+         return redirect()->route('admin.post.edit', [$newModal->id]);
+    }
+
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -295,23 +309,16 @@ class PostController extends AdminController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        // make sure the current user is an admin
-        if (!Auth::user()->isAdmin()) {
-            return redirect()->route('auth.denied');
-        }
-
         $post = PostFacade::find($id);
-
-        $post->tags()->detach();
 
         $post->delete();
 
         // set success message
-        session()->flash('alert-success', 'Post deleted successfully!');
+        \Session::flash('alert-success', 'Post deleted successfully!');
 
         return redirect()->route('admin.post.index');
     }

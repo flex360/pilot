@@ -36,7 +36,7 @@
 
         </div>
 
-        @if ($page->exists && ! config('pilot.disable_page_parts'))
+        @if ($page->exists && ! config('pilot.disable_page_parts', false))
             <form action="{{ route('admin.block.store') }}" method="post" class="form-inline" style="float: right; margin-bottom: 0;">
 
                 {{ csrf_field() }}
@@ -116,13 +116,19 @@
                         </div>
                     @endif
 
+                    @if(config('pilot.plugins.pages.vertical_image', false))
+
                     <div class="row">
 
                         <div class="form-group col-lg-6">
 
                             <label for="" title="">
-                                Featured Image
+                                Horizontal Featured Image
                             </label>
+
+                            <div class="help-block">
+                                For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 1600:640px for quality.
+                            </div>
 
                             <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'featured_image', 'options' => ['maxWidth' => 1600]]); ?>
 
@@ -131,6 +137,50 @@
                         </div>
 
                     </div>
+
+                    <div class="row">
+
+                        <div class="form-group col-lg-6">
+
+                            <label for="" title="">
+                                Vertical Featured Image
+                            </label>
+
+                            <div class="help-block">
+                                For the entire image to display, it needs to be a 1:2 ratio. We recommend minimum 800:1600px for quality.
+                            </div>
+
+                            <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'vertical_featured_image', 'options' => ['maxWidth' => 800]]); ?>
+
+                            @include('dynamo::bootstrap4.partials.fields.singleImage', ['item' => $page, 'display' => true, 'field' => $field])
+
+                        </div>
+
+                    </div>
+
+                    @else
+
+                    <div class="row">
+
+                        <div class="form-group col-lg-6">
+
+                            <label for="" title="">
+                                Featured Image
+                            </label>
+
+                            <div class="help-block">
+                                For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 1600:640px for quality.
+                            </div>
+
+                            <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'featured_image', 'options' => ['maxWidth' => 1600]]); ?>
+
+                            @include('dynamo::bootstrap4.partials.fields.singleImage', ['item' => $page, 'display' => true, 'field' => $field])
+
+                        </div>
+
+                    </div>
+
+                    @endif
 
                     @if ($page->exists)
 

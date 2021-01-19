@@ -25,6 +25,7 @@ return [
             'url' => ['admin.page.index'],
             'routePattern' => 'admin.page.*',
             'view' => null,
+            'vertical_image' => true,
             'target' => '_self',
             'children' => [
                 'manage_pages' => [
@@ -32,7 +33,7 @@ return [
                     'enabled' => true,
                     'url' => ['admin.page.index'],
                     'routePattern' => null,
-                    'view' => 'published',
+                    'view' => null,
                     'target' => '_self',
                     'children' => null,
                 ],
@@ -63,6 +64,13 @@ return [
             'routePattern' => 'admin.post.*',
             'view' => null,
             'target' => '_self',
+            'image_background_swatch_picker' => true,
+            'background-color-options' => [
+                '#43379D',
+                '#322975',
+                '#5B4EC1',
+                '#786bd5'
+            ],
             'children' => [
                 'manage_post' => [
                     'name' => 'Manage News',
@@ -141,7 +149,7 @@ return [
             ]
         ],
         'resources' => [
-            'name' => 'Resources',
+            'name' => 'Resources + Categories',
             'enabled' => false,
             'url' => ['admin.resource.index'],
             'routePattern' => 'admin.resource.*',
@@ -187,12 +195,15 @@ return [
             ],
         ],
         'employees' => [
-            'name' => 'Employees',
+            'name' => 'Employees + Departments',
             'enabled' => false,
             'url' => ['admin.employee.index'],
             'routePattern' => 'admin.employee.*',
             'view' => 'published',
             'target' => '_self',
+            'birth_date' => true,
+            'extension' => true,
+            'bio' => true,
             'children' => [
                 'manage_employee' => [
                     'name' => 'Manage Employees',
@@ -267,8 +278,8 @@ return [
             ]
         ],
         'faqs' => [
-            'name' => 'FAQs',
-            'enabled' => true,
+            'name' => 'FAQs + Categories',
+            'enabled' => false,
             'url' => ['admin.faq.index'],
             'routePattern' => 'admin.faq.*',
             'view' => 'published',

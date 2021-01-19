@@ -28,7 +28,7 @@
 
     @section('header')
 
-        @if (!config('pilot.backend_side_bar_layout'))
+        @if (!config('pilot.backend_side_bar_layout', false))
         <body>
             <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -43,27 +43,27 @@
 
                 <div class="collapse navbar-collapse" id="collapse_target">
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins')['pages']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">{{ config('pilot.plugins')['pages']['name'] }}</a></li>
+                        @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins.pages.enable', false))
+                            <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">{{ config('pilot.plugins')['pages']['name'], false }}</a></li>
                         @endif
 
-                        @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins')['events']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">{{ config('pilot.plugins')['events']['name'] }}</a></li>
+                        @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins.events.enabled', false))
+                            <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">{{ config('pilot.plugins')['events']['name'], false }}</a></li>
                         @endif
 
-                        @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins')['news']['enabled'])
-                            <li class="nav-item {{ Request::is('pilot/post*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.post.index') }}">{{ config('pilot.plugins')['news']['name'] }}</a></li>
+                        @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins.news.enabled', false))
+                            <li class="nav-item {{ Request::is('pilot/post*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.post.index') }}">{{ config('pilot.plugins')['news']['name'], false }}</a></li>
                         @endif
 
-                        @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins')['annoucements']['enabled'])
+                        @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins.annoucements.enabled', false))
                             <li class="nav-item {{ Request::is('pilot/annoucement*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.annoucement.index') }}">{{ config('pilot.plugins')['annoucements']['name'] }}</a></li>
                         @endif
 
-                        @if (isset(config('pilot.plugins')['resources']) && config('pilot.plugins')['resources']['enabled'])
+                        @if (isset(config('pilot.plugins')['resources']) && config('pilot.plugins.resources.enabled', false))
                                 <li class="nav-item {{ Request::is('pilot/resource*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.resource.index', ['view' => 'published']) }}">{{ config('pilot.plugins')['resources']['name'] }}</a></li>
                         @endif
 
-                        @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins')['forms']['enabled'] && WufooForm::hasForms())
+                        @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins.forms.enabled', false) && WufooForm::hasForms())
                             <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">{{ config('pilot.plugins')['forms']['name'] }}</a></li>
                         @endif
 
@@ -97,7 +97,7 @@
                           <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#" data-toggle="dropdown" data-target="#dropdown_admin">{{ optional(Auth::user())->getName() }} <span class="caret"></span></a>
                               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_admin">
                                 @if (Auth::user()->isAdmin())
-                                    @if (isset(config('pilot.plugins')['styles']) && config('pilot.plugins')['styles']['enabled'])
+                                    @if (isset(config('pilot.plugins')['styles']) && config('pilot.plugins.styles.enabled', false))
                                         {{-- <a class="dropdown-item" href="{{ route('admin.style.index') }}"><i class="fa fa-paint-brush"></i> Styles</a> --}}
                                     @endif
                                     <a class="dropdown-item" href="{{ route('admin.user.index') }}"><i class="fa fa-users"></i> Users</a>
@@ -151,27 +151,27 @@
                     <div class="collapse navbar-collapse" id="collapse_target">
                         <!-- this menu is tablet and mobile only -->
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0 d-lg-none d-block">
-                            @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins')['pages']['enabled'])
+                            @if (isset(config('pilot.plugins')['pages']) && config('pilot.plugins.pages.enabled', false))
                                 <li class="nav-item {{ Request::is('pilot') || Request::is('pilot/page*') ? 'active' : null }}"><a class="nav-link" href="/pilot">{{ config('pilot.plugins')['pages']['name'] }}</a></li>
                             @endif
     
-                            @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins')['news']['enabled'])
+                            @if (isset(config('pilot.plugins')['news']) && config('pilot.plugins.news.enabled', false))
                                 <li class="nav-item {{ Request::is('pilot/post*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.post.index') }}">{{ config('pilot.plugins')['news']['name'] }}</a></li>
                             @endif
 
-                            @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins')['events']['enabled'])
+                            @if (isset(config('pilot.plugins')['events']) && config('pilot.plugins.events.enabled', false))
                                 <li class="nav-item {{ Request::is('pilot/event*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.event.index') }}">{{ config('pilot.plugins')['events']['name'] }}</a></li>
                             @endif
     
-                            @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins')['annoucements']['enabled'])
+                            @if (isset(config('pilot.plugins')['annoucements']) && config('pilot.plugins.annoucements.enabled', false))
                                 <li class="nav-item {{ Request::is('pilot/annoucement*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.annoucement.index') }}">{{ config('pilot.plugins')['annoucements']['name'] }}</a></li>
                             @endif
 
-                            @if (isset(config('pilot.plugins')['resources']) && config('pilot.plugins')['resources']['enabled'])
+                            @if (isset(config('pilot.plugins')['resources']) && config('pilot.plugins.resources.enabled', false))
                                 <li class="nav-item {{ Request::is('pilot/resource*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.resource.index', ['view' => 'published']) }}">{{ config('pilot.plugins')['resources']['name'] }}</a></li>
                             @endif
     
-                            @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins')['forms']['enabled'] && WufooForm::hasForms())
+                            @if (isset(config('pilot.plugins')['forms']) && config('pilot.plugins.forms.enabled', false) && WufooForm::hasForms())
                                 <li class="nav-item {{ Request::is('pilot/form*')  ? 'active' : null }}"><a class="nav-link" href="{{ route('admin.form.index') }}">{{ config('pilot.plugins')['forms']['name'] }}</a></li>
                             @endif
 
@@ -197,7 +197,7 @@
                               <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" href="#" data-toggle="dropdown" data-target="#dropdown_admin">{{ optional(Auth::user())->getName() }} <span class="caret"></span></a>
                                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown_admin">
                                     @if (Auth::user()->hasRole('admin'))
-                                        @if (isset(config('pilot.plugins')['styles']) && config('pilot.plugins')['styles']['enabled'])
+                                        @if (isset(config('pilot.plugins')['styles']) && config('pilot.plugins.styles.enabled', false))
                                             {{-- <a class="dropdown-item" href="{{ route('admin.style.index') }}"><i class="fa fa-paint-brush"></i> Styles</a> --}}
                                         @endif
                                         <a class="dropdown-item" href="{{ route('admin.site.index') }}"><i class="fa fa-globe"></i> Websites</a>

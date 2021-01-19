@@ -13,7 +13,7 @@
 
 @section('buttons')
 
-    @if (! config('pilot.disable_menu_builder'))
+    @if (! config('pilot.disable_menu_builder', false))
         <a href="{{ route('admin.menu.index') }}" class="btn btn-info btn-sm"><i class="fa fa-list"></i> Menu Builder</a>
     @endif
 

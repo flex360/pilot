@@ -21,7 +21,7 @@ class MenuController extends AdminController
     {
         mimic('Menu Manager');
 
-        if (config('pilot.multisite')) {
+        if (config('pilot.multisite', false)) {
             $items = Menu::where('site_id', '=', $this->site->id)->get();
         } else {
             $items = Menu::all();

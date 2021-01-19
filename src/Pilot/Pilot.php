@@ -79,6 +79,9 @@ class Pilot
                 Route::get('post/scheduled', 'Admin\PostController@indexOfScheduled')->name('post.scheduled');
                 Route::get('post/drafts', 'Admin\PostController@indexOfDrafts')->name('post.draft');
                 Route::get('post/all', 'Admin\PostController@indexOfAll')->name('post.all');
+                Route::get('post/{id}/copy', 'Admin\PostController@copy')->name('post.copy');
+                Route::get('post/{id}/delete', 'Admin\PostController@destroy')
+                    ->name('post.destroy');
                 Route::resource('post', 'Admin\PostController');
 
                 // Backend Routes for Standard Events module
