@@ -59,7 +59,7 @@ return [
         ],
         'news' => [
             'name' => 'News',
-            'enabled' => false,
+            'enabled' => true,
             'url' => ['admin.post.index'],
             'routePattern' => 'admin.post.*',
             'view' => null,
@@ -122,7 +122,7 @@ return [
         ],
         'annoucements' => [
             'name' => 'Alerts',
-            'enabled' => false,
+            'enabled' => true,
             'url' => ['admin.annoucement.index'],
             'routePattern' => 'admin.annoucement.*',
             'view' => null,

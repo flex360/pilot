@@ -4,7 +4,7 @@ namespace Flex360\Pilot\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Asset extends Facade
+class Menu extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +13,6 @@ class Asset extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Flex360\Pilot\Pilot\Asset';
+        return 'Flex360\Pilot\Pilot\Menu';
     }
 }

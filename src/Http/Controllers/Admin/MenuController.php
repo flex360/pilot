@@ -4,6 +4,7 @@ namespace Flex360\Pilot\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Flex360\Pilot\Pilot\Menu;
+use Flex360\Pilot\Facades\Menu as MenuFacade;
 
 class MenuController extends AdminController
 {
@@ -104,5 +105,10 @@ class MenuController extends AdminController
         }
 
         return $items;
+    }
+
+    protected function getClass()
+    {
+       return root_class(MenuFacade::class);
     }
 }
