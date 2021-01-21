@@ -2,7 +2,7 @@
 
     <div class="learn-content">
 
-        <p>Learn more about your content management system. When you log into the pilot, the first thing that opens up is Pages. Each page has four tabs: <a href="/pilot/learn/wysiwyg">Content</a>, Settings Tab, <a href="/pilot/learn/metadata">Metadata Tab</a>, <a href="/pilot/learn/code">Code Tab</a>.</p>
+        <p>Learn more about your content management system. When you log into the pilot, the first thing that opens up is Pages. Each page has four tabs: <a href="/learn/wysiwyg">Content</a>, Settings Tab, <a href="/learn/metadata">Metadata Tab</a>, <a href="/learn/code">Code Tab</a>.</p>
 
         <h2>Page Settings Tab</h2>
 
@@ -40,7 +40,7 @@
 
         <p>Redirects are really helpful if you want to have something in your navigation, but direct that link elsewhere.&nbsp;</p>
 
-        <p>Just like when you're creating a link, if you're linking to an internal page,<strong>&nbsp;</strong><span open="" style="-webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); color: rgb(68, 68, 68); display: inline !important; float: none; font-family: ;">all you have to paste in the "http://" area is the path. (Check out the&nbsp;<a href="/pilot/learn/metadata">Metadata</a>&nbsp;tip page to learn more about paths.)</span></p>
+        <p>Just like when you're creating a link, if you're linking to an internal page,all you have to paste in the "http://" area is the path. (Check out the&nbsp;<a href="/learn/metadata">Metadata</a>&nbsp;tip page to learn more about paths.)</p>
 
         <p><strong>Tip: It's not a good idea to redirect one of your pages directly to another website</strong> unless your web design/development team has built in tools specifically for that. Reason being, when someone clicks on a page that's been redirected, it'll just go there in the same window. If you're sending someone to another site, you've sent them away from your website and it's less easy for them to get back to you.</p>
 

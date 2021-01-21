@@ -2,7 +2,7 @@
 
     <div class="learn-content">
 
-        <p>Learn more about your content management system. When you log into the pilot, the first thing that opens up is Pages. Each page has four tabs: <a href="/pilot/learn/wysiwyg">Content</a>, <a href="/pilot/learn/settings">Settings Tab</a>, <a href="/pilot/learn/metadata">Metadata Tab</a>, Code Tab.</p>
+        <p>Learn more about your content management system. When you log into the pilot, the first thing that opens up is Pages. Each page has four tabs: <a href="/learn/wysiwyg">Content</a>, <a href="/learn/settings">Settings Tab</a>, <a href="/learn/metadata">Metadata Tab</a>, Code Tab.</p>
 
         <h2>Page Code Tab</h2>
 

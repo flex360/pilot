@@ -10,7 +10,7 @@
 
         <h4>Pages</h4>
 
-        <p>When you log into the pilot, the first thing that opens up is Pages. Each page has four tabs: <a href="/pilot/learn/wysiwyg">Content</a>, <a href="/pilot/learn/settings">Settings Tab</a>, <a href="/pilot/learn/metadata">Metadata Tab</a>, <a href="/pilot/learn/code">Code Tab</a>.</p>
+        <p>When you log into the pilot, the first thing that opens up is Pages. Each page has four tabs: <a href="/learn/wysiwyg">Content</a>, <a href="/learn/settings">Settings Tab</a>, <a href="/learn/metadata">Metadata Tab</a>, <a href="/learn/code">Code Tab</a>.</p>
 
         <h4>News</h4>
 

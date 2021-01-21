@@ -24,17 +24,24 @@
     <body>
         {!! PilotSetting::get('tracking.body_top') !!}
 
-        @include(PilotView::locate('partials.header'))
+        <div id="app" v-cloak>
 
-        @yield('template-content')
+            @include(PilotView::locate('partials.header'))
 
-        @include(PilotView::locate('partials.footer'))
+            @yield('template-content')
+
+            @include(PilotView::locate('partials.footer'))
+
+        </div>
 
         <script src="{{ pmix('js/app.js') }}"></script>
 
         {!! PilotAsset::link('js') !!}
 
         {!! PilotSetting::get('tracking.body_bottom') !!}
+
+        <!-- mobile responsive on iFrames throughout website -->
+        <script src="/pilot-assets/legacy/js/iframeMobileResponsive.js"></script>
 
         @stack('scripts')
     </body>
