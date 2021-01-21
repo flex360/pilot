@@ -127,6 +127,14 @@ anothersentence. And one more. </pre>
 			</tr>
 		</tbody>
 	</table>
+	<br>
+
+	<h5>Buttons</h5>
+
+	<p><a class="btn btn-primary" href="/">Primary Button</a></p>
+
+	<p><a class="btn btn-danger" href="/">Danger Button</a></p>
+	<br>
 	<hr class="fr-tag">
 
 	<h4>Section 3: More Tools</h4>
