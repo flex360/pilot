@@ -12,9 +12,10 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\TypeableTrait;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
-use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
@@ -27,7 +28,10 @@ class Page extends Model implements HasMedia
         HasMediaTrait,
         SoftDeletes,
         HasEmptyStringAttributes,
-        PilotTablePrefix;
+        PilotTablePrefix,
+        HasMediaAttributes {
+            HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
+        }
 
     public static $current = null;
 
@@ -709,6 +713,17 @@ class Page extends Model implements HasMedia
     public function getFeaturedImageAttribute($value)
     {
         $mediaItem = $this->getFirstMedia('featured_image');
+
+        if (!empty($mediaItem)) {
+            return $mediaItem->getUrl();
+        }
+
+        return $value;
+    }
+
+    public function getVerticalFeaturedImageAttribute($value)
+    {
+        $mediaItem = $this->getFirstMedia('vertical_featured_image');
 
         if (!empty($mediaItem)) {
             return $mediaItem->getUrl();
