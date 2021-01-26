@@ -3,6 +3,7 @@
 namespace Flex360\Pilot\Pilot\Traits;
 
 use Illuminate\Support\Str;
+use Flex360\Pilot\Pilot\Site;
 
 trait SocialMetadataTrait
 {
@@ -36,7 +37,7 @@ trait SocialMetadataTrait
             return $this->image;
         }
 
-        return 'http://' . \Site::getCurrent()->getDefaultDomain() . $this->image;
+        return 'http://' . Site::getCurrent()->getDefaultDomain() . $this->image;
     }
 
     public function getSocialImageWidth()

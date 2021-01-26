@@ -3,6 +3,7 @@
 namespace Flex360\Pilot\Pilot\Publish;
 
 use Illuminate\Support\Str;
+use Flex360\Pilot\Pilot\Site;
 
 class ArticlePresenter
 {
@@ -78,7 +79,7 @@ class ArticlePresenter
 
     public function url()
     {
-        return 'http://' . \Site::getCurrent()->domain . '/post/' . $this->entity->id . '/' . $this->entity->slug;
+        return 'http://' . Site::getCurrent()->domain . '/post/' . $this->entity->id . '/' . $this->entity->slug;
     }
 
     public function link()
