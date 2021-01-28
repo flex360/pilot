@@ -14,7 +14,7 @@ class BlogController extends Controller
         $posts = PageFacade::published()
                 ->orderBy('sticky', 'desc')
                 ->orderBy('published_on', 'desc')
-                ->paginate(12)
+                ->paginate(12);
 
         PageFacade::mimic([
             'title' => 'News'
@@ -27,7 +27,7 @@ class BlogController extends Controller
     {
         $posts = PostFacade::published()
                 ->orderBy('published_on', 'desc')
-                ->simplePaginate(10);
+                ->simplePaginate(12);
 
         PageFacade::mimic([
             'title' => 'News'
@@ -79,7 +79,7 @@ class BlogController extends Controller
                 ->published()
                 ->where(config('pilot.table_prefix', '') . 'posts.status', '=', 30)
                 ->orderBy(config('pilot.table_prefix', '') . 'posts.published_on', 'desc')
-                ->simplePaginate(6);
+                ->simplePaginate(9);
 
         $slug = str_replace('-', ' ', $slug);
         $slug = ucwords($slug);
