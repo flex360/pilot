@@ -16,11 +16,11 @@
 
 	</div>
 
-	<div class="row">
+	{{-- <div class="row">
             <span class="mr-auto ml-auto" id="loadNewsSpan"><button class="btn btn-primary" style="display: flex;" id="loadMoreNewsBtn" data-page="1" onclick='LoadNextPageOfPost()'>Load More Posts</button>
             <i style="display:none;" class="mr-auto ml-auto fa-2x fas fa-spinner fa-pulse"></i></span>
-    </div>
+    </div> --}}
 
-    {{-- {!! $posts->render() !!} --}}
+    {!! $posts->render() !!}
 
 @endsection

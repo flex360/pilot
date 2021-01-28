@@ -11,9 +11,10 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = PostFacade::published()
+        $posts = PageFacade::published()
+                ->orderBy('sticky', 'desc')
                 ->orderBy('published_on', 'desc')
-                ->simplePaginate(10);
+                ->paginate(12)
 
         PageFacade::mimic([
             'title' => 'News'
