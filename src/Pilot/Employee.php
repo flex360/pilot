@@ -34,7 +34,7 @@ class Employee extends Model implements HasMedia
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'photo', 'first_name', 'last_name', 'start_date', 'birth_date', 'job_title', 'phone_number', 'extension',
+        'photo', 'first_name', 'last_name', 'start_date', 'birth_date', 'job_title', 'phone_number', 'cell_number', 'extension',
         'email', 'office_location',
     ];
 

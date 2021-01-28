@@ -36,7 +36,17 @@ class EmployeeController extends DynamoController
 
                     
                     $dynamo->text('job_title')
-                    ->text('phone_number');
+                    ->text('phone_number', [
+                        'label' => 'Office Phone',
+                    ]);
+
+                     // if extension is enabled, include datetimepicker for it
+                     if (config('pilot.plugins.employees.cell_phone', false)) {
+                        $dynamo->text('cell_number', [
+                            'label' => 'Cell Phone',
+                        ]);
+                    }
+                    
 
                     // if extension is enabled, include datetimepicker for it
                     if (config('pilot.plugins.employees.extension', false)) {

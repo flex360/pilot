@@ -202,6 +202,7 @@ return [
             'view' => 'published',
             'target' => '_self',
             'birth_date' => true,
+            'cell_phone' => true,
             'extension' => true,
             'bio' => true,
             'children' => [
