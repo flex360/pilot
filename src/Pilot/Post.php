@@ -227,8 +227,8 @@ class Post extends Model implements HasMedia, PostContract
             return [
                 'path' => $item->getUrl(),
                 'title' => $item->getCustomProperty('title'),
-                'caption' => $item->getCustomProperty('description'),
-                'extra' => '',
+                'credit' => $item->getCustomProperty('credit'),
+                'description' => $item->getCustomProperty('description'),
             ];
         })->toArray();
     }
