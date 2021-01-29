@@ -70,8 +70,8 @@
             <ul class="nav nav-tabs card-header-tabs" id="index-nav-tabs">
               <li class="nav-item active">
                 <a class="nav-link active" role="tab" data-toggle="tab" href="#content">Content <i id="dont-show-on-mobile-tooltip" style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
-                title="Click on the <b>'Learn'</b>
-                tab on the black nav bar above and then click <b>'WYSIWYG Editor'</b> to learn more about how to use the text editor below."></i></a>
+                title="Click in the <b>'Learn'</b>
+                tab in the sidebar and then click <b>'WYSIWYG Editor'</b> to learn more about how to use the text editor below."></i></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" href="#settings">Settings
@@ -87,7 +87,7 @@
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" href="#code">Code <i id="dont-show-on-mobile-tooltip" style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
                 title="Click on the <b>'Learn'</b>
-                tab on the black nav bar above and then click <b>'Code'</b> to learn more"></i></a>
+                tab in the sidebar and then click <b>'Code'</b> to learn more"></i></a>
               </li>
 
               {{-- <button type="button" class="btn-sm btn-secondary" data-toggle="tooltip" data-html="true" title="<em>Tooltip</em> <u>with</u> <b>HTML</b>">[?]</button> --}}
