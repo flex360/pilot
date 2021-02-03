@@ -88,7 +88,7 @@ class PilotTakeoff extends Command
             // remove default welcome route
             $webRoutes = file_get_contents(base_path('routes/web.php'));
             $welcomeRouteCode = "\n\nRoute::get('/', function () {\n    return view('welcome');\n});";
-            $pilotRoutes = "\n\nPilot::routesBefore();\n\n// your backend routes go here\nRoute::middleware(['web', 'pilot.global', 'auth.admin', 'backend'])\n    ->prefix('pilot')\n    ->name('admin.')\n    ->group(function () {\n        /* ---- Dynamo Routes ---- */\n\n});\n\n// your frontend routes go here\nRoute::middleware(['web', 'pilot.global'])\n    ->group(function () {\n\n});\n\nPilot::routesAfter();\n";
+            $pilotRoutes = "\n\nPilot::routesBefore();\n\n// your backend routes go here\nRoute::middleware(['web', 'pilot.global', 'auth.admin', 'backend'])\n    ->prefix('pilot')\n    ->name('admin.')\n    ->group(function () {\n        /* ---- Dynamo Routes ---- */\n\n});\n\n// your frontend routes go here\nRoute::middleware(['web', 'pilot.global'])\n    ->group(function () {\n\n});\n\nPilot::routesAfter();\n\nRoute::middleware(['web', 'pilot.global'])->group(function () {\n\n// content pages and Department pages\n\nRoute::get('{path?}', ['as' => 'pages',  'uses' => 'SiteController@view'])->where('path', '.+');\n\n});";
             $webRoutes = str_replace($welcomeRouteCode, $pilotRoutes, $webRoutes);
             file_put_contents(base_path('routes/web.php'), $webRoutes);
 
