@@ -281,10 +281,10 @@
                                         }
                                     }
                                     // create parent item
-                                    $parentNavItem = PilotNavItem::make($settings['name'], $url, $settings['routePattern'], null, $settings['target']);
+                                    $parentNavItem = PilotNavItem::make($settings['name'], $url, $settings['routePattern'] ?? null, null, $settings['target'] ?? null);
 
                                     // check if current plugin we are looping thru has children NavItems, if so, add it to the parentNavItem
-                                    if ($settings['children'] != null) {
+                                    if (isset($settings['children']) && $settings['children'] != null) {
                                         // create array of children NavItems
                                         $childrenNavItems = [];
 
