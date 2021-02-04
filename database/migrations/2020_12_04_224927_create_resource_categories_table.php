@@ -16,6 +16,8 @@ class CreateResourceCategoriesTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+
         $resourceCategoryTable = (new ResourceCategory())->getTable();
         
         if (!Schema::hasTable($resourceCategoryTable)) {
@@ -40,7 +42,13 @@ class CreateResourceCategoriesTable extends Migration
                 $table->foreign('resource_category_id', 'resource_cat_id')->references('id')
                     ->on($resourceCategoryTable);
             });
+
+            Schema::table($resourceCategoryPivotTable, function (Blueprint $table) {
+                $table->primary(['resource_id', 'resource_category_id']);
+            });
         }
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

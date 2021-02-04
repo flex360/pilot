@@ -17,6 +17,8 @@ class CreateProductCategoryTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+        
         $productTable = (new Product())->getTable();
         $productCount = Schema::hasTable($productTable) ? DB::table($productTable)->count() : 0;
         $productCategoryTableCreated = false;
@@ -45,7 +47,13 @@ class CreateProductCategoryTable extends Migration
                 $table->foreign('product_category_id')->references('id')->on($productCategoryTable);
                 $table->integer('position');
             });
+
+            Schema::table($productCategoryPivotTable, function (Blueprint $table) {
+                $table->primary(['product_id', 'product_category_id']);
+            });
         }
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

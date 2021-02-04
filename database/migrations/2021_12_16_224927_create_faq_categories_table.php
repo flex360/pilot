@@ -17,6 +17,8 @@ class CreateFaqCategoriesTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+        
         $faqCategoryTable = (new FaqCategory())->getTable();
         if (!Schema::hasTable($faqCategoryTable)) {
             Schema::create($faqCategoryTable, function (Blueprint $table) {
@@ -39,7 +41,13 @@ class CreateFaqCategoriesTable extends Migration
                 $table->foreign('faq_category_id')->references('id')->on($faqCategoryTable);
                 $table->integer('position');
             });
+
+            Schema::table($faqCategoryPivotTable, function (Blueprint $table) {
+                $table->primary(['faq_id', 'faq_category_id']);
+            });
         }
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
