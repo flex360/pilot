@@ -19,7 +19,6 @@
         </ul>
     </div> --}}
 
-
     <div class="row">
         <div class="col-3">
             <div class="list-group" id="list-tab" role="tablist">
@@ -45,12 +44,25 @@
 
                     @if ($field['type'] == 'header')
                         <h4 style="margin-bottom: 20px;">{{ $field['label'] }}</h4>
-                    @elseif ($field['type'] == 'text' || $field['type'] == 'textarea')
+                    @elseif (in_array($field['type'], ['text', 'textarea', 'select']))
                     <div class="form-group">
                         <label for="{{ $field['id'] }}" title=""{{ $configSetting['key'] . '.' . $field['id'] }}>
                             {!! $field['label'] !!}
                         </label>
-                        @if ($field['type'] == 'text')
+                        @if ($field['type'] == 'select')
+                            <?php
+                            $fieldConfig = collect($configSetting['fields'])->where('id', $field['id'])->first();
+                            $selectOptions = [];
+                            if (!empty($fieldConfig['options'])) {
+                                if (is_array($fieldConfig['options'])) {
+                                    $selectOptions = $fieldConfig['options'];
+                                } elseif (is_callable($fieldConfig['options'])) {
+                                    $selectOptions = call_user_func_array($fieldConfig['options'], []);
+                                }
+                            }
+                            ?>
+                            {!! Form::select($field['id'], $selectOptions, $setting->getFieldValueById($field['id']), array('class' => 'form-control')) !!}
+                        @elseif ($field['type'] == 'text')
                             {!! Form::text($field['id'], $setting->getFieldValueById($field['id']), array('class' => 'form-control')) !!}
                         @elseif ($field['type'] == 'textarea')
                             {!! Form::textarea($field['id'], $setting->getFieldValueById($field['id']) , array('class' => 'form-control ' . $field['id'])) !!}

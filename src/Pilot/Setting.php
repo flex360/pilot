@@ -124,6 +124,17 @@ class Setting extends \Eloquent
         return null;
     }
 
+    public function getFieldOptionsById($id)
+    {
+        $fields = $this->fields;
+
+        if (isset($fields->$id)) {
+            return $fields->$id;
+        }
+
+        return null;
+    }
+
     public static function getSelectListWYSIWYG()
     {
         return [
