@@ -16,9 +16,12 @@ class AddBioToEmployees extends Migration
      */
     public function up()
     {
-        Schema::table((new Employee())->getTable(), function (Blueprint $table) {
-           $table->text('bio')->after('office_location');
-        });
+        $employeeTable = (new Employee())->getTable();
+        if (Schema::hasTable($employeeTable) && !Schema::hasColumn($employeeTable, 'bio')) {
+            Schema::table($employeeTable, function (Blueprint $table) {
+                $table->text('bio')->after('office_location');
+            });
+        }
     }
 
     /**
@@ -28,8 +31,8 @@ class AddBioToEmployees extends Migration
      */
     public function down()
     {
-        Schema::table((new Employee)->getTable(), function (Blueprint $table) {
-            $table->dropColumn('bio');
-        });
+        // Schema::table((new Employee)->getTable(), function (Blueprint $table) {
+        //     $table->dropColumn('bio');
+        // });
     }
 }

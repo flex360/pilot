@@ -16,9 +16,12 @@ class AddCellPhoneToEmployees extends Migration
      */
     public function up()
     {
-        Schema::table((new Employee())->getTable(), function (Blueprint $table) {
-           $table->string('cell_number')->after('phone_number');
-        });
+        $employeeTable = (new Employee())->getTable();
+        if (Schema::hasTable($employeeTable) && !Schema::hasColumn($employeeTable, 'cell_number')) {
+            Schema::table($employeeTable, function (Blueprint $table) {
+                $table->string('cell_number')->after('phone_number');
+            });
+        }
     }
 
     /**
@@ -28,8 +31,8 @@ class AddCellPhoneToEmployees extends Migration
      */
     public function down()
     {
-        Schema::table((new Employee)->getTable(), function (Blueprint $table) {
-            $table->dropColumn('cell_number');
-        });
+        // Schema::table((new Employee)->getTable(), function (Blueprint $table) {
+        //     $table->dropColumn('cell_number');
+        // });
     }
 }

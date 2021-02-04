@@ -14,9 +14,12 @@ class AddStickyToPostTable extends Migration
      */
     public function up()
     {
-        Schema::table((new Post)->getTable(), function (Blueprint $table) {
-            $table->boolean('sticky')->default(0)->after('gallery');
-        });
+        $postTable = (new Post)->getTable();
+        if (Schema::hasTable($postTable) && !Schema::hasColumn($postTable, 'sticky')) {
+            Schema::table($postTable, function (Blueprint $table) {
+                $table->boolean('sticky')->default(0)->after('gallery');
+            });
+        }
     }
 
     /**
@@ -26,8 +29,8 @@ class AddStickyToPostTable extends Migration
      */
     public function down()
     {
-        Schema::table((new Post)->getTable(), function (Blueprint $table) {
-            $table->dropColumn('sticky');
-        });
+        // Schema::table((new Post)->getTable(), function (Blueprint $table) {
+        //     $table->dropColumn('sticky');
+        // });
     }
 }

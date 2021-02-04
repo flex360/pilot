@@ -16,24 +16,18 @@ class CreateFaqsTable extends Migration
      */
     public function up()
     {
-        Schema::create((new Faq())->getTable(), function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('question');
-            $table->text('answer');
-            $table->integer('status');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        // create the Standard Example Faq
-        DB::table((new Faq())->getTable())->insert(
-            ['question' => 'What is an FAQ?',
-             'answer' => 'An FAQ stands for Frequently Asked Question. It is a question that our customers and friends commonly have for us.',
-             'status' => 10,
-             'created_at' => Carbon::now(),
-             'updated_at' => Carbon::now(),
-            ]
-        );
+        $faqsTable = (new Faq())->getTable();
+        
+        if (!Schema::hasTable($faqsTable)) {
+            Schema::create($faqsTable, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('question');
+                $table->text('answer');
+                $table->integer('status');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
     }
 
     /**
@@ -43,6 +37,6 @@ class CreateFaqsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists((new Faq())->getTable());
+        // Schema::dropIfExists((new Faq())->getTable());
     }
 }

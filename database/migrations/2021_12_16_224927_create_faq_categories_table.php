@@ -17,38 +17,29 @@ class CreateFaqCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create((new FaqCategory())->getTable(), function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        $faqCategoryTable = (new FaqCategory())->getTable();
+        if (!Schema::hasTable($faqCategoryTable)) {
+            Schema::create($faqCategoryTable, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
 
-         // pivot table : faq_faq_category
-         Schema::create(config('pilot.table_prefix') . 'faq_' . config('pilot.table_prefix') . 'faq_category', function (Blueprint $table) {
-            $table->integer('faq_id')->unsigned();
-            $table->foreign('faq_id')->references('id')->on((new Faq())->getTable());
+        // pivot table : faq_faq_category
+        $faqTable = (new Faq())->getTable();
+        $faqCategoryPivotTable = config('pilot.table_prefix') . 'faq_' . config('pilot.table_prefix') . 'faq_category';
+        if (!Schema::hasTable($faqCategoryPivotTable)) {
+            Schema::create($faqCategoryPivotTable, function (Blueprint $table) use ($faqCategoryTable, $faqTable) {
+                $table->integer('faq_id')->unsigned();
+                $table->foreign('faq_id')->references('id')->on($faqTable);
 
-            $table->integer('faq_category_id')->unsigned();
-            $table->foreign('faq_category_id')->references('id')->on((new FaqCategory())->getTable());
-            $table->integer('position');
-        });
-
-        // create the Standard Example FaqCategory
-        DB::table((new FaqCategory())->getTable())->insert(
-            ['name' => 'Payments & Financing',
-             'created_at' => Carbon::now(),
-             'updated_at' => Carbon::now(),
-            ]
-        );
-
-        // create the example faq_faq_category entry
-        DB::table(config('pilot.table_prefix') . 'faq_' . config('pilot.table_prefix') . 'faq_category')->insert(
-            ['faq_id' => 1,
-             'faq_category_id' => 1,
-             'position' => 0,
-            ]
-        );
+                $table->integer('faq_category_id')->unsigned();
+                $table->foreign('faq_category_id')->references('id')->on($faqCategoryTable);
+                $table->integer('position');
+            });
+        }
     }
 
     /**
@@ -58,6 +49,6 @@ class CreateFaqCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists((new FaqCategory())->getTable());
+        // Schema::dropIfExists((new FaqCategory())->getTable());
     }
 }

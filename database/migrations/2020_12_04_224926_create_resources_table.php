@@ -16,26 +16,17 @@ class CreateResourcesTable extends Migration
      */
     public function up()
     {
-        Schema::create((new Resource())->getTable(), function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-            $table->string('short_description');
-            $table->text('link');
-            $table->integer('status');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        // create the Standard Example Resource
-        DB::table((new Resource())->getTable())->insert(
-            ['title' => 'Cute puppies',
-             'short_description' => 'This is a test resource that links to cute puppies',
-             'link' => 'https://www.google.com/search?ei=LBTMX6zWBpKxtQbhi5OYCw&q=cute+puppies&oq=cute+puppies&gs_lcp=CgZwc3ktYWIQAzIFCAAQsQMyAggAMgIIADICCAAyBQgAEMkDMgIIADICCAAyAggAMgIIADICCAA6BAgAEEc6CAguEJECEJMCOgsILhDHARCjAhCRAjoICAAQsQMQgwE6CAguEMcBEKMCOg4ILhCxAxCDARDHARCjAjoFCAAQkQI6CwguEMcBEK8BEJECOhEILhDHARCvARDJAxCRAhCTAjoFCC4QsQM6CAgAELEDEMkDOgcIABCxAxAKOgQIABAKOgcIABDJAxAKUJwlWKUzYNwzaAFwAXgAgAGCAYgBuAiSAQM3LjSYAQCgAQGqAQdnd3Mtd2l6yAEIwAEB&sclient=psy-ab&ved=0ahUKEwisnLj2-7ftAhWSWM0KHeHFBLMQ4dUDCA0&uact=5',
-             'status' => 10,
-             'created_at' => Carbon::now(),
-             'updated_at' => Carbon::now(),
-            ]
-        );
+        if (!Schema::hasTable((new Resource())->getTable())) {
+            Schema::create((new Resource())->getTable(), function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('title');
+                $table->string('short_description');
+                $table->text('link');
+                $table->integer('status');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
     }
 
     /**
@@ -45,6 +36,6 @@ class CreateResourcesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists((new Resource())->getTable());
+        // Schema::dropIfExists((new Resource())->getTable());
     }
 }

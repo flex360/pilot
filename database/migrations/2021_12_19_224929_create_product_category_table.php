@@ -17,38 +17,35 @@ class CreateProductCategoryTable extends Migration
      */
     public function up()
     {
-        Schema::create((new ProductCategory())->getTable(), function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        $productTable = (new Product())->getTable();
+        $productCount = Schema::hasTable($productTable) ? DB::table($productTable)->count() : 0;
+        $productCategoryTableCreated = false;
+        $productCategoryTable = (new ProductCategory())->getTable();
+        if (!Schema::hasTable($productCategoryTable) && $productCount == 0) {
+            Schema::create($productCategoryTable, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('title');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+            $productCategoryTableCreated = true;
+        }
 
-         // pivot table : product_product_category
-         Schema::create(config('pilot.table_prefix') . 'product_' . config('pilot.table_prefix') . 'product_category', function (Blueprint $table) {
-            $table->integer('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on((new Product())->getTable());
+        // pivot table : product_product_category
+        $productCategoryPivotTable = config('pilot.table_prefix') . 'product_' .
+            config('pilot.table_prefix') . 'product_category';
+        // only add this if the current products table is empty
+        // this protects applications with existing products tables
+        if (!Schema::hasTable($productCategoryPivotTable) && $productCount == 0) {
+            Schema::create($productCategoryPivotTable, function (Blueprint $table) use ($productCategoryTable, $productTable) {
+                $table->integer('product_id')->unsigned();
+                $table->foreign('product_id')->references('id')->on($productTable);
 
-            $table->integer('product_category_id')->unsigned();
-            $table->foreign('product_category_id')->references('id')->on((new ProductCategory())->getTable());
-            $table->integer('position');
-        });
-
-        // create the Standard Example ProductCategory
-        DB::table((new ProductCategory())->getTable())->insert(
-            ['title' => 'Payments & Financing',
-             'created_at' => Carbon::now(),
-             'updated_at' => Carbon::now(),
-            ]
-        );
-
-        // create the example product_product_category entry
-        DB::table(config('pilot.table_prefix') . 'product_' . config('pilot.table_prefix') . 'product_category')->insert(
-            ['product_id' => 1,
-             'product_category_id' => 1,
-             'position' => 0,
-            ]
-        );
+                $table->integer('product_category_id')->unsigned();
+                $table->foreign('product_category_id')->references('id')->on($productCategoryTable);
+                $table->integer('position');
+            });
+        }
     }
 
     /**
@@ -58,6 +55,6 @@ class CreateProductCategoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists((new ProductCategory())->getTable());
+        // Schema::dropIfExists((new ProductCategory())->getTable());
     }
 }
