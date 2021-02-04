@@ -18,8 +18,6 @@ class CreateDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
-        
         $departmentTable = (new Department())->getTable();
 
         if (!Schema::hasTable($departmentTable)) {
@@ -49,9 +47,7 @@ class CreateDepartmentsTable extends Migration
                 $table->integer('department_id')->unsigned();
                 $table->foreign('department_id')->references('id')->on($departmentTable);
                 $table->integer('position')->default(0);
-            });
 
-            Schema::table($employeeDepartmentTable, function (Blueprint $table) {
                 $table->primary(['employee_id', 'department_id']);
             });
         }
@@ -67,9 +63,7 @@ class CreateDepartmentsTable extends Migration
 
                 $table->integer('tag_id')->unsigned();
                 $table->foreign('tag_id')->references('id')->on('tags');
-            });
 
-            Schema::table($departmentTagTable, function (Blueprint $table) {
                 $table->primary(['department_id', 'tag_id']);
             });
         }
@@ -85,14 +79,10 @@ class CreateDepartmentsTable extends Migration
 
                 $table->integer('resource_id')->unsigned();
                 $table->foreign('resource_id')->references('id')->on((new Resource())->getTable());
-            });
 
-            Schema::table($departmentResourceTable, function (Blueprint $table) {
                 $table->primary(['department_id', 'resource_id']);
             });
         }
-
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
