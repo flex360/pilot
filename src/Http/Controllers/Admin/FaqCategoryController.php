@@ -53,10 +53,6 @@ class FaqCategoryController extends DynamoController
                     ->addIndex('id', 'Order FAQs in this Category',function ($item) {
                         return '<a href="' . route('admin.faqcategory.faqs', ['id' => $item->id]) . '" class="btn btn-success">Order</a>';
                     })
-                    // ->addIndex('Permalink', 'PermaLink', function ($item) {
-                    //     // return '<a href="' . route('faq.detail', ['faq' => $item->id, 'slug' => strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $item->question)))]) . '" target="_blank" class="btn btn-primary btn-sm"><i style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-placement="left" data-html="true" title="Serves as a permalink copy tool for the question."></i> View</a>';
-                    //     return '<a href="' . $item->url() . '" data-clipboard-text="' . $item->url() . '" target="_blank" class="permalink-button btn btn-primary btn-sm"><i style="font-size: 16px; color: black;" class="fas fa-question-circle" data-toggle="tooltip" data-placement="left" data-html="true" title="Serves as a permalink copy tool for this Category."></i> View</a>';
-                    // })
                     ->hideDelete()
                     ->addFormFooterButton(function() {
                         return '<a href="/pilot/testing" class="mt-3 btn btn-danger btn" data-toggle="modal" data-target="#relationships-manager-modal">Delete</a>';
@@ -110,11 +106,8 @@ class FaqCategoryController extends DynamoController
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $faqID) {
-        $faq = FaqFacade::find($faqID);
-
-        //$staffMember->position = $position;
-        $faq->faq_categories()->updateExistingPivot($faqcategory->id, compact('position'));
-        //$staffMember->save();
+            $faq = FaqFacade::find($faqID);
+            $faq->faq_categories()->updateExistingPivot($faqcategory->id, compact('position'));
         }
 
         return $ids;

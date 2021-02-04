@@ -325,6 +325,68 @@ return [
                 ],
             ]
         ],
+        'products' => [
+            'name' => 'Products + Categories',
+            'enabled' => true,
+            'url' => ['admin.product.index'],
+            'routePattern' => 'admin.product.*',
+            'view' => 'published',
+            'target' => '_self',
+            'fields' => [
+                'name' => true,
+                'price' => true,
+                'short_description' => true,
+                'full_description' => true,
+                'featured_image' => true,
+                'gallery' => true,
+                'categories' => true,
+                'status' => true
+            ],
+            'children' => [
+                'manage_products' => [
+                    'name' => 'Manage Products',
+                    'enabled' => true,
+                    'url' => ['admin.product.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_product' => [
+                    'name' => 'Add New Product',
+                    'enabled' => true,
+                    'url' => ['admin.product.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'manage_product_categories' => [
+                    'name' => 'Manage Product Categories',
+                    'enabled' => true,
+                    'url' => ['admin.productcategory.index'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'fields' => [
+                        'title' => true,
+                        'featured_image' => true,
+                        'product_selector' => true,
+                        'product_sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
+                    ],
+                    'children' => null
+                ],
+                'add_product_category' => [
+                    'name' => 'Add New Product Category',
+                    'enabled' => true,
+                    'url' => ['admin.productcategory.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ]
+        ],
         'forms' => [
             'name' => 'Forms',
             'enabled' => false,

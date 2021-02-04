@@ -146,6 +146,23 @@ class Pilot
                     ->name('faq.destroy');
                 Route::resource('faq', 'Admin\FaqController');
 
+                // Backend Routes for Standard Product & Product Categories Modules
+                Route::get('/productcategory/{id}/products', 'Admin\ProductCategoryController@products')
+                ->name('productcategory.products');
+                Route::post(
+                    '/product-category-products/{productcategory}/products/reorderProductsWithinCategory',
+                    'Admin\ProductCategoryController@reorderProductsWithinCategory'
+                )->name('productcategoryProducts.reorder');
+                Route::get('/productcategory/{id}/copy', 'Admin\ProductCategoryController@copy')
+                    ->name('productcategory.copy');
+                Route::resource('productcategory', 'Admin\ProductCategoryController');
+
+                Route::get('/product/{id}/copy', 'Admin\ProductController@copy')
+                    ->name('product.copy');
+                Route::get('/product/{id}/delete', 'Admin\ProductController@destroy')
+                    ->name('product.destroy');
+                Route::resource('product', 'Admin\ProductController');
+
                 // Backend Routes for Routes for Settings module
                 Route::resource('setting', 'Admin\SettingController');
                 Route::get('setting/{setting}', 'Admin\SettingController@settings')->name('setting.default');
@@ -232,6 +249,11 @@ class Pilot
                 // faq frontend routes
                 Route::get('/faqs', 'FaqController@index')->name('faq.index');
                 Route::get('/faqs/{faq}/{slug}', 'FaqController@detail')->name('faq.detail');
+
+                // product frontend routes
+                Route::get('/products', 'ProductController@index')->name('product.index');
+                Route::get('/products/{id}/{slug}', 'ProductController@categoryIndex')->name('productCategory.index');
+                Route::get('/product/{id}/{slug}', 'ProductController@detail')->name('product.detail');
             });
 
             // sitemap routes

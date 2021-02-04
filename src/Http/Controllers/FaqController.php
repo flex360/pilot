@@ -16,7 +16,7 @@ class FaqController extends Controller
                     ->get();
 
 
-        $faqCategories = FaqCategoryFacade::with('faqs', 'faqs.faq_categories')->where('name', '!=', 'Careers')->orderBy('name')->get();
+        $faqCategories = FaqCategoryFacade::with('faqs', 'faqs.faq_categories')->orderBy('name')->get();
 
         // get query string params
         $faqId = request()->input('faq');

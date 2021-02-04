@@ -16,7 +16,6 @@
 
     <!-- main admin css -->
     <link href="{{ pmix('/pilot-assets/admin/css/app.css') }}" rel="stylesheet">
-    <link src="/dist/components/Trumbowyg-master/dist/ui/trumbowyg.min.css"></link>
 
     @yield('head')
     @stack('head')
@@ -371,13 +370,14 @@
 
     <!-- DualListBox javascript -->
     <script src="/pilot-assets/components/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.min.js"></script>
-    @if (request()->is('pilot/*'))
+
     <!-- Module specific javascript -->
+    @if (request()->is('pilot/*'))
     <script type="text/javascript" src="/pilot-assets/legacy/js/{{ strtolower(UrlHelper::getPart(2)) }}.js"></script>
     @endif
 
-    @if (request()->is('pilot'))
     <!-- Module specific javascript -->
+    @if (request()->is('pilot'))
     <script type="text/javascript" src="/pilot-assets/legacy/js/page.js"></script>
     @endif
     
@@ -385,7 +385,7 @@
     <script src="/pilot-assets/components/sortablejs/Sortable.min.js"></script>
     <script src="/pilot-assets/components/jquery-sortablejs/jquery-sortable.js"></script>
 
-    <!-- DirtyFormsJS - Leave Site? code -->
+    <!-- DirtyFormsJS -->
     <script src="/pilot-assets/components/jquery.dirtyforms/jquery.dirtyforms.min.js"></script>
 
     @yield('scripts')
