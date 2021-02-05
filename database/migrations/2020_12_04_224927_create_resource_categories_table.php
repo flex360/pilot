@@ -42,7 +42,7 @@ class CreateResourceCategoriesTable extends Migration
                 $table->foreign('resource_category_id', 'resource_cat_id')->references('id')
                     ->on($resourceCategoryTable);
                 
-                $table->primary(['resource_id', 'resource_category_id']);
+                $table->primary(['resource_id', 'resource_category_id'], 'pilot_resource_id_resource_category_id_primary');
             });
         }
     }

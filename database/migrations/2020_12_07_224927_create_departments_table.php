@@ -50,7 +50,7 @@ class CreateDepartmentsTable extends Migration
                 $table->foreign('department_id')->references('id')->on($departmentTable);
                 $table->integer('position')->default(0);
 
-                $table->primary(['employee_id', 'department_id']);
+                $table->primary(['employee_id', 'department_id'], 'pilot_employee_id_department_id_primary');
             });
         }
 
@@ -66,7 +66,7 @@ class CreateDepartmentsTable extends Migration
                 $table->integer('tag_id')->unsigned();
                 $table->foreign('tag_id')->references('id')->on('tags');
 
-                $table->primary(['department_id', 'tag_id']);
+                $table->primary(['department_id', 'tag_id'], 'pilot_department_id_tag_id_primary');
             });
         }
 
@@ -82,7 +82,7 @@ class CreateDepartmentsTable extends Migration
                 $table->integer('resource_id')->unsigned();
                 $table->foreign('resource_id')->references('id')->on((new Resource())->getTable());
 
-                $table->primary(['department_id', 'resource_id']);
+                $table->primary(['department_id', 'resource_id'], 'pilot_department_id_resource_id_primary');
             });
         }
     }

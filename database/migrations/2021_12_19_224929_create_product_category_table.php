@@ -47,7 +47,7 @@ class CreateProductCategoryTable extends Migration
                 
                 $table->integer('position');
 
-                $table->primary(['product_id', 'product_category_id']);
+                $table->primary(['product_id', 'product_category_id'], 'pilot_product_id_product_category_id_primary');
             });
         }
     }

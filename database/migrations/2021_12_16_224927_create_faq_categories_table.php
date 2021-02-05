@@ -40,7 +40,7 @@ class CreateFaqCategoriesTable extends Migration
                 $table->foreign('faq_category_id')->references('id')->on($faqCategoryTable);
                 $table->integer('position');
 
-                $table->primary(['faq_id', 'faq_category_id']);
+                $table->primary(['faq_id', 'faq_category_id'], 'pilot_faq_id_faq_category_id_primary');
             });
         }
     }
