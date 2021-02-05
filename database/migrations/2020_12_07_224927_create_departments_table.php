@@ -35,6 +35,8 @@ class CreateDepartmentsTable extends Migration
             });
         }
 
+        DB::statement('SET SESSION sql_require_primary_key=0');
+
         // pivot table : employee_department
         $employeeDepartmentTable = config('pilot.table_prefix') . 'department_' .
             config('pilot.table_prefix') . 'employee';

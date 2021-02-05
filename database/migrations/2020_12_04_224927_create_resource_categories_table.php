@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Flex360\Pilot\Pilot\Resource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Flex360\Pilot\Pilot\ResourceCategory;
 use Illuminate\Database\Schema\Blueprint;
@@ -32,6 +33,7 @@ class CreateResourceCategoriesTable extends Migration
             config('pilot.table_prefix') . 'resource_category';
 
         if (!Schema::hasTable($resourceCategoryPivotTable)) {
+            DB::statement('SET SESSION sql_require_primary_key=0');
             Schema::create($resourceCategoryPivotTable, function (Blueprint $table) use ($resourceCategoryTable) {
                 $table->integer('resource_id')->unsigned();
                 $table->foreign('resource_id')->references('id')->on((new Resource())->getTable());
