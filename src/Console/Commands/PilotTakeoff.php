@@ -25,6 +25,13 @@ class PilotTakeoff extends Command
     protected $description = 'Do all the initial stuff to get started with Pilot';
 
     /**
+     * The console command description.
+     *
+     * @var string
+     */
+    public $appUrl = '';
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -86,6 +93,11 @@ class PilotTakeoff extends Command
 
         // this will ensure the Standard module routes are registered
         $this->call('route:clear');
+
+        // this will ensure the APP_KEY is set for the application
+        $this->call('key:generate');
+
+        $this->info("\n\n\nPilot Takeoff Successful! 🚀 \n\n You can visit your website now: " . $this->appUrl);
     }
 
     private function removeInitialLaravelFiles()
@@ -150,9 +162,10 @@ class PilotTakeoff extends Command
     private function updateAppUrl()
     {
         // update APP_URL in .env
-        $appUrl = 'APP_URL=' . $this->ask('App url (ie http://pilot.test)?');
+        $appUrl = $this->ask('App url (ie http://pilot.test)?');
+        $this->appUrl = $appUrl;
         $envContent = file_get_contents(base_path('.env'));
-        file_put_contents(base_path('.env'), str_replace('APP_URL=http://localhost', $appUrl, $envContent));
+        file_put_contents(base_path('.env'), str_replace('APP_URL=http://localhost', 'APP_URL=' . $appUrl, $envContent));
     }
 
     private function setPilotTablePrefix()
