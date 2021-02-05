@@ -104,7 +104,7 @@ class PilotServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('auth.admin', AuthenticateAdmin::class);
         $router->aliasMiddleware('backend', BeforeBackendMiddleware::class);
-        $router->aliasMiddleware('pilot.module', PilotModuleEnabledMiddleware::class);
+        // $router->aliasMiddleware('pilot.module', PilotModuleEnabledMiddleware::class);
         $router->pushMiddlewareToGroup('pilot.global', BeforeMiddleware::class);
 
         class_alias(UrlHelper::class, 'UrlHelper');
