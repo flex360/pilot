@@ -415,7 +415,7 @@ return [
         ],
         'products' => [
             'name' => 'Products + Categories',
-            'enabled' => true,
+            'enabled' => false,
             'url' => ['admin.product.index'],
             'routePattern' => 'admin.product.*',
             'view' => 'published',
