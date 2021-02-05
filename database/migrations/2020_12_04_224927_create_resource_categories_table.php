@@ -33,7 +33,9 @@ class CreateResourceCategoriesTable extends Migration
             config('pilot.table_prefix') . 'resource_category';
 
         if (!Schema::hasTable($resourceCategoryPivotTable)) {
-            DB::statement('SET SESSION sql_require_primary_key=0');
+            if (count(DB::select("SHOW VARIABLES LIKE 'sql_require_primary_key'")) > 0) {
+                DB::statement('SET SESSION sql_require_primary_key=0');
+            }
             Schema::create($resourceCategoryPivotTable, function (Blueprint $table) use ($resourceCategoryTable) {
                 $table->integer('resource_id')->unsigned();
                 $table->foreign('resource_id')->references('id')->on((new Resource())->getTable());

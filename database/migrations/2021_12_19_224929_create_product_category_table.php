@@ -37,7 +37,9 @@ class CreateProductCategoryTable extends Migration
         // only add this if the current products table is empty
         // this protects applications with existing products tables
         if (!Schema::hasTable($productCategoryPivotTable) && $productCount == 0) {
-            DB::statement('SET SESSION sql_require_primary_key=0');
+            if (count(DB::select("SHOW VARIABLES LIKE 'sql_require_primary_key'")) > 0) {
+                DB::statement('SET SESSION sql_require_primary_key=0');
+            }
             Schema::create($productCategoryPivotTable, function (Blueprint $table) use ($productCategoryTable, $productTable) {
                 $table->integer('product_id')->unsigned();
                 $table->foreign('product_id')->references('id')->on($productTable);

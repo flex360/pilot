@@ -31,7 +31,9 @@ class CreateFaqCategoriesTable extends Migration
         $faqTable = (new Faq())->getTable();
         $faqCategoryPivotTable = config('pilot.table_prefix') . 'faq_' . config('pilot.table_prefix') . 'faq_category';
         if (!Schema::hasTable($faqCategoryPivotTable)) {
-            DB::statement('SET SESSION sql_require_primary_key=0');
+            if (count(DB::select("SHOW VARIABLES LIKE 'sql_require_primary_key'")) > 0) {
+                DB::statement('SET SESSION sql_require_primary_key=0');
+            }
             Schema::create($faqCategoryPivotTable, function (Blueprint $table) use ($faqCategoryTable, $faqTable) {
                 $table->integer('faq_id')->unsigned();
                 $table->foreign('faq_id')->references('id')->on($faqTable);

@@ -29,6 +29,7 @@ use Flex360\Pilot\Console\Commands\SyncForms;
 use Flex360\Pilot\Pilot\Forms\Wufoo\WufooForm;
 use Flex360\Pilot\Console\Commands\PilotTakeoff;
 use Flex360\Pilot\Console\Commands\PilotMakeUser;
+use Flex360\Pilot\Console\Commands\PilotSeed;
 use Flex360\Pilot\Console\Commands\SyncNewsFeeds;
 use Flex360\Pilot\Http\Middleware\BeforeMiddleware;
 use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
@@ -95,6 +96,7 @@ class PilotServiceProvider extends ServiceProvider
                 FixMedia::class,
                 PilotMakeUser::class,
                 PilotTakeoff::class,
+                PilotSeed::class,
                 SyncForms::class,
                 SyncNewsFeeds::class,
             ]);
