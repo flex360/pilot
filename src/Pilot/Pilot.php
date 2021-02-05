@@ -75,95 +75,113 @@ class Pilot
                 });
 
                 // Backend Routes for Routes for News module
-                Route::get('post/sticky', 'Admin\PostController@indexOfSticky')->name('post.sticky');
-                Route::get('post/scheduled', 'Admin\PostController@indexOfScheduled')->name('post.scheduled');
-                Route::get('post/drafts', 'Admin\PostController@indexOfDrafts')->name('post.draft');
-                Route::get('post/all', 'Admin\PostController@indexOfAll')->name('post.all');
-                Route::get('post/{id}/copy', 'Admin\PostController@copy')->name('post.copy');
-                Route::get('post/{id}/delete', 'Admin\PostController@destroy')
-                    ->name('post.destroy');
-                Route::resource('post', 'Admin\PostController');
+                if (config('pilot.plugins.news.enabled', false)) {
+                    Route::get('post/sticky', 'Admin\PostController@indexOfSticky')->name('post.sticky');
+                    Route::get('post/scheduled', 'Admin\PostController@indexOfScheduled')->name('post.scheduled');
+                    Route::get('post/drafts', 'Admin\PostController@indexOfDrafts')->name('post.draft');
+                    Route::get('post/all', 'Admin\PostController@indexOfAll')->name('post.all');
+                    Route::get('post/{id}/copy', 'Admin\PostController@copy')->name('post.copy');
+                    Route::get('post/{id}/delete', 'Admin\PostController@destroy')
+                        ->name('post.destroy');
+                    Route::resource('post', 'Admin\PostController');
+                }
 
                 // Backend Routes for Standard Events module
-                Route::get('event/scheduled', 'Admin\EventController@indexOfScheduled')->name('event.scheduled');
-                Route::get('event/drafts', 'Admin\EventController@indexOfDrafts')->name('event.draft');
-                Route::get('event/past', 'Admin\EventController@indexOfPast')->name('event.past');
-                Route::get('event/all', 'Admin\EventController@indexOfAll')->name('event.all');
-                Route::get('/event/{id}/copy', 'Admin\EventController@copy')->name('event.copy');
-                Route::resource('event', 'Admin\EventController');
+                if (config('pilot.plugins.events.enabled', false)) {
+                    Route::get('event/scheduled', 'Admin\EventController@indexOfScheduled')->name('event.scheduled');
+                    Route::get('event/drafts', 'Admin\EventController@indexOfDrafts')->name('event.draft');
+                    Route::get('event/past', 'Admin\EventController@indexOfPast')->name('event.past');
+                    Route::get('event/all', 'Admin\EventController@indexOfAll')->name('event.all');
+                    Route::get('/event/{id}/copy', 'Admin\EventController@copy')->name('event.copy');
+                    Route::resource('event', 'Admin\EventController');
+                }
 
                 // Backend Routes for Standard Annoucement module
-                Route::get('activate-annoucement/{id}', 'Admin\AnnoucementController@activate')
-                    ->name('annoucement.activate');
-                Route::get('annoucement/{id}/copy', 'Admin\AnnoucementController@copy')->name('annoucement.copy');
-                Route::get('annoucement/{id}/delete', 'Admin\AnnoucementController@destroy')
-                    ->name('annoucement.destroy');
-                Route::get('annoucement/deactivate', 'Admin\AnnoucementController@deactivate')
-                    ->name('annoucement.deactivate');
-                Route::resource('annoucement', 'Admin\AnnoucementController');
+                if (config('pilot.plugins.annoucements.enabled', false)) {
+                    Route::get('activate-annoucement/{id}', 'Admin\AnnoucementController@activate')
+                        ->name('annoucement.activate');
+                    Route::get('annoucement/{id}/copy', 'Admin\AnnoucementController@copy')->name('annoucement.copy');
+                    Route::get('annoucement/{id}/delete', 'Admin\AnnoucementController@destroy')
+                        ->name('annoucement.destroy');
+                    Route::get('annoucement/deactivate', 'Admin\AnnoucementController@deactivate')
+                        ->name('annoucement.deactivate');
+                    Route::resource('annoucement', 'Admin\AnnoucementController');
+                }
 
                 // Backend Routes for Standard Resources & Resource Category Module
-                Route::get('resource/{id}/copy', 'Admin\ResourceController@copy')->name('resource.copy');
-                Route::get('resource/{id}/delete', 'Admin\ResourceController@destroy')
-                    ->name('resource.destroy');
-                Route::resource('resource', 'Admin\ResourceController');
-                Route::get('resourcecategory/{id}/copy', 'Admin\ResourceCategoryController@copy')->name('resourceCategory.copy');
-                Route::get('resourcecategory/{id}/delete', 'Admin\ResourceCategoryController@destroy')
-                    ->name('resourceCategory.destroy');
-                Route::resource('resourcecategory', 'Admin\ResourceCategoryController');
+                if (config('pilot.plugins.resources.enabled', false)) {
+                    Route::get('resource/{id}/copy', 'Admin\ResourceController@copy')->name('resource.copy');
+                    Route::get('resource/{id}/delete', 'Admin\ResourceController@destroy')
+                        ->name('resource.destroy');
+                    Route::resource('resource', 'Admin\ResourceController');
+                    Route::get('resourcecategory/{id}/copy', 'Admin\ResourceCategoryController@copy')->name('resourceCategory.copy');
+                    Route::get('resourcecategory/{id}/delete', 'Admin\ResourceCategoryController@destroy')
+                        ->name('resourceCategory.destroy');
+                    Route::resource('resourcecategory', 'Admin\ResourceCategoryController');
+                }
 
                 // Backend Routes for Standard Employees & Departments Module
-                Route::get('employee/{id}/copy', 'Admin\EmployeeController@copy')->name('employee.copy');
-                Route::get('employee/{id}/delete', 'Admin\EmployeeController@destroy')
-                    ->name('employee.destroy');
-                Route::resource('employee', 'Admin\EmployeeController');
+                if (config('pilot.plugins.employees.enabled', false)) {
+                    Route::get('employee/{id}/copy', 'Admin\EmployeeController@copy')->name('employee.copy');
+                    Route::get('employee/{id}/delete', 'Admin\EmployeeController@destroy')
+                        ->name('employee.destroy');
+                    Route::resource('employee', 'Admin\EmployeeController');
 
-                Route::get('department/{id}/copy', 'Admin\DepartmentController@copy')->name('department.copy');
-                Route::get('department/{id}/delete', 'Admin\DepartmentController@destroy')
-                    ->name('department.destroy');
-                Route::get('/department-employees/{id}/staffers', 'Admin\DepartmentController@staffMembers')->name('department.staff');
-                Route::post('/department/reorderDepartments', 'Admin\DepartmentController@reorderDepartments')->name('department.reorder');
-                Route::post('/department-employees/{id}/staffers/reorderStaffWithinDepartments', 'Admin\DepartmentController@reorderStaffWithinDepartment')->name('departmentStaff.reorder');
-                Route::resource('department', 'Admin\DepartmentController');
+                    Route::get('department/{id}/copy', 'Admin\DepartmentController@copy')->name('department.copy');
+                    Route::get('department/{id}/delete', 'Admin\DepartmentController@destroy')
+                        ->name('department.destroy');
+                    Route::get('/department-employees/{id}/staffers', 'Admin\DepartmentController@staffMembers')->name('department.staff');
+                    Route::post('/department/reorderDepartments', 'Admin\DepartmentController@reorderDepartments')->name('department.reorder');
+                    Route::post('/department-employees/{id}/staffers/reorderStaffWithinDepartments', 'Admin\DepartmentController@reorderStaffWithinDepartment')->name('departmentStaff.reorder');
+                    Route::resource('department', 'Admin\DepartmentController');
+                }
 
                 // Backend Routes for Standard Testimonials Module
-                Route::get('testimonial/{id}/copy', 'Admin\TestimonialController@copy')->name('testimonial.copy');
-                Route::get('testimonial/{id}/delete', 'Admin\TestimonialController@destroy')
-                    ->name('testimonial.destroy');
-                Route::resource('testimonial', 'Admin\TestimonialController');
+                if (config('pilot.plugins.testimonials.enabled', false)) {
+                    Route::get('testimonial/{id}/copy', 'Admin\TestimonialController@copy')->name('testimonial.copy');
+                    Route::get('testimonial/{id}/delete', 'Admin\TestimonialController@destroy')
+                        ->name('testimonial.destroy');
+                    Route::resource('testimonial', 'Admin\TestimonialController');
+                }
+
 
                 // Backend Routes for Standard FAQ & FAQ Categories Modules
-                Route::get('/faqcategory/{id}/faqs', 'Admin\FaqCategoryController@faqs')
-                ->name('faqcategory.faqs');
-                Route::post(
-                    '/faqcategory/{faqcategory}/faqs/reorderFaqsWithinCategory',
-                    'Admin\FaqCategoryController@reorderFaqsWithinCategory'
-                )->name('faqcategoryFaqs.reorder');
-                Route::resource('faqcategory', 'Admin\FaqCategoryController');
-                Route::get('/faq/{id}/copy', 'Admin\FaqController@copy')
-                    ->name('faq.copy');
-                Route::get('/faq/{id}/delete', 'Admin\FaqController@destroy')
-                    ->name('faq.destroy');
-                Route::resource('faq', 'Admin\FaqController');
+                if (config('pilot.plugins.faqs.enabled', false)) {
+                    Route::get('/faqcategory/{id}/faqs', 'Admin\FaqCategoryController@faqs')
+                    ->name('faqcategory.faqs');
+                    Route::post(
+                        '/faqcategory/{faqcategory}/faqs/reorderFaqsWithinCategory',
+                        'Admin\FaqCategoryController@reorderFaqsWithinCategory'
+                    )->name('faqcategoryFaqs.reorder');
+                    Route::resource('faqcategory', 'Admin\FaqCategoryController');
+                    Route::get('/faq/{id}/copy', 'Admin\FaqController@copy')
+                        ->name('faq.copy');
+                    Route::get('/faq/{id}/delete', 'Admin\FaqController@destroy')
+                        ->name('faq.destroy');
+                    Route::resource('faq', 'Admin\FaqController');
+                }
+
 
                 // Backend Routes for Standard Product & Product Categories Modules
-                Route::get('/productcategory/{id}/products', 'Admin\ProductCategoryController@products')
-                ->name('productcategory.products');
-                Route::post(
-                    '/product-category-products/{productcategory}/products/reorderProductsWithinCategory',
-                    'Admin\ProductCategoryController@reorderProductsWithinCategory'
-                )->name('productcategoryProducts.reorder');
-                Route::get('/productcategory/{id}/copy', 'Admin\ProductCategoryController@copy')
-                    ->name('productcategory.copy');
-                Route::resource('productcategory', 'Admin\ProductCategoryController');
+                if (config('pilot.plugins.products.enabled', false)) {
+                    Route::get('/productcategory/{id}/products', 'Admin\ProductCategoryController@products')
+                    ->name('productcategory.products');
+                    Route::post(
+                        '/product-category-products/{productcategory}/products/reorderProductsWithinCategory',
+                        'Admin\ProductCategoryController@reorderProductsWithinCategory'
+                    )->name('productcategoryProducts.reorder');
+                    Route::get('/productcategory/{id}/copy', 'Admin\ProductCategoryController@copy')
+                        ->name('productcategory.copy');
+                    Route::resource('productcategory', 'Admin\ProductCategoryController');
 
-                Route::get('/product/{id}/copy', 'Admin\ProductController@copy')
-                    ->name('product.copy');
-                Route::get('/product/{id}/delete', 'Admin\ProductController@destroy')
-                    ->name('product.destroy');
-                Route::resource('product', 'Admin\ProductController');
+                    Route::get('/product/{id}/copy', 'Admin\ProductController@copy')
+                        ->name('product.copy');
+                    Route::get('/product/{id}/delete', 'Admin\ProductController@destroy')
+                        ->name('product.destroy');
+                    Route::resource('product', 'Admin\ProductController');
+                }
 
-                // Backend Routes for Routes for Settings module
+                // Backend Routes for Settings module
                 Route::resource('setting', 'Admin\SettingController');
                 Route::get('setting/{setting}', 'Admin\SettingController@settings')->name('setting.default');
 
@@ -179,12 +197,14 @@ class Pilot
 
                 Route::get('/style', 'Admin\StyleController@index')->name('style.index');
 
-                Route::get('/form', 'Admin\FormController@index')->name('form.index');
-                Route::get('/form/{hash}/configuration', 'Admin\FormController@configuration')
-                    ->name('form.configuration');
-                Route::get('/form/{hash}/entries', 'Admin\FormController@entries')->name('form.entries');
-                Route::post('/form/{hash}/sync', 'Admin\FormController@sync')->name('form.sync');
-                Route::get('/form/{hash}/entry/{id}', 'Admin\FormController@entry')->name('form.entry');
+                if (config('pilot.plugins.forms.enabled', false)) {
+                    Route::get('/form', 'Admin\FormController@index')->name('form.index');
+                    Route::get('/form/{hash}/configuration', 'Admin\FormController@configuration')
+                        ->name('form.configuration');
+                    Route::get('/form/{hash}/entries', 'Admin\FormController@entries')->name('form.entries');
+                    Route::post('/form/{hash}/sync', 'Admin\FormController@sync')->name('form.sync');
+                    Route::get('/form/{hash}/entry/{id}', 'Admin\FormController@entry')->name('form.entry');
+                }
 
                 // media routes
                 Route::group(['prefix' => 'media'], function () {
@@ -217,43 +237,59 @@ class Pilot
 
             // - note that all pilot module routes must be wrapped in the pilot.module middleware to check if this route
             // should be available on the frontend
-            Route::group(['middleware' => ['pilot.module']], function () {
-                // blog frontend routes
-                Route::get('/news', 'BlogController@index')->name('blog');
-                Route::get('/news/post/{id}/{slug}', 'BlogController@post')->name('blog.post');
-                Route::get('/news/tagged/{id}/{slug}', 'BlogController@tagged')->name('blog.tagged');
-                Route::get('/rss.xml', 'BlogController@rss')->name('rss');
+            Route::group(['middleware' => []], function () {
 
-                //Blog Routes for 'Load More Post' Button
-                Route::get('/load-more-news', 'BlogController@loadMorePostIntoIndex')->name('blog.more');
-                Route::get('/load-more-tagged-news/{id}/{slug}', 'BlogController@loadMorePostIntoTagged')
-                    ->name('blog.moreTagged');
+
+                // Blog frontend routes
+                if (config('pilot.plugins.forms.enabled', false)) {
+                    Route::get('/news', 'BlogController@index')->name('blog');
+                    Route::get('/news/post/{id}/{slug}', 'BlogController@post')->name('blog.post');
+                    Route::get('/news/tagged/{id}/{slug}', 'BlogController@tagged')->name('blog.tagged');
+                    Route::get('/rss.xml', 'BlogController@rss')->name('rss');
+
+                    //Blog Routes for 'Load More Post' Button
+                    Route::get('/load-more-news', 'BlogController@loadMorePostIntoIndex')->name('blog.more');
+                    Route::get('/load-more-tagged-news/{id}/{slug}', 'BlogController@loadMorePostIntoTagged')
+                        ->name('blog.moreTagged');
+                }
 
                 // calendar frontend routes
-                Route::get('/calendar', 'CalendarController@index')->name('calendar');
-                Route::get('/calendar/month', 'CalendarController@month')->name('calendar.month');
-                Route::get('/calendar/json', 'CalendarController@json')->name('calendar.json');
-                Route::get('/calendar/event/{id}/{slug}', 'CalendarController@event')->name('calendar.event');
-                Route::get('/calendar/tagged/{id}/{slug}', 'CalendarController@tagged')->name('calendar.tagged');
+                if (config('pilot.plugins.events.enabled', false)) {
+                    Route::get('/calendar', 'CalendarController@index')->name('calendar');
+                    Route::get('/calendar/month', 'CalendarController@month')->name('calendar.month');
+                    Route::get('/calendar/json', 'CalendarController@json')->name('calendar.json');
+                    Route::get('/calendar/event/{id}/{slug}', 'CalendarController@event')->name('calendar.event');
+                    Route::get('/calendar/tagged/{id}/{slug}', 'CalendarController@tagged')->name('calendar.tagged');
+                }
 
                 // resource frontend routes
-                Route::get('/resources', 'ResourceController@index')->name('resource.index');
+                if (config('pilot.plugins.resources.enabled', false)) {
+                    Route::get('/resources', 'ResourceController@index')->name('resource.index');
+                }
 
                 // employee frontend routes
-                Route::get('/employees', 'EmployeeController@index')->name('employee.index');
-                Route::get('/department/{department}/{slug}', 'EmployeeController@departmentLandingPage')->name('department.index');
+                if (config('pilot.plugins.employees.enabled', false)) {
+                    Route::get('/employees', 'EmployeeController@index')->name('employee.index');
+                    Route::get('/department/{department}/{slug}', 'EmployeeController@departmentLandingPage')->name('department.index');
+                }
 
                 // testimonial frontend routes
-                Route::get('/testimonials', 'TestimonialController@index')->name('testimonial.index');
+                if (config('pilot.plugins.testimonials.enabled', false)) {
+                    Route::get('/testimonials', 'TestimonialController@index')->name('testimonial.index');
+                }
 
                 // faq frontend routes
-                Route::get('/faqs', 'FaqController@index')->name('faq.index');
-                Route::get('/faqs/{faq}/{slug}', 'FaqController@detail')->name('faq.detail');
+                if (config('pilot.plugins.faqs.enabled', false)) {
+                    Route::get('/faqs', 'FaqController@index')->name('faq.index');
+                    Route::get('/faqs/{faq}/{slug}', 'FaqController@detail')->name('faq.detail');
+                }
 
                 // product frontend routes
-                Route::get('/products', 'ProductController@index')->name('product.index');
-                Route::get('/products/{id}/{slug}', 'ProductController@categoryIndex')->name('productCategory.index');
-                Route::get('/product/{id}/{slug}', 'ProductController@detail')->name('product.detail');
+                if (config('pilot.plugins.products.enabled', false)) {
+                    Route::get('/products', 'ProductController@index')->name('product.index');
+                    Route::get('/products/{id}/{slug}', 'ProductController@categoryIndex')->name('productCategory.index');
+                    Route::get('/product/{id}/{slug}', 'ProductController@detail')->name('product.detail');
+                }
             });
 
             // sitemap routes
