@@ -29,14 +29,6 @@ class AddTags extends Migration {
             $table->integer('tag_id')->unsigned()->nullable();
             $table->foreign('tag_id')->references('id')->on('tags');
         });
-
-        // create test tag
-        DB::table('tags')->insert(
-            ['name' => 'Example Tag',
-             'created_at' => Carbon::now(),
-             'updated_at' => Carbon::now(),
-            ]
-        );
     }
 
     /**

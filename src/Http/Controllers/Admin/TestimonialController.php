@@ -13,101 +13,135 @@ class TestimonialController extends DynamoController
 {
     public function getDynamo()
     {
-        $dynamo = Dynamo::make(get_class(TestimonialFacade::getFacadeRoot()))
-            
-            ->addIndexButton(function () {
-                return '<a href="/testimonials" target="_blank" class="btn btn-secondary btn-sm"><i class="fa fa-eye"></i> View Testimonials</a>';
-            });
-
-        if (config('pilot.plugins.testimonials.international-testimonials', false)) {
-            $customerInfoGroup = Group::make('customer_info', ['label' => '<b>Customer/Friend Info</b>','class' => 'col-md-12'])
-                                        ->rowStart()
-                                        ->text('name')
-                                        ->text('city')
-                                        ->text('state')
-                                        ->select('country', [
-                                            'options' => getCountriesArray(),
-                                        ])
-                                        ->rowEnd();
-        } else {
-            $customerInfoGroup = Group::make('customer_info', ['label' => '<b>Customer/Friend Info</b>','class' => 'col-md-12'])
-                                        ->rowStart()
-                                        ->text('name')
-                                        ->text('city')
-                                        ->select('country', [
-                                            'options' => getStatesArray(),
-                                        ])
-                                        ->rowEnd();
-        }
-            //Customer Info Group
-            $dynamo->group($customerInfoGroup) 
-            //end of Customer Info Group
-
-            //Quote Group
-            ->group(
-                Group::make(
-                    'quote_group',
-                    [
-                        'label' => '<b>Testimonial</b>',
-                        'class' => 'col-md-12 quote-group'
-                    ]
-                )
-                    ->rowStart()
-                    ->textarea('quote', [
-                        'class' => 'wysiwyg-editor',
-                        'label' => 'Quote',
-                        'help' => '<mark><strong>REQUIRED: </strong> If left blank, this testimonial will be filtered out of the frontend of the website.</mark>',
-                    ])
-                    ->text('attribution', [
-                        'help' => 'Leave the attribution field blank to make this quote and testimonial anonymous.'
-                    ])
-                    ->rowEnd()
-            ) //end of Quote Group
+        $dynamo = Dynamo::make(get_class(TestimonialFacade::getFacadeRoot()));
+                            // check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                            if (config('pilot.plugins.testimonials.display_name') != null) {
+                                $dynamo->alias(Str::singular(config('pilot.plugins.testimonials.display_name')));
+                            }
 
 
-            ->select('status', [
-                'options' => TestimonialFacade::getStatuses(),
-                'help' => 'Save a draft to come back to this later. Published testimonials will be automatically displayed on the front-end of the website after you save.',
-                'position' => 500,
-            ])
-            ->removeField('deleted_at')
+                            /************************************************************************************
+                             *  Pilot plugin: Testimonial form view                                              *
+                             *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                             ************************************************************************************/
+                            $dynamo->addIndexButton(function () {
+                                return '<a href="/testimonials" target="_blank" class="btn btn-secondary btn-sm"><i class="fa fa-eye"></i> View Testimonials</a>';
+                            });
 
-            //set index view
-            // ->applyScopes()
-            ->indexTab(
-                IndexTab::make('Published', function ($query) {
-                    return $query->where('status', 30)->orderBy('name');
-                })
-                    ->setBadgeColor('blue') // default is red if you don't supply
-                    ->showCount()
-            )
-            ->indexTab(
-                IndexTab::make('Drafts', function ($query) {
-                    return $query->where('status', 10);
-                })
-                    ->showCount()
-            )
-            ->paginate(25)
-            ->searchable('name')
-            ->searchOptions([
-                'placeholder' => 'Search By Name',
-            ])
-            ->clearIndexes()
-            ->addIndex('name')
-            ->addIndex('quote', 'Quote', function ($testimonial) {
-                return $testimonial->getQuoteDisplayBackend();
-            })
-            ->addIndex('attribution')
-            ->addIndex('updated_at', 'Last Edited')
-            ->addActionButton(function ($item) {
-                return '<a href="testimonial/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
-            })
-            ->addActionButton(function ($item) {
-                return '<a href="testimonial/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
-            })
-            ->indexOrderBy('name');
+                            //create custom info group
+                            if (config('pilot.plugins.testimonials.fields.international_testimonials', false)) {
+                                $customerInfoGroup = Group::make('customer_info', ['label' => '<b>Customer/Friend Info</b>','class' => 'col-md-12'])
+                                                            ->rowStart();
 
-            return $dynamo;
+                                                            if (config('pilot.plugins.testimonials.fields.name', false)) {
+                                                                $customerInfoGroup->text('name');
+                                                            }
+                                                            if (config('pilot.plugins.testimonials.fields.city', false)) {
+                                                                $customerInfoGroup->text('city');
+                                                            }
+                                                            if (config('pilot.plugins.testimonials.fields.state', false)) {
+                                                                $customerInfoGroup->text('state');
+                                                            }
+                                                            if (config('pilot.plugins.testimonials.fields.country', false)) {
+                                                                $customerInfoGroup->select('country', [
+                                                                    'options' => getCountriesArray(),
+                                                                ]);
+                                                            }
+                                                            $customerInfoGroup->rowEnd();
+                            } else {
+                                $customerInfoGroup = Group::make('customer_info', ['label' => '<b>Customer/Friend Info</b>','class' => 'col-md-12'])
+                                                            ->rowStart();
+                                                            if (config('pilot.plugins.testimonials.fields.name', false)) {
+                                                                $customerInfoGroup->text('name');
+                                                            }
+                                                            if (config('pilot.plugins.testimonials.fields.city', false)) {
+                                                                $customerInfoGroup->text('city');
+                                                            }
+                                                            if (config('pilot.plugins.testimonials.fields.state', false)) {
+                                                                $customerInfoGroup->text('state');
+                                                            }
+                                                            $customerInfoGroup->rowEnd();
+                            }
+
+                            // attach the customerInfoGroup
+                            $dynamo->group($customerInfoGroup);
+
+                            // create Quote Group
+                            $quoteGroup = Group::make('quote_group', ['label' => '<b>Testimonial</b>','class' => 'col-md-12 quote-group'])
+                                                ->rowStart();
+
+                                                if (config('pilot.plugins.testimonials.fields.quote', false)) {
+                                                    $quoteGroup->textarea('quote', [
+                                                        'class' => 'wysiwyg-editor',
+                                                        'label' => 'Quote',
+                                                        'help' => '<mark><strong>REQUIRED: </strong> If left blank, this testimonial will be filtered out of the frontend of the website.</mark>',
+                                                    ]);
+                                                }
+                                                if (config('pilot.plugins.testimonials.fields.attribution', false)) {
+                                                    $quoteGroup->text('attribution', [
+                                                        'help' => 'Leave the attribution field blank to make this quote and testimonial anonymous.'
+                                                    ]);
+                                                }
+                                                if (config('pilot.plugins.testimonials.fields.status', false)) {
+                                                    $quoteGroup->select('status', [
+                                                        'options' => TestimonialFacade::getStatuses(),
+                                                        'help' => 'Save a draft to come back to this later. Published testimonials will be automatically displayed on the front-end of the website after you save.',
+                                                        'position' => 500,
+                                                    ]);
+                                                }
+                                                $quoteGroup->rowEnd();
+
+                            // attach the Quote Group
+                            $dynamo->group($quoteGroup)
+                                    ->removeField('deleted_at');
+
+                            /************************************************************************************
+                             *  Pilot plugin: Department index view                                              *
+                             *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                             ************************************************************************************/
+                            // ->applyScopes()
+                            $dynamo->indexTab(
+                                IndexTab::make('Published', function ($query) {
+                                    return $query->where('status', 30)->orderBy('name');
+                                })
+                                    ->setBadgeColor('blue') // default is red if you don't supply
+                                    ->showCount()
+                            )
+                            ->indexTab(
+                                IndexTab::make('Drafts', function ($query) {
+                                    return $query->where('status', 10);
+                                })
+                                    ->showCount()
+                            )
+                            ->paginate(25)
+                            ->searchable('name')
+                            ->searchOptions([
+                                'placeholder' => 'Search By Name',
+                            ])
+                            ->clearIndexes();
+
+                            if (config('pilot.plugins.testimonials.fields.name', false)) {
+                                $dynamo->addIndex('name');
+                            }
+                            if (config('pilot.plugins.testimonials.fields.quote', false)) {
+                                $dynamo->addIndex('quote', 'Quote', function ($testimonial) {
+                                    return $testimonial->getQuoteDisplayBackend();
+                                });
+                            }
+                            if (config('pilot.plugins.testimonials.fields.attribution', false)) {
+                                $dynamo->addIndex('attribution');
+                            }
+                            
+                            $dynamo->addIndex('updated_at', 'Last Edited')
+                            ->addActionButton(function ($item) {
+                                return '<a href="testimonial/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
+                            })
+                            ->addActionButton(function ($item) {
+                                return '<a href="testimonial/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
+                            })
+                            ->indexOrderBy('name');
+
+        return $dynamo;
     }
 
     /**

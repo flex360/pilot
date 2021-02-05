@@ -8,56 +8,88 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
-use Flex360\Pilot\Pilot\Annoucement;
+use Flex360\Pilot\Facades\Annoucement as AnnoucementFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 
 class AnnoucementController extends DynamoController
 {
     public function getDynamo()
     {
-        return Dynamo::make(Annoucement::class)
-                    ->auto()
+        $dynamo = Dynamo::make(get_class(AnnoucementFacade::getFacadeRoot()));
+                    //check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                    if (config('pilot.plugins.annoucements.display_name') != null) {
+                        $dynamo->alias(Str::singular(config('pilot.plugins.annoucements.display_name')));
+                    }
 
-                    ->alias(Str::singular(config('pilot.plugins')['annoucements']['name']))
-
-                    // form
-                    ->text('headline', [
-                        'help' => 'Suggest keeping to 5 words or less',
-                        'attributes' => ['id' => 'headline']
-                    ])
-                    ->text('short_description', [
-                        'help' => 'Not required. Suggest keeping to 10 words or less if used.'
-                    ])
-                    ->text('button_text', [
-                        'help' => 'If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
-                    ])
-                    ->text('button_link', [
-                        'help' => 'If you want the announcement to link somewhere, paste the path (internal links) or entire URL (external links) here.'
-                    ])
-                    ->checkbox('status', [
-                        "label" => "Check this box to activate this Annoucement!",
-                    ])
-                    ->removeBoth('deleted_at')
                     
 
-                    //index
-                    ->clearIndexes()
+                    /************************************************************************************
+                     *  Pilot plugin: Annoucement form view                                            *
+                     *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                     ************************************************************************************/
+                    if (config('pilot.plugins.annoucements.fields.headline', true)) {
+                        $dynamo->text('headline', [
+                            'help' => 'Suggest keeping to 5 words or less',
+                            'attributes' => ['id' => 'headline']
+                        ]);
+                    }
+                    if (config('pilot.plugins.annoucements.fields.short_description', true)) {
+                        $dynamo->text('short_description', [
+                            'help' => 'Not required. Suggest keeping to 10 words or less if used.'
+                        ]);
+                    }
+                    if (config('pilot.plugins.annoucements.fields.button_text', true)) {
+                        $dynamo->text('button_text', [
+                            'help' => 'If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
+                        ]);
+                    }
+                    if (config('pilot.plugins.annoucements.fields.button_link', true)) {
+                        $dynamo->text('button_link', [
+                            'help' => 'If you want the announcement to link somewhere, paste the path (internal links) or entire URL (external links) here.'
+                        ]);
+                    }
+                    if (config('pilot.plugins.annoucements.fields.status', true)) {
+                        $dynamo->checkbox('status', [
+                            "label" => "Check this box to activate this Annoucement!",
+                        ]);
+                    }
+                    $dynamo->removeBoth('deleted_at');
+                    
+
+
+                    /************************************************************************************
+                     *  Pilot plugin: Annoucement index view                                           *
+                     *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                     ************************************************************************************/
+                    $dynamo->clearIndexes()
                     ->addIndexButton(function () {
                         return '<a href="/pilot/annoucement/deactivate" class="btn btn-danger btn-sm">Deactivate</a>';
-                    })
-                    ->addIndex('headline')
-                    ->addIndex('short_description')
-                    ->addIndex('button_text')
-                    ->addIndex('button_link')
-                    ->addIndex('updated_at', 'Last Edited')
-                    ->addIndex('active', 'Status', function ($annoucement) {
-                        if ($annoucement->status) {
-                            return '<span class="badge alert-success">Active</span';
-                        } else {
-                            return '<span class="badge alert-danger">Inactive</span';
-                        }
-                    })
-                    ->addActionButton(function ($annoucement) {
+                    });
+                    if (config('pilot.plugins.annoucements.fields.headline', true)) {
+                        $dynamo->addIndex('headline');
+                    }
+                    if (config('pilot.plugins.annoucements.fields.short_description', true)) {
+                        $dynamo->addIndex('short_description');
+                    }
+                    if (config('pilot.plugins.annoucements.fields.button_text', true)) {
+                        $dynamo->addIndex('button_text');
+                    }
+                    if (config('pilot.plugins.annoucements.fields.button_link', true)) {
+                        $dynamo->addIndex('button_link');
+                    }
+                    if (config('pilot.plugins.annoucements.fields.button_link', true)) {
+                        $dynamo->addIndex('updated_at', 'Last Edited');
+                    }
+                    if (config('pilot.plugins.annoucements.fields.status', true)) {
+                        $dynamo->addIndex('active', 'Status', function ($annoucement) {
+                            if ($annoucement->status) {
+                                return '<span class="badge alert-success">Active</span';
+                            } else {
+                                return '<span class="badge alert-danger">Inactive</span';
+                            }
+                        });
+                    }
+                    $dynamo->addActionButton(function ($annoucement) {
                         if (!$annoucement->status) {
                             return '<a href="' . route('admin.annoucement.activate', $annoucement->id) . '" class="btn btn-secondary btn-sm"> Activate</a>';
                         }
@@ -71,6 +103,9 @@ class AnnoucementController extends DynamoController
                         return '<a href="annoucement/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')" class="btn btn-secondary btn-sm">Delete</a>';
                     })
                     ->indexOrderBy('headline');
+
+
+        return $dynamo;
     }
 
     /**

@@ -21,12 +21,16 @@
               <li class="nav-item active">
                 <a class="nav-link active" role="tab" data-toggle="tab" href="#content">Content</a>
               </li>
+              @if (config('pilot.plugins.news.fields.gallery', true))
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" href="#gallery">Gallery</a>
               </li>
+              @endif
+              @if (config('pilot.plugins.news.fields.slug', true) || config('pilot.plugins.news.fields.summary', true))
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" href="#metadata">Metadata</a>
               </li>
+              @endif
            </ul>
        </div>
 
@@ -36,6 +40,7 @@
 
                 <div class="tab-pane active" id="content">
 
+                    @if (config('pilot.plugins.news.fields.title', true))
                     <div class="form-group">
 
                         {!! Form::label('title', 'Title') !!}
@@ -43,7 +48,9 @@
                         {!! Form::text('title', null, array('class' => 'form-control', 'autofocus' => true)) !!}
 
                     </div>
+                    @endif
 
+                    @if (config('pilot.plugins.news.fields.body', true))
                     <div class="form-group">
 
                         {!! Form::label('body', 'Body') !!}
@@ -51,9 +58,11 @@
                         {!! Form::textarea('body', null, array('class' => 'form-control wysiwyg-editor')) !!}
 
                     </div>
+                    @endif
 
                     <div class="row">
 
+                        @if (config('pilot.plugins.news.fields.horizontal_featured_image', true))
                         <div class="form-group col-lg-6">
 
                             <label for="" title="">
@@ -61,7 +70,7 @@
                             </label>
 
                             <!-- Background Color Swatch Radio Button Selector -->
-                            @if (config('pilot.plugins.news.image_background_swatch_picker', false))
+                            @if (config('pilot.plugins.news.fields.image_background_swatch_picker', true))
 
                             <div class="help-block">
                                 Select a background color if you don't have an image, and your logo in will 
@@ -70,7 +79,7 @@
 
                             <div class="color-swatch-picker">
                                 <ul>
-                                @foreach (config('pilot.plugins.news.background-color-options') as $color)
+                                @foreach (config('pilot.plugins.news.fields.background-color-options') as $color)
                                
                                     <li>
                                         <label>
@@ -93,11 +102,13 @@
                             @include('dynamo::bootstrap4.partials.fields.singleImage', ['display' => true, 'field' => $field])
 
                         </div>
+                        @endif
 
                     </div>
 
                     <div class="row">
 
+                        @if (config('pilot.plugins.news.fields.vertical_featured_image', true))
                         <div class="form-group col-lg-6">
 
                             <label for="" title="">
@@ -113,11 +124,13 @@
                             @include('dynamo::bootstrap4.partials.fields.singleImage', ['display' => true, 'field' => $field])
 
                         </div>
+                        @endif
 
                     </div>
 
                     <div class="row">
 
+                        @if (config('pilot.plugins.news.fields.publish_date', true))
                         <div class="form-group col-lg-6">
 
                             {!! Form::label('published_on', 'Publish Date') !!}
@@ -128,7 +141,9 @@
                             {!! Form::text('published_on', $item->published_on->format('n/j/Y g:i a'), array('class' => 'datetimepicker form-control')) !!}
 
                         </div>
+                        @endif
 
+                        @if (config('pilot.plugins.news.fields.status', true))
                         <div class="form-group col-lg-6">
 
                             {!! Form::label('status', 'Status') !!}
@@ -140,9 +155,11 @@
                             {!! Form::select('status', PilotPost::getStatuses(), null, array('class' => 'form-control')) !!}
 
                         </div>
+                        @endif
 
                     </div>
 
+                    @if (config('pilot.plugins.news.fields.tags', true))
                     <div class="form-group">
 
                         {!! Form::label('tags', 'Tags') !!}
@@ -154,17 +171,13 @@
                         {!! Form::select('tags[]', $tags, null, ['multiple' => true, 'class' => 'form-control chosen-select']) !!}
 
                     </div>
+                    @endif
 
+                    @if (config('pilot.plugins.news.fields.sticky_post', true))
                     <div class="form-group">
 
                         {!! Form::label('sticky', 'Sticky Post?') !!}
 
-                        {{-- <i style="font-size: 16px;" class="fas fa-question-circle" data-toggle="tooltip" data-html="true"
-                        title="You can either search and select tags that already in the system or create new tags by typing out 'Dogs' for example and pressing Enter."></i> --}}
-
-                        
-
-                        
                         {!! Form::checkbox('sticky') !!}
                         <div class="help-block">
                             Check this to keep at the top of your news feed until it's un-checked.<br>
@@ -173,17 +186,20 @@
                         </div>
 
                     </div>
+                    @endif
 
                 </div>
 
+                @if (config('pilot.plugins.news.fields.gallery', true))
                 <div class="tab-pane" id="gallery">
-
-                    @include('dynamo::bootstrap4.partials.fields.gallery', ['display' => true, 'field' => \Jzpeepz\Dynamo\DynamoField::make(['key' => 'gallery'])])
-
+                        @include('dynamo::bootstrap4.partials.fields.gallery', ['display' => true, 'field' => \Jzpeepz\Dynamo\DynamoField::make(['key' => 'gallery'])])
                 </div>
+                @endif
+
 
                 <div class="tab-pane" id="metadata">
 
+                    @if (config('pilot.plugins.news.fields.slug', true))
                     <div class="form-group">
 
                         {!! Form::label('slug', 'Slug') !!}
@@ -194,7 +210,9 @@
                         {!! Form::text('slug', null, array('class' => 'form-control')) !!}
 
                     </div>
+                    @endif
 
+                    @if (config('pilot.plugins.news.fields.summary', true))
                     <div class="form-group">
 
                         {!! Form::label('summary', 'Summary') !!}
@@ -202,6 +220,7 @@
                         {!! Form::textarea('summary', null, array('class' => 'form-control')) !!}
 
                     </div>
+                    @endif
 
                 </div>
 

@@ -16,13 +16,17 @@ class ProductCategoryController extends DynamoController
 {
     public function getDynamo()
     {
-        $dynamo = Dynamo::make(get_class(ProductCategoryFacade::getFacadeRoot()))
+        $dynamo = Dynamo::make(get_class(ProductCategoryFacade::getFacadeRoot()));
+                    // check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                    if (config('pilot.plugins.products.children.manage_product_categories.display_name') != null) {
+                        $dynamo->alias(Str::singular(config('pilot.plugins.products.children.manage_product_categories.display_name')));
+                    }
 
                     /***********************************************************************************
                      *  Pilot plugin: Product Category form view                                       *
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
-                    ->addFormHeaderButton(function() {
+                    $dynamo->addFormHeaderButton(function() {
                         return '<a href="/pilot/productcategory" class="btn btn-info btn-sm">Back to Product Categories</a>';
                     })
                     ->addFormHeaderButton(function() {

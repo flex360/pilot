@@ -492,12 +492,15 @@ class Site extends Model implements HasMedia
                     $page->title = $data['title'];
                     if ($page->title == 'CMS Introduction') {
                         $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
+                        $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('vertical_featured_image');
                     }
                     if ($page->title == 'Internal Page Layout') {
                         $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
+                        $page->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('vertical_featured_image');
                     }
                     if ($page->title == 'Alert Module Test') {
                         $page->addMedia(public_path('pilot-assets/img/alertModuleTest.jpg'))->preservingOriginal()->toMediaCollection('featured_image');
+                        $page->addMedia(public_path('pilot-assets/img/alertModuleTest.jpg'))->preservingOriginal()->toMediaCollection('vertical_featured_image');
                     }
                     $page->save();
                 }

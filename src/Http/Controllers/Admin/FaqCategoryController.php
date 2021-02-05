@@ -11,52 +11,69 @@ use Jzpeepz\Dynamo\FieldGroup;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\Faq as FaqFacade;
 use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
+use Illuminate\Support\Str;
 
 class FaqCategoryController extends DynamoController
 {
     public function getDynamo()
     {
-        return Dynamo::make(get_class(FaqCategoryFacade::getFacadeRoot()))
-                    ->auto()
-                    ->addIndexButton(function() {
-                        return '<a href="/pilot/faq?view=published" class="btn btn-primary btn-sm">Back to FAQs</a>';
-                    })
-                    ->text('name', [
-                        'class' => 'category-name-for-delete-modal',
-                    ])
-                    ->hideDelete()
-                    ->removeBoth('deleted_at')
-                    ->hasMany('faqs', [
-                            'options' => FaqFacade::all()->pluck('question', 'id'),
-                            'label' => 'FAQs',
-                            'class' => 'category-dual-list',
-                            'id' => 'category-dual-list',
-                            'tooltip' => 'Select the FAQs you would like to belong to this category.',
-                        ])
-                    ->addFormHeaderButton(function() {
-                        return '<a href="/pilot/faqcategory" class="btn btn-info btn-sm">Back to FAQ Categories</a>';
-                    })
-                    ->addFormHeaderButton(function() {
-                        return '<a href="/pilot/faq?view=published" class="btn btn-primary btn-sm">Back to FAQs</a>';
-                    })
-                    ->setFormPanelTitle("Add FAQ Category")
-                    ->setSaveItemText('Save FAQ Category')
+        $dynamo = Dynamo::make(get_class(FaqCategoryFacade::getFacadeRoot()));
+                        //check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                        if (config('pilot.plugins.faqs.children.manage_faq_categories.display_name') != null) {
+                            $dynamo->alias(Str::singular(config('pilot.plugins.faqs.children.manage_faq_categories.display_name')));
+                        }
 
-                    //set index view
-                    ->setIndexPanelTitle("FAQ Category Manager")
-                    ->setAddItemText('Add FAQ Category')
-                    ->applyScopes()
-                    ->paginate(10)
-                    ->addIndex('test', 'Number of FAQ\'s in this category', function($item) {
-                        return $item->faqs->count();
-                    })
-                    ->addIndex('id', 'Order FAQs in this Category',function ($item) {
-                        return '<a href="' . route('admin.faqcategory.faqs', ['id' => $item->id]) . '" class="btn btn-success">Order</a>';
-                    })
-                    ->hideDelete()
-                    ->addFormFooterButton(function() {
-                        return '<a href="/pilot/testing" class="mt-3 btn btn-danger btn" data-toggle="modal" data-target="#relationships-manager-modal">Delete</a>';
-                    });
+
+
+                        /************************************************************************************
+                         *  Pilot plugin: FAQ Category form view                                           *
+                         *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                         ************************************************************************************/
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/faq?view=published" class="btn btn-primary btn-sm">Back to FAQs</a>';
+                        });
+                        if (config('pilot.plugins.faqs.children.manage_faq_categories.fields.name', true)) {
+                            $dynamo->text('name', [
+                                'class' => 'category-name-for-delete-modal',
+                            ]);
+                        }
+                        if (config('pilot.plugins.faqs.children.manage_faq_categories.fields.faq_selector', true)) {
+                            $dynamo->hasMany('faqs', [
+                                'options' => FaqFacade::all()->pluck('question', 'id'),
+                                'label' => 'FAQs',
+                                'class' => 'category-dual-list',
+                                'id' => 'category-dual-list',
+                                'tooltip' => 'Select the FAQs you would like to belong to this category.',
+                            ]);
+                        }
+                        $dynamo->hideDelete()
+                        ->removeBoth('deleted_at')
+                        ->addFormHeaderButton(function() {
+                            return '<a href="/pilot/faqcategory" class="btn btn-info btn-sm">Back to FAQ Categories</a>';
+                        })
+                        ->addFormHeaderButton(function() {
+                            return '<a href="/pilot/faq?view=published" class="btn btn-primary btn-sm">Back to FAQs</a>';
+                        })
+                        ->addFormFooterButton(function() {
+                            return '<a href="/pilot/testing" class="mt-3 btn btn-danger btn" data-toggle="modal" data-target="#relationships-manager-modal">Delete</a>';
+                        });
+
+
+
+                        /************************************************************************************
+                         *  Pilot plugin: FAQ Category index view                                          *
+                         *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                         ************************************************************************************/
+                        $dynamo->applyScopes()
+                        ->paginate(10)
+                        ->addIndex('test', 'Number of FAQ\'s in this category', function($item) {
+                            return $item->faqs->count();
+                        })
+                        ->addIndex('id', 'Order FAQs in this Category',function ($item) {
+                            return '<a href="' . route('admin.faqcategory.faqs', ['id' => $item->id]) . '" class="btn btn-success">Order</a>';
+                        });
+
+        return $dynamo;
     }
 
     /**

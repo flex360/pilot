@@ -58,6 +58,9 @@ class PilotTakeoff extends Command
         // migrate the database
         $this->call('migrate');
 
+        //seed the database
+        $this->seedDatabase();
+
         $this->updateAuthConfig();
 
         $this->createUser();
@@ -155,6 +158,15 @@ class PilotTakeoff extends Command
 
         $this->info("Loading...");
         sleep(1);
+    }
+
+    private function seedDatabase()
+    {
+        $confirm = $this->confirm('Success! Do you want seed the database with starter data?', true);
+        if ($confirm) {
+            $this->call('pilot:seed');
+        }
+        $this->info("Database seeding sucessfully!");
     }
 
     private function updateAuthConfig()

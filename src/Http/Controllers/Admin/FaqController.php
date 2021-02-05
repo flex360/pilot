@@ -11,26 +11,31 @@ use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\Faq as FaqFacade;
 use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
 use Jzpeepz\Dynamo\IndexTab;
+use Illuminate\Support\Str;
 
 class FaqController extends DynamoController
 {
     public function getDynamo()
     {
-        $dynamo = Dynamo::make(get_class(FaqFacade::getFacadeRoot()))
-                    ->auto()
-                    ->addIndexButton(function() {
+        $dynamo = Dynamo::make(get_class(FaqFacade::getFacadeRoot()));
+                    //check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                    if (config('pilot.plugins.faqs.display_name') != null) {
+                        $dynamo->alias(Str::singular(config('pilot.plugins.faqs.display_name')));
+                    }
+
+
+
+                    /************************************************************************************
+                     *  Pilot plugin: FAQ form view                                                    *
+                     *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                     ************************************************************************************/
+                    $dynamo->addIndexButton(function() {
                         return '<a href="/pilot/faqcategory" class="btn btn-primary btn-sm">FAQ Categories</a>';
                     })
                     ->addIndexButton(function () {
                         return '<a href="'. route('faq.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View FAQs</a>';
-                    });
-
-                    /**
-                     *  Pilot config: FAQ uses long/short answer
-                     *  Check config file to see if we use short/long answer. If long, use WYSIWYG, if short, use normal text field
-                     * 
-                     */ 
-                    if (config('pilot.plugins.faqs.uses-long-answers', false)) {
+                    }); 
+                    if (config('pilot.plugins.faqs.fields.uses_long_answers', false)) {
                         $dynamo->textarea('answer', [
                             'class' => 'wysiwyg-editor',
                             'help' => 'Please use this space to provide a full / detailed answer to the question, including any stipulations,
@@ -42,30 +47,34 @@ class FaqController extends DynamoController
                             'class' => 'character-limited',
                             'maxlength' => 255,
                         ]);
-                    } 
-                    
-                    $dynamo->hasManySimple('faq_categories', [
-                        'nameField' => 'question',
-                        'modelClass' => FaqFacade::class,
-                        'label' => 'FAQ Categories',
-                        'help' => 'Categories must already exist. If they don\'t, please save a draft without assigned categories
-                                      and go to the category manager to create the desired category.',
-                        'position' => 40,
-                    ])
-                    ->select('status', [
-                        'options' => FaqFacade::getStatuses(),
-                        'help' => 'Use the \'\'Draft\'\' status to save information as you have it. When you\'re ready for an FAQ to
-                                      show up on the front end of the website, change it to \'\'Published\'\' and then click the \'\'Save FAQ\'\' button.',
-                        'position' => 200,
-                    ])
-                    ->setFormPanelTitle("FAQ")
-                    ->setSaveItemText('Save FAQ')
-                    ->removeField('deleted_at')
+                    }
+                    if (config('pilot.plugins.faqs.fields.categories', true)) {
+                        $dynamo->hasManySimple('faq_categories', [
+                            'nameField' => 'question',
+                            'modelClass' => FaqFacade::class,
+                            'label' => 'FAQ Categories',
+                            'help' => 'Categories must already exist. If they don\'t, please save a draft without assigned categories
+                                          and go to the category manager to create the desired category.',
+                            'position' => 40,
+                        ]);
+                    }
+                    if (config('pilot.plugins.faqs.fields.status', true)) {
+                        $dynamo->select('status', [
+                            'options' => FaqFacade::getStatuses(),
+                            'help' => 'Use the \'\'Draft\'\' status to save information as you have it. When you\'re ready for an FAQ to
+                                          show up on the front end of the website, change it to \'\'Published\'\' and then click the \'\'Save FAQ\'\' button.',
+                            'position' => 200,
+                        ]);
+                    }
+                    $dynamo->removeField('deleted_at');
 
-                    //set index view
-                    ->setIndexPanelTitle("FAQ Manager")
-                    ->setAddItemText('Add FAQ')
-                    ->applyScopes()
+
+
+                    /************************************************************************************
+                     *  Pilot plugin: FAQ index view                                                   *
+                     *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                     ************************************************************************************/
+                    $dynamo->applyScopes()
                     ->paginate(25)
                     ->indexTab(IndexTab::make('Published', function ($query) {
                             return $query->where('status', 30)->whereNull('deleted_at');
@@ -83,20 +92,24 @@ class FaqController extends DynamoController
                     ->searchOptions([
                         'placeholder' => 'Search By Question',
                     ])
-                    ->clearIndexes()
-                    ->addIndex('question')
-                    ->addIndex('answer', 'Answer', function ($item) {
+                    ->clearIndexes();
+                    if (config('pilot.plugins.faqs.fields.question', true)) {
+                        $dynamo->addIndex('question');
+                    }
+                    $dynamo->addIndex('answer', 'Answer', function ($item) {
                         return $item->getShortAnswerBackend();
-                    })
-                    ->addIndex('category', 'Applicable Categories', function ($item) {
-                        return $item->faq_categories->transform(function($cat) {
-                          return $cat->name;
-
-                        })
-                        ->implode (', ');
-
-                    })
-                    ->addIndex('updated_at', 'Last Edited')
+                    });
+                    if (config('pilot.plugins.faqs.fields.categories', true)) {
+                        $dynamo->addIndex('category', 'Applicable Categories', function ($item) {
+                            return $item->faq_categories->transform(function($cat) {
+                              return $cat->name;
+    
+                            })
+                            ->implode (', ');
+    
+                        });
+                    }
+                    $dynamo->addIndex('updated_at', 'Last Edited')
                     // ->addActionButton(function($item) {
                     //     return '<a href="'.$item->url().'" target="_blank"  class="btn btn-secondary btn-sm">View</a>';
                     // })
@@ -108,6 +121,8 @@ class FaqController extends DynamoController
                     })
                     ->indexOrderBy('question');
 
+
+                    
         return $dynamo;
 
     }

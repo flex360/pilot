@@ -25,8 +25,10 @@ return [
             'url' => ['admin.page.index'],
             'routePattern' => 'admin.page.*',
             'view' => null,
-            'vertical_image' => true,
             'target' => '_self',
+            'fields' => [
+                'vertical_featured_image' => true, // if turned on, featured_image gets a new label 'Hoziontal Featured Imaged'
+            ],
             'children' => [
                 'manage_pages' => [
                     'name' => 'Manage Pages',
@@ -64,12 +66,26 @@ return [
             'routePattern' => 'admin.post.*',
             'view' => null,
             'target' => '_self',
-            'image_background_swatch_picker' => true,
-            'background-color-options' => [
-                '#43379D',
-                '#322975',
-                '#5B4EC1',
-                '#786bd5'
+            'fields' => [
+                'title' => true,
+                'body' => true,
+                'image_background_swatch_picker' => true,
+                'background-color-options' => [
+                    '#43379D',
+                    '#322975',
+                    '#5B4EC1',
+                    '#786bd5'
+                ],
+                'horizontal_featured_image' => true,
+                'vertical_featured_image' => true,
+                'publish_date' => true,
+                'status' => true,
+                'tags' => true,
+                'sticky_post' => true,
+                'gallery' => true,
+                'slug' => true,
+                'summary' => true,
+
             ],
             'children' => [
                 'manage_post' => [
@@ -99,6 +115,18 @@ return [
             'routePattern' => 'admin.event.*',
             'view' => null,
             'target' => '_self',
+            'fields' => [
+                'title' => true,
+                'start_date' => true,
+                'end_date' => true,
+                'short_description' => true,
+                'description' => true,
+                'main_image' => true,
+                'publish_date' => true,
+                'status' => true,
+                'tags' => true,
+                'gallery' => true,
+            ],
             'children' => [
                 'manage_event' => [
                     'name' => 'Manage Events',
@@ -122,11 +150,19 @@ return [
         ],
         'annoucements' => [
             'name' => 'Alerts',
+            'display_name' => 'Alerts',
             'enabled' => true,
             'url' => ['admin.annoucement.index'],
             'routePattern' => 'admin.annoucement.*',
             'view' => null,
             'target' => '_self',
+            'fields' => [
+                'headline' => true,
+                'short_description' => true,
+                'button_text' => true,
+                'button_link' => true,
+                'status' => true,
+            ],
             'children' => [
                 'manage_alerts' => [
                     'name' => 'Manage Alerts',
@@ -155,6 +191,13 @@ return [
             'routePattern' => 'admin.resource.*',
             'view' => 'published',
             'target' => '_self',
+            'fields' => [
+                'title' => true,
+                'short_description' => true,
+                'upload_link_or_resource' => true,
+                'categories' => true,
+                'status' => true,
+            ],
             'children' => [
                 'manage_resource' => [
                     'name' => 'Manage Resources',
@@ -181,6 +224,10 @@ return [
                     'routePattern' => null,
                     'view' => null,
                     'target' => '_self',
+                    'fields' => [
+                        'name' => true,
+                        'resources_selector' => true,
+                    ],
                     'children' => null
                 ],
                 'add_resource_category' => [
@@ -201,10 +248,21 @@ return [
             'routePattern' => 'admin.employee.*',
             'view' => 'published',
             'target' => '_self',
-            'birth_date' => true,
-            'cell_phone' => true,
-            'extension' => true,
-            'bio' => true,
+            'fields' => [
+                'photo' => true,
+                'first_name' => true,
+                'last_name' => true,
+                'start_date' => true,
+                'birth_date' => true,
+                'job_title' => true,
+                'office_phone' => true,
+                'cell_phone' => true,
+                'extension' => true,
+                'email' => true,
+                'office_location' => true,
+                'bio' => true,
+                'status' => true,
+            ],
             'children' => [
                 'manage_employee' => [
                     'name' => 'Manage Employees',
@@ -231,10 +289,20 @@ return [
                     'routePattern' => null,
                     'view' => null,
                     'target' => '_self',
+                    'fields' => [
+                        'name' => true,
+                        'intro_text' => true,
+                        'featured_image' => true,
+                        'employees_selector' => true,
+                        'tags_relationship' => true,
+                        'resources_relationship' => true,
+                        'status' => true,
+                        'slug' => true,
+                        'summary' => true,
+                        'sort_employees_within_department' => true,
+                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
+                    ],
                     'children' => null,
-                    'tags_relationship' => true,
-                    'resources_relationship' => true,
-                    'sort_employees_within_department' => false
                 ],
                 'add_departments' => [
                     'name' => 'Add New Department',
@@ -256,7 +324,16 @@ return [
             'routePattern' => 'admin.testimonial.*',
             'view' => 'published',
             'target' => '_self',
-            'international-testimonials' => false,
+            'fields' => [
+                'name' => true,
+                'city' => true,
+                'state' => true,
+                'country' => true,
+                'quote' => true,
+                'attribution' => true,
+                'status' => true,
+                'international_testimonials' => true,
+            ],
             'children' => [
                 'manage_testimonial' => [
                     'name' => 'Manage Testimonials',
@@ -280,14 +357,20 @@ return [
         ],
         'faqs' => [
             'name' => 'FAQs + Categories',
+            'display_name' => 'FAQs',
             'enabled' => false,
             'url' => ['admin.faq.index'],
             'routePattern' => 'admin.faq.*',
             'view' => 'published',
             'target' => '_self',
-            'uses-long-answers' => false,
+            'fields' => [
+                'question' => true,
+                'uses_long_answers' => true,
+                'categories' => true,
+                'status' => true,
+            ],
             'children' => [
-                'manage_employee' => [
+                'manage_faq' => [
                     'name' => 'Manage FAQs',
                     'enabled' => true,
                     'url' => ['admin.faq.index'],
@@ -296,7 +379,7 @@ return [
                     'target' => '_self',
                     'children' => null,
                 ],
-                'add_employee' => [
+                'add_faq' => [
                     'name' => 'Add New FAQ',
                     'enabled' => true,
                     'url' => ['admin.faq.create'],
@@ -307,11 +390,16 @@ return [
                 ],
                 'manage_faq_categories' => [
                     'name' => 'Manage FAQ Categories',
+                    'display_name' => 'FAQ Categories',
                     'enabled' => true,
                     'url' => ['admin.faqcategory.index'],
                     'routePattern' => null,
                     'view' => null,
                     'target' => '_self',
+                    'fields' => [
+                        'name' => true,
+                        'faq_selector' => true,
+                    ],
                     'children' => null
                 ],
                 'add_faq_category' => [

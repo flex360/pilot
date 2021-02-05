@@ -21,9 +21,11 @@
               <li class="nav-item active">
                 <a class="nav-link active" role="tab" data-toggle="tab" href="#content">Content</a>
               </li>
+              @if (config('pilot.plugins.events.fields.gallery', true))
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" href="#gallery">Gallery</a>
               </li>
+              @endif
            </ul>
        </div>
 
@@ -33,6 +35,7 @@
 
                 <div class="tab-pane active" id="content">
 
+                    @if (config('pilot.plugins.events.fields.title', true))
                     <div class="form-group">
 
                         {!! Form::label('title', 'Title') !!}
@@ -40,9 +43,11 @@
                         {!! Form::text('title', null, array('class' => 'form-control', 'autofocus' => true)) !!}
 
                     </div>
+                    @endif
 
                     <div class="row">
 
+                        @if (config('pilot.plugins.events.fields.start_date', true))
                         <div class="form-group col-lg-6">
 
                             {!! Form::label('start', 'Start Date/Time') !!}
@@ -53,7 +58,9 @@
                             {!! Form::text('start', $item->start->format('n/j/Y g:i a'), array('class' => 'datetimepicker form-control')) !!}
 
                         </div>
+                        @endif
 
+                        @if (config('pilot.plugins.events.fields.end_date', true))
                         <div class="form-group col-lg-6">
 
                             {!! Form::label('end', 'End Date/Time') !!}
@@ -61,9 +68,11 @@
                             {!! Form::text('end', $item->end->format('n/j/Y g:i a'), array('class' => 'datetimepicker form-control')) !!}
 
                         </div>
+                        @endif
 
                     </div>
 
+                    @if (config('pilot.plugins.events.fields.short_description', true))
                     <div class="form-group">
 
                         {!! Form::label('short_description', 'Short Description') !!}
@@ -71,7 +80,9 @@
                         {!! Form::text('short_description', null, array('class' => 'form-control character-limited', 'maxlength' => 255)) !!}
 
                     </div>
+                    @endif
 
+                    @if (config('pilot.plugins.events.fields.description', true))
                     <div class="form-group">
 
                         {!! Form::label('body', 'Description') !!}
@@ -79,7 +90,9 @@
                         {!! Form::textarea('body', null, array('class' => 'form-control wysiwyg-editor')) !!}
 
                     </div>
+                    @endif
 
+                    @if (config('pilot.plugins.events.fields.main_image', true))
                     <div class="row">
 
                         <div class="form-group col-lg-6">
@@ -95,9 +108,11 @@
                         </div>
 
                     </div>
+                    @endif
 
                     <div class="row">
 
+                        @if (config('pilot.plugins.events.fields.publish_date', true))
                         <div class="form-group col-lg-6">
 
                             {!! Form::label('published_at', 'Publish Date') !!}
@@ -108,7 +123,9 @@
                             {!! Form::text('published_at', $item->published_at->format('n/j/Y g:i a'), array('class' => 'datetimepicker form-control')) !!}
 
                         </div>
+                        @endif
 
+                        @if (config('pilot.plugins.events.fields.status', true))
                         <div class="form-group col-lg-6">
 
                             {!! Form::label('status', 'Status') !!}
@@ -120,9 +137,11 @@
                             {!! Form::select('status', PilotEvent::getStatuses(), null, array('class' => 'form-control')) !!}
 
                         </div>
+                        @endif
 
                     </div>
 
+                    @if (config('pilot.plugins.events.fields.tags', true))
                     <div class="form-group">
 
                         {!! Form::label('tags', 'Tags') !!}
@@ -132,14 +151,17 @@
                         {!! Form::select('tags[]', $tags, $item->tags->pluck('id'), array('class' => 'form-control chosen-select', 'data-placeholder' => 'Choose Tags', 'multiple' => true)) !!}
 
                     </div>
+                    @endif
 
                 </div>
 
+                @if (config('pilot.plugins.events.fields.gallery', true))
                 <div class="tab-pane" id="gallery">
 
                     @include('dynamo::bootstrap4.partials.fields.gallery', ['display' => true, 'field' => \Jzpeepz\Dynamo\DynamoField::make(['key' => 'gallery'])])
 
                 </div>
+                @endif
 
                 <div class="tab-pane" id="metadata">
 

@@ -26,18 +26,6 @@ class CreateAnnoucementsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
-
-        // create the Standard Example Annoucement
-        DB::table((new Annoucement())->getTable())->insert(
-            ['headline' => 'Testing Alert Module',
-             'short_description' => 'We\'re testing out our new alert module!',
-             'button_text' => 'Did it work?',
-             'button_link' => '/learn/alert-module-test',
-             'status' => 1,
-             'created_at' => Carbon::now(),
-             'updated_at' => Carbon::now(),
-            ]
-        );
     }
 
     /**

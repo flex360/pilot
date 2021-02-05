@@ -5,12 +5,15 @@ namespace Flex360\Pilot\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use Flex360\Pilot\Pilot\Faq;
+use Flex360\Pilot\Pilot\Post;
+use Flex360\Pilot\Pilot\Event;
 use Illuminate\Console\Command;
 use Flex360\Pilot\Pilot\Product;
 use Flex360\Pilot\Pilot\Employee;
 use Flex360\Pilot\Pilot\Resource;
 use Illuminate\Support\Facades\DB;
 use Flex360\Pilot\Pilot\Department;
+use Flex360\Pilot\Pilot\Annoucement;
 use Flex360\Pilot\Pilot\FaqCategory;
 use Flex360\Pilot\Pilot\Testimonial;
 use Flex360\Pilot\Pilot\ProductCategory;
@@ -49,6 +52,72 @@ class PilotSeed extends Command
      */
     public function handle()
     {
+        // create test tag
+        DB::table('tags')->insert(
+            ['name' => 'Example Tag',
+             'created_at' => Carbon::now(),
+             'updated_at' => Carbon::now(),
+            ]
+        );
+        
+        // create the Standard Example Event
+        DB::table((new Event())->getTable())->insert(
+            ['title' => 'Event Example',
+             'short_description' => 'This is the short description',
+             'start' => Carbon::now()->sub(3, 'days'),
+             'end' => Carbon::now()->add(3, 'days'),
+             'body' => 'Example text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+             'gallery' => '',
+             'image' => '',
+             'status' => 10,
+             'created_at' => Carbon::now(),
+             'updated_at' => Carbon::now(),
+             'published_at' => Carbon::now(),
+            ]
+        );
+
+        // create the example department_tag entry
+        DB::table(config('pilot.table_prefix') . 'event_tag')->insert(
+            ['event_id' => 1,
+             'tag_id' => 1,
+            ]
+        );
+
+         // create the Standard Post Example
+        DB::table((new Post())->getTable())->insert(
+            ['title' => 'Post Example',
+             'summary' => 'This is the post summary',
+             'body' => 'Example text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+             'horizontal_featured_image' => '',
+             'vertical_featured_image' => '',
+             'gallery' => '',
+             'external_link' => '',
+             'status' => 10,
+             'published_on' => Carbon::now(),
+             'created_at' => Carbon::now(),
+             'updated_at' => Carbon::now(),             
+            ]
+        );
+
+        // create the example department_tag entry
+        DB::table(config('pilot.table_prefix') . 'post_tag')->insert(
+            ['post_id' => 1,
+             'tag_id' => 1,
+            ]
+        );
+
+        // create the Standard Example Annoucement
+        DB::table((new Annoucement())->getTable())->insert(
+            ['headline' => 'Testing Alert Module',
+             'short_description' => 'We\'re testing out our new alert module!',
+             'button_text' => 'Did it work?',
+             'button_link' => '/learn/alert-module-test',
+             'status' => 1,
+             'created_at' => Carbon::now(),
+             'updated_at' => Carbon::now(),
+            ]
+        );
+
         // create the Standard Example Resource
         DB::table((new Resource())->getTable())->insert(
             ['title' => 'Cute puppies',

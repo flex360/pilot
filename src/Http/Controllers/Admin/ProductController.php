@@ -16,12 +16,18 @@ class ProductController extends DynamoController
 {
     public function getDynamo()
     {
-        $dynamo = Dynamo::make(get_class(ProductFacade::getFacadeRoot()))
+        $dynamo = Dynamo::make(get_class(ProductFacade::getFacadeRoot()));
+                    // check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                    if (config('pilot.plugins.products.display_name') != null) {
+                        $dynamo->alias(Str::singular(config('pilot.plugins.products.display_name')));
+                    }
+
+
                     /************************************************************************************
                      *  Pilot plugin: Product form view                                                *
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
-                    ->addIndexButton(function() {
+                    $dynamo->addIndexButton(function() {
                         return '<a href="/pilot/productcategory" class="btn btn-primary btn-sm">Product Categories</a>';
                     })
                     ->addIndexButton(function () {

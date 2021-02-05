@@ -12,73 +12,91 @@ class EmployeeController extends DynamoController
 {
     public function getDynamo()
     {
-        $dynamo = Dynamo::make(get_class(EmployeeFacade::getFacadeRoot()))
-                    ->removeField('position')
-                    ->removeField('deleted_at')
-                    ->applyScopes()
+        $dynamo = Dynamo::make(get_class(EmployeeFacade::getFacadeRoot()));
+                    //check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
+                    if (config('pilot.plugins.employees.display_name') != null) {
+                        $dynamo->alias(Str::singular(config('pilot.plugins.employees.display_name')));
+                    }
 
-                    ->singleImage('photo', [
-                        'help' => 'Upload photo. Once selected, hover over the image and select the edit icon (paper & pencil) to manage metadata title, photo credit, and description.',
-                        'maxWidth' => 1000,
-                    ])
-                    ->text('first_name')
-                    ->text('last_name')
-                    ->text('start_date', [
-                        'class' => 'datepicker'
-                    ]);
 
-                    // if birth_date is enabled, include datetimepicker for it
-                    if (config('pilot.plugins.employees.birth_date', false)) {
+
+                    /************************************************************************************
+                     *  Pilot plugin: Employee form view                                               *
+                     *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                     ************************************************************************************/
+                    if (config('pilot.plugins.employees.fields.photo', true)) {
+                        $dynamo->singleImage('photo', [
+                            'help' => 'Upload photo. Once selected, hover over the image and select the edit icon (paper & pencil) to manage metadata title, photo credit, and description.',
+                            'maxWidth' => 1000,
+                        ]);
+                    }
+                    if (config('pilot.plugins.employees.fields.first_name', true)) {
+                        $dynamo->text('first_name');
+                    }
+                    if (config('pilot.plugins.employees.fields.last_name', true)) {
+                        $dynamo->text('last_name');
+                    }   
+                    if (config('pilot.plugins.employees.fields.start_date', true)) {
+                        $dynamo->text('start_date', [
+                            'class' => 'datepicker'
+                        ]);
+                    }      
+                    if (config('pilot.plugins.employees.fields.birth_date', true)) {
                         $dynamo->text('birth_date', [
                             'class' => 'datepicker'
                         ]);
                     }
-
-                    
-                    $dynamo->text('job_title')
-                    ->text('phone_number', [
-                        'label' => 'Office Phone',
-                    ]);
-
-                     // if extension is enabled, include datetimepicker for it
-                     if (config('pilot.plugins.employees.cell_phone', false)) {
+                    if (config('pilot.plugins.employees.fields.job_title', true)) {
+                        $dynamo->text('job_title');
+                    }
+                    if (config('pilot.plugins.employees.fields.office_phone', true)) {
+                        $dynamo->text('phone_number', [
+                            'label' => 'Office Phone',
+                        ]);
+                    }
+                    if (config('pilot.plugins.employees.fields.cell_phone', true)) {
                         $dynamo->text('cell_number', [
                             'label' => 'Cell Phone',
                         ]);
                     }
-                    
-
-                    // if extension is enabled, include datetimepicker for it
-                    if (config('pilot.plugins.employees.extension', false)) {
+                    if (config('pilot.plugins.employees.fields.extension', true)) {
                         $dynamo->text('extension');
                     }
-
-                    
-                    $dynamo->text('email')
-                    ->text('office_location');
-
-                     // if extension is enabled, include datetimepicker for it
-                     if (config('pilot.plugins.employees.bio', false)) {
+                    if (config('pilot.plugins.employees.fields.email', true)) {
+                        $dynamo->text('email');
+                    }
+                    if (config('pilot.plugins.employees.fields.office_location', true)) {
+                        $dynamo->text('office_location');
+                    }
+                    if (config('pilot.plugins.employees.fields.bio', true)) {
                         $dynamo->textarea('bio', [
                             'class' => 'wysiwyg-editor'
                         ]);
                     }
-
-                    // if departments is enabled, include HasManySimple multi-selector
-                    if (config('pilot.plugins.employees.children.departments.enabled', false)) {
+                    if (config('pilot.plugins.employees.children.departments.enabled', true)) {
                         $dynamo->hasManySimple('departments', [
                             'modelClass' => 'Flex360\Pilot\Pilot\Department',
                             'help' => 'Select the Departments this Employees belongs to. If you don\'t see the Department available, you will need to <a href="/pilot/department/create" target="_blank">create the Department</a>.'
                         ]);
                     }
+                    if (config('pilot.plugins.employees.fields.status', true)) {
+                        $dynamo->select('status', [
+                            'options' => EmployeeFacade::getStatuses(),
+                            'help' => 'Save a draft to come back to this later. Published Employees will be automatically displayed on the front-end of the website after you save.',
+                            'position' => 500,
+                        ]);
+                    }
+                    $dynamo->removeField('position');
+                    $dynamo->removeField('deleted_at');
 
-                    $dynamo->select('status', [
-                        'options' => EmployeeFacade::getStatuses(),
-                        'help' => 'Save a draft to come back to this later. Published Employees will be automatically displayed on the front-end of the website after you save.',
-                        'position' => 500,
-                    ])
 
-                    //Set indexes for admin view
+
+
+                    /************************************************************************************
+                     *  Pilot plugin: Employee index view                                              *
+                     *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
+                     ************************************************************************************/
+                    $dynamo->applyScopes()
                     ->clearIndexes()
                     ->paginate(50)
                     ->indexTab(
@@ -98,20 +116,28 @@ class EmployeeController extends DynamoController
                     ->searchable('first_name')
                     ->searchOptions([
                         'placeholder' => 'Search By Name',
-                    ])
-                    ->addIndex('photo', 'Photo', function ($item) {
-                        if (empty($item->photo)) {
-                            return '';
-                        }
-                        return '<img style="width: 100px  " src="' . $item->photo . '" class="" style="width: 60px;">';
-                    })
-                    ->addIndex('first_name')
-                    ->addIndex('last_name')
-                    ->addIndex('departments', 'Departments', function ($item) {
-                        return $item->departments->implode('name', ', ');
-                    })
+                    ]);
+                    if (config('pilot.plugins.employees.fields.photo', true)) {
+                        $dynamo->addIndex('photo', 'Photo', function ($item) {
+                            if (empty($item->photo)) {
+                                return '';
+                            }
+                            return '<img style="width: 100px  " src="' . $item->photo . '" class="" style="width: 60px;">';
+                        });
+                    }
+                    if (config('pilot.plugins.employees.fields.first_name', true)) {
+                        $dynamo->addIndex('first_name');
+                    }
+                    if (config('pilot.plugins.employees.fields.last_name', true)) {
+                        $dynamo->addIndex('last_name');
+                    }
+                    if (config('pilot.plugins.employees.children.departments.enabled', true)) {
+                        $dynamo->addIndex('departments', 'Departments', function ($item) {
+                            return $item->departments->implode('name', ', ');
+                        });
+                    }
 
-                    ->addActionButton(function ($item) {
+                    $dynamo->addActionButton(function ($item) {
                         return '<a href="employee/' . $item->id . '/copy" class="btn btn-secondary btn-sm">Copy</a>';
                     })
                     ->addActionButton(function ($item) {
@@ -119,6 +145,9 @@ class EmployeeController extends DynamoController
                     })
                     ->indexOrderBy('last_name');
 
+
+
+                    
         return $dynamo;
     }
 
