@@ -93,7 +93,7 @@ return [
                     'enabled' => true,
                     'url' => ['admin.post.index'],
                     'routePattern' => null,
-                    'view' => 'published',
+                    'view' => null,
                     'target' => '_self',
                     'children' => null,
                 ],
