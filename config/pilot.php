@@ -169,7 +169,7 @@ return [
                     'enabled' => true,
                     'url' => ['admin.annoucement.index'],
                     'routePattern' => null,
-                    'view' => 'published',
+                    'view' => null,
                     'target' => '_self',
                     'children' => null,
                 ],
