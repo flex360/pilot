@@ -116,7 +116,8 @@
                         </div>
                     @endif
 
-                    @if(config('pilot.plugins.pages.fields.vertical_image', false))
+                    @if(config('pilot.plugins.pages.fields.vertical_featured_image', false))
+                    
 
                     <div class="row">
 
