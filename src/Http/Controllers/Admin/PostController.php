@@ -207,13 +207,17 @@ class PostController extends AdminController
         //create new post and attach input
         $newPost = PostFacade::getFacadeRoot();
         $input = request()->except('tags', 'horizontal_featured_image', 'vertical_featured_image', 'gallery');
-
+        
         $newPost->title = $input['title'];
         $newPost->body = $input['body'];
         $newPost->published_on = $input['published_on'];
         $newPost->status = $input['status'];
         $newPost->slug = $input['slug'];
         $newPost->summary = $input['summary'];
+
+        if (array_key_exists('sticky', $input)) {
+            $newPost->sticky = $input['sticky'];
+        }
 
         //Change input of slug to make sure its URL friendly
         if (empty($newPost->slug)) {
