@@ -215,6 +215,10 @@ class PostController extends AdminController
         $newPost->slug = $input['slug'];
         $newPost->summary = $input['summary'];
 
+        if (array_key_exists('sticky', $input)) {
+            $newPost->sticky = $input['sticky'];
+        }
+
         //Change input of slug to make sure its URL friendly
         if (empty($newPost->slug)) {
             $newPost->slug = Str::slug($newPost->title);
