@@ -237,7 +237,7 @@ class Pilot
             // should be available on the frontend
             Route::group(['middleware' => []], function () {
                 // blog frontend routes
-                if (config('pilot.plugins.forms.enabled', false)) {
+                if (config('pilot.plugins.news.enabled', false)) {
                     Route::get('/news', 'BlogController@index')->name('blog');
                     Route::get('/news/post/{id}/{slug}', 'BlogController@post')->name('blog.post');
                     Route::get('/news/tagged/{id}/{slug}', 'BlogController@tagged')->name('blog.tagged');
