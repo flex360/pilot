@@ -8,4 +8,12 @@
     -->
     @include('pilot::partials.welcome')
 
+    <!-- 
+        Be sure to include your homepage inside this container
+    -->
+
+    <div class="homepage-container">
+
+    </div>
+
 @endsection
