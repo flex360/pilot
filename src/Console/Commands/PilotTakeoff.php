@@ -48,17 +48,19 @@ class PilotTakeoff extends Command
      */
     public function handle()
     {
-        $this->info("\nWelcome to Pilot! First let's make sure you on the latest version of pilot.\n\n");
+        // $this->info("\nWelcome to Pilot! First let's make sure you on the latest version of pilot.\n\n");
 
-        $this->info("Running 'composer update flex360/pilot'...\n\n");
+        $this->info("\nWelcome to Pilot!\n\n");
 
-        sleep(5);
+        // $this->info("Running 'composer update flex360/pilot'...\n\n");
 
-        $output = shell_exec('COMPOSER_MEMORY_LIMIT=-1 composer update flex360/pilot');
+        // sleep(5);
 
-        $this->info($output . "\n");
+        // $output = shell_exec('COMPOSER_MEMORY_LIMIT=-1 composer update flex360/pilot');
 
-        $this->info("Success!\n");
+        // $this->info($output . "\n");
+
+        // $this->info("Success!\n");
 
         $this->removeInitialLaravelFiles();
 
