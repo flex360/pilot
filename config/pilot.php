@@ -21,6 +21,7 @@ return [
     'plugins' => [
         'pages' => [
             'name' => 'Pages',
+            'display_name' => null,
             'enabled' => true,
             'url' => ['admin.page.index'],
             'routePattern' => 'admin.page.*',
@@ -61,6 +62,7 @@ return [
         ],
         'news' => [
             'name' => 'News',
+            'display_name' => null,
             'enabled' => true,
             'url' => ['admin.post.index'],
             'routePattern' => 'admin.post.*',
@@ -110,6 +112,7 @@ return [
         ],
         'events' => [
             'name' => 'Events',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.event.index'],
             'routePattern' => 'admin.event.*',
@@ -186,6 +189,7 @@ return [
         ],
         'resources' => [
             'name' => 'Resources + Categories',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.resource.index'],
             'routePattern' => 'admin.resource.*',
@@ -243,6 +247,7 @@ return [
         ],
         'employees' => [
             'name' => 'Employees + Departments',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.employee.index'],
             'routePattern' => 'admin.employee.*',
@@ -319,6 +324,7 @@ return [
         ],
         'testimonials' => [
             'name' => 'Testimonials',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.testimonial.index'],
             'routePattern' => 'admin.testimonial.*',
@@ -415,6 +421,7 @@ return [
         ],
         'products' => [
             'name' => 'Products + Categories',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.product.index'],
             'routePattern' => 'admin.product.*',
@@ -477,6 +484,7 @@ return [
         ],
         'forms' => [
             'name' => 'Forms',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.form.index'],
             'routePattern' => 'admin.form.*',
@@ -486,6 +494,7 @@ return [
         ],
         'styles' => [
             'name' => 'Styles',
+            'display_name' => null,
             'enabled' => false,
             'url' => ['admin.style.index'],
             'routePattern' => 'admin.style.*',
