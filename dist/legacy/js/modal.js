@@ -46,3 +46,47 @@ function toggleModal (id) {
     modal.classList.toggle('modal-is-open');
     body.classList.toggle('modal-active');
 }
+
+
+
+/*  
+    functions to move the modal slides left or right one with arrow keys or button clicks.
+    to use, just include <script src="/pilot-assets/legacy/js/modalArrowKey.js"></script> in your file
+*/
+function leftOneModal (id) {
+    console.log(id);
+    console.log('left: ' + id - 1);
+    const body = document.querySelector('body');
+    var currentModal = document.querySelector('.modal-id-' + id);
+    currentModal.classList.toggle('opacity-0');
+    currentModal.classList.toggle('pointer-events-none');
+    currentModal.classList.toggle('modal-is-open');
+    if ((id == 0)) {
+        var nextModal = document.querySelector('.modal-id-' + (totalModals - 1));
+    } else {
+        var nextModal = document.querySelector('.modal-id-' + (id - 1));
+    }
+    nextModal.classList.toggle('opacity-0');
+    nextModal.classList.toggle('pointer-events-none');
+    nextModal.classList.toggle('modal-is-open');
+    body.classList.toggle('modal-active');
+}
+
+function rightOneModal (id) {
+    console.log(id);
+    console.log('right: ' + (parseInt(id) + 1));
+    const body = document.querySelector('body');
+    var currentModal = document.querySelector('.modal-id-' + id);
+    currentModal.classList.toggle('opacity-0');
+    currentModal.classList.toggle('pointer-events-none');
+    currentModal.classList.toggle('modal-is-open');
+    if ((id == (totalModals - 1))) {
+        var nextModal = document.querySelector('.modal-id-0');
+    } else {
+        var nextModal = document.querySelector('.modal-id-' + (parseInt(id) + 1));
+    }
+    nextModal.classList.toggle('opacity-0');
+    nextModal.classList.toggle('pointer-events-none');
+    nextModal.classList.toggle('modal-is-open');
+    body.classList.toggle('modal-active');
+}
