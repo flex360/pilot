@@ -67,7 +67,6 @@ class ServiceController extends DynamoController
                             'label' => 'Projects',
                             'help' => 'Projects must already exist. If they don\'t, please save this service as a draft without assigned projects
                                           and go to the <a href="/pilot/project?view=published" target="_blank">Project Manager</a> to create the desired Project.',
-                            'position' => 40,
                         ]);
                     }
                     if (config('pilot.plugins.services.fields.status', true)) {

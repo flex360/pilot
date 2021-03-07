@@ -77,7 +77,6 @@ class ProjectController extends DynamoController
                             'label' => 'Project Categories',
                             'help' => 'Categories must already exist. If they don\'t, please save a draft without assigned categories
                                           and go to the <a href="/pilot/projectcategory" target="_blank">Project Category Manager</a> to create the desired category.',
-                            'position' => 40,
                         ]);
                     }
                     if (config('pilot.plugins.projects.fields.services', true)) {
@@ -87,7 +86,6 @@ class ProjectController extends DynamoController
                             'label' => 'Services',
                             'help' => 'Services must already exist. If they don\'t, please save this project as a draft without assigned services
                                           and go to the <a href="/pilot/service?view=published" target="_blank">Service Manager</a> to create the desired service.',
-                            'position' => 40,
                         ]);
                     }
                     if (config('pilot.plugins.projects.fields.featured_project', true)) {
