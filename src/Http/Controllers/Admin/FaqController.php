@@ -54,7 +54,7 @@ class FaqController extends DynamoController
                             'modelClass' => FaqFacade::class,
                             'label' => 'FAQ Categories',
                             'help' => 'Categories must already exist. If they don\'t, please save a draft without assigned categories
-                                          and go to the category manager to create the desired category.',
+                                          and go to the <a href="/pilot/faqcategory?view=published" target="_blank">FAQ Category Manager</a> to create the desired category.',
                             'position' => 40,
                         ]);
                     }

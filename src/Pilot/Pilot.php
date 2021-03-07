@@ -172,6 +172,7 @@ class Pilot
                     )->name('productcategoryProducts.reorder');
                     Route::get('/productcategory/{id}/copy', 'Admin\ProductCategoryController@copy')
                         ->name('productcategory.copy');
+                    Route::post('/productcategory/reorderProductCategories', 'Admin\ProductCategoryController@reorderProductCategories')->name('productcategory.reorder');
                     Route::resource('productcategory', 'Admin\ProductCategoryController');
 
                     Route::get('/product/{id}/copy', 'Admin\ProductController@copy')
@@ -179,6 +180,46 @@ class Pilot
                     Route::get('/product/{id}/delete', 'Admin\ProductController@destroy')
                         ->name('product.destroy');
                     Route::resource('product', 'Admin\ProductController');
+                }
+
+                // Backend Routes for Standard Projects & Project Categories Modules, combined as the Portfolio module
+                if (config('pilot.plugins.projects.enabled', false)) {
+                    Route::get('/projectcategory/{id}/projects', 'Admin\ProjectCategoryController@projects')
+                    ->name('projectcategory.projects');
+                    Route::post(
+                        '/project-category-projects/{projectcategory}/projects/reorderProjectsWithinCategory',
+                        'Admin\ProjectCategoryController@reorderProjectsWithinCategory'
+                    )->name('projectcategoryProjects.reorder');
+                    Route::get('/projectcategory/{id}/copy', 'Admin\ProjectCategoryController@copy')
+                        ->name('projectcategory.copy');
+                    Route::post('/projectcategory/reorderProjectCategories', 'Admin\ProjectCategoryController@reorderProjectCategories')->name('projectcategory.reorder');
+                    Route::resource('projectcategory', 'Admin\ProjectCategoryController');
+
+                    Route::get('/project/{id}/copy', 'Admin\ProjectController@copy')
+                        ->name('project.copy');
+                    Route::get('/project/{id}/delete', 'Admin\ProjectController@destroy')
+                        ->name('project.destroy');
+                    Route::resource('project', 'Admin\ProjectController');
+                }
+
+                // Backend Routes for Standard Service & Service Categories Modules, combined as Services module
+                if (config('pilot.plugins.services.enabled', false)) {
+                    Route::get('/servicecategory/{id}/services', 'Admin\ServiceCategoryController@services')
+                    ->name('servicecategory.services');
+                    Route::post(
+                        '/service-category-services/{servicecategory}/services/reorderServicesWithinCategory',
+                        'Admin\ServiceCategoryController@reorderServicesWithinCategory'
+                    )->name('servicecategoryservices.reorder');
+                    Route::get('/servicecategory/{id}/copy', 'Admin\ServiceCategoryController@copy')
+                        ->name('servicecategory.copy');
+                    Route::post('/servicecategory/reorderServiceCategories', 'Admin\ServiceCategoryController@reorderServiceCategories')->name('servicecategory.reorder');
+                    Route::resource('servicecategory', 'Admin\ServiceCategoryController');
+
+                    Route::get('/service/{id}/copy', 'Admin\ServiceController@copy')
+                        ->name('service.copy');
+                    Route::get('/service/{id}/delete', 'Admin\ServiceController@destroy')
+                        ->name('service.destroy');
+                    Route::resource('service', 'Admin\ServiceController');
                 }
 
                 // Backend Routes for Settings module
@@ -289,6 +330,20 @@ class Pilot
                     Route::get('/products', 'ProductController@index')->name('product.index');
                     Route::get('/products/{id}/{slug}', 'ProductController@categoryIndex')->name('productCategory.index');
                     Route::get('/product/{id}/{slug}', 'ProductController@detail')->name('product.detail');
+                }
+
+                // project frontend routes
+                if (config('pilot.plugins.projects.enabled', false)) {
+                    Route::get('/projects', 'ProjectController@index')->name('project.index');
+                    Route::get('/projects/{id}/{slug}', 'ProjectController@categoryIndex')->name('projectCategory.index');
+                    Route::get('/project/{id}/{slug}', 'ProjectController@detail')->name('project.detail');
+                }
+
+                // service frontend routes
+                if (config('pilot.plugins.services.enabled', false)) {
+                    Route::get('/services', 'ServiceController@index')->name('service.index');
+                    Route::get('/services/{id}/{slug}', 'ServiceController@categoryIndex')->name('serviceCategory.index');
+                    Route::get('/service/{id}/{slug}', 'ServiceController@detail')->name('service.detail');
                 }
             });
 

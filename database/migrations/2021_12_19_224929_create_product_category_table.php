@@ -25,6 +25,9 @@ class CreateProductCategoryTable extends Migration
             Schema::create($productCategoryTable, function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('title');
+                $table->string('featured_image');
+                $table->integer('position')->default(0);
+                $table->integer('status')->default(30);
                 $table->timestamps();
                 $table->softDeletes();
             });

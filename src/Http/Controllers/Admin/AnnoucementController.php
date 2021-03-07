@@ -40,7 +40,7 @@ class AnnoucementController extends DynamoController
                     }
                     if (config('pilot.plugins.annoucements.fields.button_text', true)) {
                         $dynamo->text('button_text', [
-                            'help' => 'If you want the announcement to link somewhere, what do you want the button to say? \'\'Read More\'\' is a good go-to.'
+                            'help' => 'If you want the announcement to link somewhere, what do you want the button to say? "Read More" is a good go-to.'
                         ]);
                     }
                     if (config('pilot.plugins.annoucements.fields.button_link', true)) {

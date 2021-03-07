@@ -2,24 +2,21 @@
 
 namespace Flex360\Pilot\Pilot;
 
-use Illuminate\Support\Str;
-use Spatie\Image\Manipulations;
-use Illuminate\Support\Facades\DB;
-use Spatie\MediaLibrary\Models\Media;
+use Flex360\Pilot\Pilot\Project;
+use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Flex360\Pilot\Facades\Product as ProductFacade;
-use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
+use Illuminate\Support\Str;
 
-class ProductCategory extends Model implements HasMedia
+class ProjectCategory extends Model implements HasMedia
 {
     use PresentableTrait, HasMediaTrait, 
         SoftDeletes, HasMediaAttributes,
@@ -28,27 +25,34 @@ class ProductCategory extends Model implements HasMedia
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
-    protected $table = 'product_categories';
+    protected $table = 'project_categories';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'title'
+        'name',
     ];
 
     protected $mediaAttributes = ['featured_image'];
 
-    public function products()
+    public function projects()
     {
-        if (config('pilot.plugins.products.children.manage_product_categories.fields.product_sort_method') == 'manual_sort') {
-            return $this->belongsToMany(root_class(ProductFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
+        if (config('pilot.plugins.projects.children.manage_project_categories.fields.project_sort_method') == 'manual_sort') {
+            return $this->belongsToMany(root_class(ProjectFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'project_category')
                         ->where('status', 30)
                         ->orderBy('position');
         } else {
-            return $this->belongsToMany(root_class(ProductFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
+            return $this->belongsToMany(root_class(ProjectFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'project_category')
                         ->where('status', 30)
-                        ->orderBy('name');
+                        ->orderBy('title');
         }
+    }
+
+    public static function getSelectList()
+    {
+        return static::orderBy('name')
+            ->get()
+            ->pluck('name', 'id');
     }
 
     public function duplicate()
@@ -58,18 +62,13 @@ class ProductCategory extends Model implements HasMedia
         $newModel = $model->replicate();
 
         // append to the title to designate a copy
-        $newModel->title .= ' (Copy)';
-
-        // copy media items
-        foreach ($model->media as $media) {
-            $media->copyTo($newModel);
-        }
+        $newModel->name .= ' (Copy)';
 
         $newModel->push();
 
         // copy all attached categories over to new model
-        foreach ($model->products as $product) {
-            $newModel->products()->attach($product);
+        foreach ($model->projects as $project) {
+            $newModel->projects()->attach($project);
         }
 
         return $newModel;
@@ -95,20 +94,11 @@ class ProductCategory extends Model implements HasMedia
 
     public function url()
     {
-        return route('productCategory.index', [
-            'id' => $this->id,
-            'slug' => $this->getSlug(),
-        ]);
-    }
-
-    public function getUrlAttribute($value)
-    {
-        return $this->url();
+        return route('project.index');
     }
 
     public function getSlug()
     {
-        return Str::slug($this->title);
+        return Str::slug($this->name);
     }
-
 }

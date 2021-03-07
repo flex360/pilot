@@ -37,16 +37,16 @@ class ResourceController extends DynamoController
                         if (config('pilot.plugins.resources.fields.upload_link_or_resource', true)) {
                             $dynamo->singleFileOrUrl('link', [
                                 'label' => 'Upload or Link Resource',
-                                'help' => '<strong>Need to upload a <span style="text-decoration: underline;">PDF, spreadsheet, or other document</span>?</strong><br> <i>--Select \'\'File\'\' and use the 
+                                'help' => '<strong>Need to upload a <span style="text-decoration: underline;">PDF, spreadsheet, or other document</span>?</strong><br> <i>--Select "File" and use the 
                                             uploader tool or browse other files already uploaded to the website.</i><Br>
                                             
-                                            <strong>Need to link to a page or section of the <span style="text-decoration: underline;">this</span> website?</strong><br> <i>--Select \'\'URL\'\' and paste the 
-                                            path to the desired resource. The \'\'path\'\' is whatever comes after the main URL known as the domain name.
-                                            Example: To link to an about-us page, enter \'\'/about-us\'\'</i><br>
+                                            <strong>Need to link to a page or section of the <span style="text-decoration: underline;">this</span> website?</strong><br> <i>--Select "URL" and paste the 
+                                            path to the desired resource. The "path" is whatever comes after the main URL known as the domain name.
+                                            Example: To link to an about-us page, enter "/about-us"</i><br>
                                             
                                             <strong>Need to link to a webpage or a document from <span style="text-decoration: underline;">external</span> website?</strong><br> <i>--Enter the entire web address.
                                             Example: If you were linking to an article on a news site, you would enter
-                                            \'\'https://newsWebsite.com/article/4/name-of-article\'\'</i>',
+                                            "https://newsWebsite.com/article/4/name-of-article"</i>',
                             ]);
                         }
                         if (config('pilot.plugins.resources.fields.categories', true)) {
@@ -66,7 +66,8 @@ class ResourceController extends DynamoController
                         if (config('pilot.plugins.resources.fields.status', true)) {
                             $dynamo->select('status', [
                                 'options' => ResourceFacade::getStatuses(),
-                                'help' => 'Save a draft to come back to this later. Published resources will be automatically displayed on the front-end of the website after you save.',
+                                'help' => 'Use the "Draft" status to save information as you have it. When you\'re ready for a Resource to
+                                            show up on the front end of the website, change it to "Published" and then click the "Save Resource" button.',
                                 'position' => 500,
                             ]);
                         }

@@ -73,7 +73,7 @@
                             @if (config('pilot.plugins.news.fields.image_background_swatch_picker', true))
 
                             <div class="help-block">
-                                Select a background color if you don't have an image, and your logo in will 
+                                Select a background color if you don't have an image, and your logo will 
                                 automatically display in front of this background color. Or upload your own image to show up at the top of this post.<br>
                             </div>
 

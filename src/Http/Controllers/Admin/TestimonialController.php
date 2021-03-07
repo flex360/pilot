@@ -85,7 +85,8 @@ class TestimonialController extends DynamoController
                                                 if (config('pilot.plugins.testimonials.fields.status', false)) {
                                                     $quoteGroup->select('status', [
                                                         'options' => TestimonialFacade::getStatuses(),
-                                                        'help' => 'Save a draft to come back to this later. Published testimonials will be automatically displayed on the front-end of the website after you save.',
+                                                        'help' => 'Use the "Draft" status to save information as you have it. When you\'re ready for a Testimonial to
+                                                        show up on the front end of the website, change it to "Published" and then click the "Save Testimonial" button.',
                                                         'position' => 500,
                                                     ]);
                                                 }

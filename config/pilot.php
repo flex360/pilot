@@ -188,7 +188,7 @@ return [
             ]
         ],
         'resources' => [
-            'name' => 'Resources + Categories',
+            'name' => 'Resources',
             'display_name' => null,
             'enabled' => false,
             'url' => ['admin.resource.index'],
@@ -246,7 +246,7 @@ return [
             ],
         ],
         'employees' => [
-            'name' => 'Employees + Departments',
+            'name' => 'Employees',
             'display_name' => null,
             'enabled' => false,
             'url' => ['admin.employee.index'],
@@ -362,7 +362,7 @@ return [
             ]
         ],
         'faqs' => [
-            'name' => 'FAQs + Categories',
+            'name' => 'FAQs',
             'display_name' => 'FAQs',
             'enabled' => false,
             'url' => ['admin.faq.index'],
@@ -420,7 +420,7 @@ return [
             ]
         ],
         'products' => [
-            'name' => 'Products + Categories',
+            'name' => 'Products',
             'display_name' => null,
             'enabled' => false,
             'url' => ['admin.product.index'],
@@ -467,7 +467,9 @@ return [
                         'title' => true,
                         'featured_image' => true,
                         'product_selector' => true,
-                        'product_sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
+                        'status' => true,
+                        'product_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
+                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
                     ],
                     'children' => null
                 ],
@@ -475,6 +477,146 @@ return [
                     'name' => 'Add New Product Category',
                     'enabled' => true,
                     'url' => ['admin.productcategory.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ]
+        ],
+        'projects' => [
+            'name' => 'Portfolio',
+            'display_name' => null,
+            'enabled' => false,
+            'url' => ['admin.project.index'],
+            'routePattern' => 'admin.project.*',
+            'view' => 'published',
+            'target' => '_self',
+            'fields' => [
+                'title' => true,
+                'featured_image' => true,
+                'image_background_swatch_picker' => true,
+                'background-color-options' => [
+                    '#43379D',
+                    '#322975',
+                    '#5B4EC1',
+                    '#786bd5'
+                ],
+                'summary' => true,
+                'location' => true,
+                'completion_date' => true,
+                'gallery' => true,
+                'categories' => true,
+                'services' => true,
+                'featured_project' => true,
+                'status' => true
+            ],
+            'children' => [
+                'manage_project' => [
+                    'name' => 'Manage Projects',
+                    'enabled' => true,
+                    'url' => ['admin.project.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_project' => [
+                    'name' => 'Add New Project',
+                    'enabled' => true,
+                    'url' => ['admin.project.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'manage_project_categories' => [
+                    'name' => 'Manage Project Categories',
+                    'display_name' => null,
+                    'enabled' => true,
+                    'url' => ['admin.projectcategory.index'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'fields' => [
+                        'name' => true,
+                        'featured_image' => true,
+                        'project_selector' => true,
+                        'status' => true,
+                        'project_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
+                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
+                    ],
+                    'children' => null
+                ],
+                'add_project_category' => [
+                    'name' => 'Add New Project Category',
+                    'enabled' => true,
+                    'url' => ['admin.projectcategory.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+            ]
+        ],
+        'services' => [
+            'name' => 'Services',
+            'display_name' => null,
+            'enabled' => false,
+            'url' => ['admin.service.index'],
+            'routePattern' => 'admin.service.*',
+            'view' => 'published',
+            'target' => '_self',
+            'fields' => [
+                'icon' => true,
+                'title' => true,
+                'featured_image' => true,
+                'subservices' => true,
+                'description' => true,
+                'projects_selector' => true,
+                'status' => true
+            ],
+            'children' => [
+                'manage_service' => [
+                    'name' => 'Manage Services',
+                    'enabled' => true,
+                    'url' => ['admin.service.index'],
+                    'routePattern' => null,
+                    'view' => 'published',
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'add_service' => [
+                    'name' => 'Add New Service',
+                    'enabled' => true,
+                    'url' => ['admin.service.create'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'children' => null,
+                ],
+                'manage_service_categories' => [
+                    'name' => 'Manage Service Categories',
+                    'display_name' => null,
+                    'enabled' => true,
+                    'url' => ['admin.servicecategory.index'],
+                    'routePattern' => null,
+                    'view' => null,
+                    'target' => '_self',
+                    'fields' => [
+                        'name' => true,
+                        'featured_image' => true,
+                        'service_selector' => true,
+                        'status' => true,
+                        'service_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
+                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
+                    ],
+                    'children' => null
+                ],
+                'add_service_category' => [
+                    'name' => 'Add New Service Category',
+                    'enabled' => true,
+                    'url' => ['admin.servicecategory.create'],
                     'routePattern' => null,
                     'view' => null,
                     'target' => '_self',

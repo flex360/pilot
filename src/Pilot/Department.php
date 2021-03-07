@@ -51,7 +51,15 @@ class Department extends Model implements HasMedia
 
     public function employees()
     {
-        return $this->belongsToMany(root_class(EmployeeFacade::class), config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee')->orderBy('position');
+        if (config('pilot.plugins.employees.children.departments.fields.sort_method') == 'manual_sort') {
+            return $this->belongsToMany(root_class(EmployeeFacade::class), $this->getPrefix() . 'department_' . config('pilot.table_prefix') . 'employee')
+                        ->where('status', 30)
+                        ->orderBy('position');
+        } else {
+            return $this->belongsToMany(root_class(EmployeeFacade::class), $this->getPrefix() . 'department_' . config('pilot.table_prefix') . 'employee')
+                        ->where('status', 30)
+                        ->orderBy('first_name');
+        }
     }
 
     public function tags()

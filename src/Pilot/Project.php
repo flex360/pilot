@@ -16,10 +16,11 @@ use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Flex360\Pilot\Facades\Product as ProductFacade;
-use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
+use Flex360\Pilot\Facades\Service as ServiceFacade;
+use Flex360\Pilot\Facades\Project as ProjectFacade;
+use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
 
-class ProductCategory extends Model implements HasMedia
+class Project extends Model implements HasMedia
 {
     use PresentableTrait, HasMediaTrait, 
         SoftDeletes, HasMediaAttributes,
@@ -28,27 +29,35 @@ class ProductCategory extends Model implements HasMedia
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
-    protected $table = 'product_categories';
+    protected $table = 'projects';
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'title'
+        'title', 'summary', 'location', 'completion_date', 'featured'
     ];
 
-    protected $mediaAttributes = ['featured_image'];
+    protected $mediaAttributes = ['featured_image', 'gallery'];
 
-    public function products()
+    public function getSummaryBackend()
     {
-        if (config('pilot.plugins.products.children.manage_product_categories.fields.product_sort_method') == 'manual_sort') {
-            return $this->belongsToMany(root_class(ProductFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
-                        ->where('status', 30)
-                        ->orderBy('position');
+        if ($this->summary != null) {
+            return substr(strip_tags($this->summary), 0, 60) . '...';
         } else {
-            return $this->belongsToMany(root_class(ProductFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
-                        ->where('status', 30)
-                        ->orderBy('name');
+            return 'N/A';
         }
+    }
+
+    public function project_categories()
+    {
+        return $this->belongsToMany(root_class(ProjectCategoryFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'project_category')
+                    ->orderBy('name');
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany(root_class(ServiceFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'service')
+                    ->orderBy('title');
     }
 
     public function duplicate()
@@ -60,16 +69,19 @@ class ProductCategory extends Model implements HasMedia
         // append to the title to designate a copy
         $newModel->title .= ' (Copy)';
 
-        // copy media items
-        foreach ($model->media as $media) {
+         // copy media items
+         foreach ($model->media as $media) {
             $media->copyTo($newModel);
         }
+
+        // make new copy a draft
+        $newModel->status = 10;
 
         $newModel->push();
 
         // copy all attached categories over to new model
-        foreach ($model->products as $product) {
-            $newModel->products()->attach($product);
+        foreach ($model->project_categories as $cat) {
+            $newModel->project_categories()->attach($cat);
         }
 
         return $newModel;
@@ -85,7 +97,7 @@ class ProductCategory extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \ProjectCategory::getStatuses();
+        $status = \Project::getStatuses();
 
         return (object) array(
             'id' => $this->status,
@@ -95,13 +107,13 @@ class ProductCategory extends Model implements HasMedia
 
     public function url()
     {
-        return route('productCategory.index', [
+        return route('project.detail', [
             'id' => $this->id,
             'slug' => $this->getSlug(),
         ]);
     }
 
-    public function getUrlAttribute($value)
+    public function getUrlAttribute()
     {
         return $this->url();
     }

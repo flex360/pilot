@@ -76,13 +76,15 @@ class EmployeeController extends DynamoController
                     if (config('pilot.plugins.employees.children.departments.enabled', true)) {
                         $dynamo->hasManySimple('departments', [
                             'modelClass' => 'Flex360\Pilot\Pilot\Department',
-                            'help' => 'Select the Departments this Employees belongs to. If you don\'t see the Department available, you will need to <a href="/pilot/department/create" target="_blank">create the Department</a>.'
+                            'help' => 'Departments must already exist. If they don\'t, please save this Employee as a draft without assigned departments
+                                        and go to the <a href="/pilot/department?view=published" target="_blank">Department Manager</a> to create the desired department.',
                         ]);
                     }
                     if (config('pilot.plugins.employees.fields.status', true)) {
                         $dynamo->select('status', [
                             'options' => EmployeeFacade::getStatuses(),
-                            'help' => 'Save a draft to come back to this later. Published Employees will be automatically displayed on the front-end of the website after you save.',
+                            'help' => 'Use the "Draft" status to save information as you have it. When you\'re ready for a Employee to
+                                        show up on the front end of the website, change it to "Published" and then click the "Save Employee" button.',
                             'position' => 500,
                         ]);
                     }
@@ -98,6 +100,9 @@ class EmployeeController extends DynamoController
                      ************************************************************************************/
                     $dynamo->applyScopes()
                     ->clearIndexes()
+                    ->addIndexButton(function() {
+                        return '<a href="/pilot/department" class="btn btn-primary btn-sm">Departments</a>';
+                    })
                     ->paginate(50)
                     ->indexTab(
                         IndexTab::make('Published', function ($query) {

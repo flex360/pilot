@@ -27,11 +27,6 @@ class DepartmentController extends DynamoController
                                 'class' => 'wysiwyg-editor',
                             ]);
                         }
-                        if (config('pilot.plugins.employees.children.departments.fields.intro_text', true)) {
-                            $departmentDeatilsFormTab->textarea('intro_text', [
-                                'class' => 'wysiwyg-editor',
-                            ]);
-                        }
                         if (config('pilot.plugins.employees.children.departments.fields.featured_image', true)) {
                             $departmentDeatilsFormTab->singleImage('featured_image', [
                                 'maxWidth' => 1000,
@@ -53,8 +48,8 @@ class DepartmentController extends DynamoController
                                 'options' => Tag::orderBy('name')->get()->pluck('name', 'id'),
                                 'class' => 'category-dual-list',
                                 'id' => 'category-dual-list',
-                                'help' => 'Select the relevant Tags for this Department.<br> Example: If you select the tag <strong>\'\'Cute Puppies\'\'</strong>,
-                                then <strong>\'\'Cute Puppies\'\'</strong> News will display on this department page.',
+                                'help' => 'Select the relevant Tags for this Department.<br> Example: If you select the tag <strong>"Cute Puppies"</strong>,
+                                then <strong>"Cute Puppies"</strong> News will display on this department page.',
                             ]);
                         }
                         if (config('pilot.plugins.employees.children.departments.fields.resources_relationship', true)) {
@@ -71,7 +66,8 @@ class DepartmentController extends DynamoController
                         if (config('pilot.plugins.employees.children.departments.fields.status', true)) {
                             $departmentDeatilsFormTab->select('status', [
                                 'options' => DepartmentFacade::getStatuses(),
-                                'help' => 'Save a draft to come back to this later. Published departments will be automatically displayed on the front-end of the website after you save.',
+                                'help' => 'Use the "Draft" status to save information as you have it. When you\'re ready for a Department to
+                                            show up on the front end of the website, change it to "Published" and then click the "Save Department" button.',
                                 'position' => 10,
                             ]);
                         }
@@ -102,8 +98,14 @@ class DepartmentController extends DynamoController
                          *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                          ************************************************************************************/
                         $dynamo->removeField('position')
-                        ->removeField('deleted_at')
-                        ->formTab($departmentDeatilsFormTab);
+                        ->removeField('deleted_at');
+                        $dynamo->addFormHeaderButton(function() {
+                            return '<a href="/pilot/department" class="btn btn-info btn-sm">Back to Departments</a>';
+                        })
+                        ->addFormHeaderButton(function() {
+                            return '<a href="/pilot/employee?view=published" class="btn btn-primary btn-sm">Back to Employees</a>';
+                        });
+                        $dynamo->formTab($departmentDeatilsFormTab);
                         if (isset($metadataFormTab)) {
                             $dynamo ->formTab($metadataFormTab);
                         }
@@ -116,37 +118,44 @@ class DepartmentController extends DynamoController
                          *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                          ************************************************************************************/
                         $dynamo->clearIndexes();
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/employee?view=published" class="btn btn-primary btn-sm">Back to Employees</a>';
+                        });
                         if (config('pilot.plugins.employees.children.departments.fields.sort_method') == 'manual_sort') {
                             $dynamo->addIndex('hamburger', 'Sort', function ($item) {
                                 return '<i class="fas fa-bars fa-2x" ></i>';
                             });
+                        }
+                        if (config('pilot.plugins.employees.children.departments.fields.name', true)) {
+                            $dynamo->addIndex('name');
                         }
                         if (config('pilot.plugins.employees.children.departments.fields.sort_employees_within_department', true)) {
                             $dynamo->addIndex('id', 'Order Staff', function ($item) {
                                 return '<a href="' . route('admin.department.staff', ['id' => $item->id]) . '" class="btn btn-success">Order</a>';
                             });
                         }
-                        if (config('pilot.plugins.employees.children.departments.fields.name', true)) {
-                            $dynamo->addIndex('name');
-                        }
+                        $dynamo->addIndex('count', 'Number Of Employees In This Department', function ($item) {
+                            return $item->employees->count();
+                        });
                         if (config('pilot.plugins.employees.children.departments.fields.status', true)) {
                             $dynamo->addIndex('test', 'Published?', function ($item) {
                                 return $item->status == 30 ? '<i class="far fa-check-circle fa-3x" style="color: green; padding-top: 10px;"></i>' : '<i class="far fa-times-circle fa-3x" style="color: red; padding-top: 10px;"></i>';
                             });
                         }
-                        $dynamo->addIndex('count', 'Number Of Employees In This Department', function ($item) {
-                            return $item->employees->count();
-                        })
+
+                        $dynamo->addIndex('updated_at', 'Last Edited')
+
                         ->addActionButton(function ($item) {
                             return '<a href="department/' . $item->id . '/copy" class="btn btn-secondary btn-sm">Copy</a>';
                         })
                         ->addActionButton(function ($item) {
                             return '<a href="department/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever. ( FLEX360 can bring it back for you )\')" class="btn btn-secondary btn-sm">Delete</a>';
-                        })
-                        ->indexOrderBy('position');
-
-
-                        
+                        });
+                        if (config('pilot.plugins.employees.children.departments.fields.sort_method') == 'manual_sort') {
+                            $dynamo->indexOrderBy('position');
+                        } else {
+                            $dynamo->indexOrderBy('name');
+                        }
 
         return $dynamo;
     }
