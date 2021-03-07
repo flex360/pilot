@@ -28,10 +28,12 @@ class ProjectController extends DynamoController
                      *  Pilot plugin: Project form view                                                *
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
-                    $dynamo->addIndexButton(function() {
-                        return '<a href="/pilot/projectcategory" class="btn btn-primary btn-sm">Project Categories</a>';
-                    })
-                    ->addIndexButton(function () {
+                    if (config('pilot.plugins.projects.fields.categories', true)) {
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/projectcategory" class="btn btn-primary btn-sm">Project Categories</a>';
+                        });
+                    }
+                    $dynamo->addIndexButton(function () {
                         return '<a href="'. route('project.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Projects</a>';
                     });
                     if (config('pilot.plugins.projects.fields.title', true)) {

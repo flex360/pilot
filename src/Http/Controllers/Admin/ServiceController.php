@@ -29,10 +29,13 @@ class ServiceController extends DynamoController
                      *  Pilot plugin: Service form view                                                *
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
-                    $dynamo->addIndexButton(function() {
-                        return '<a href="/pilot/servicecategory" class="btn btn-primary btn-sm">Service Categories</a>';
-                    })
-                    ->addIndexButton(function () {
+                    if (config('pilot.plugins.services.fields.categories', true)) {
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/servicecategory" class="btn btn-primary btn-sm">Service Categories</a>';
+                        });
+                    }
+                    
+                    $dynamo->addIndexButton(function () {
                         return '<a href="'. route('service.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Services</a>';
                     });
                     if (config('pilot.plugins.services.fields.icon', true)) {
@@ -67,6 +70,15 @@ class ServiceController extends DynamoController
                             'label' => 'Projects',
                             'help' => 'Projects must already exist. If they don\'t, please save this service as a draft without assigned projects
                                           and go to the <a href="/pilot/project?view=published" target="_blank">Project Manager</a> to create the desired Project.',
+                        ]);
+                    }
+                    if (config('pilot.plugins.services.fields.categories', true)) {
+                        $dynamo->hasManySimple('service_categories', [
+                            'nameField' => 'name',
+                            'modelClass' => ServiceCategoryFacade::class,
+                            'label' => 'Service Categories',
+                            'help' => 'Categories must already exist. If they don\'t, please save this service as a draft without assigned categories
+                                          and go to the <a href="/pilot/servicecategory?view=published" target="_blank">Service Category Manager</a> to create the desired category.',
                         ]);
                     }
                     if (config('pilot.plugins.services.fields.status', true)) {

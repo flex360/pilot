@@ -27,10 +27,13 @@ class ProductController extends DynamoController
                      *  Pilot plugin: Product form view                                                *
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
-                    $dynamo->addIndexButton(function() {
-                        return '<a href="/pilot/productcategory" class="btn btn-primary btn-sm">Product Categories</a>';
-                    })
-                    ->addIndexButton(function () {
+                    if (config('pilot.plugins.products.fields.categories', true)) {
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/productcategory" class="btn btn-primary btn-sm">Product Categories</a>';
+                        });
+                    }
+                    
+                    $dynamo->addIndexButton(function () {
                         return '<a href="'. route('product.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Products</a>';
                     });
                     if (config('pilot.plugins.products.fields.name', true)) {
