@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
@@ -13,11 +14,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Facades\Project as ProjectFacade;
+use Flex360\Pilot\Facades\Service as ServiceFacade;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
-use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Flex360\Pilot\Facades\Service as ServiceFacade;
-use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
 
 class Project extends Model implements HasMedia
@@ -34,7 +35,7 @@ class Project extends Model implements HasMedia
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'title', 'summary', 'location', 'completion_date', 'featured'
+        'title', 'summary', 'location', 'featured'
     ];
 
     protected $mediaAttributes = ['featured_image', 'gallery'];
@@ -58,6 +59,24 @@ class Project extends Model implements HasMedia
     {
         return $this->belongsToMany(root_class(ServiceFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'service')
                     ->orderBy('title');
+    }
+
+    public function setCompletionDateAttribute($value)
+    {
+        if (empty($value)) {
+            $this->attributes['completion_date'] = null;
+            return;
+        }
+        $this->attributes['completion_date'] = Carbon::createFromFormat('m-d-Y', $value)->format('Y-m-d 00:00:00');
+    }
+
+    public function getCompletionDateAttribute($value)
+    {
+        if (!empty($value)) {
+            return Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('m-d-Y');
+        } else {
+            return null;
+        }
     }
 
     public function duplicate()

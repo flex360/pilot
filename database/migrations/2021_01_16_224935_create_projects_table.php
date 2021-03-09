@@ -25,7 +25,7 @@ class CreateProjectsTable extends Migration
                 $table->string('fi_background_color');
                 $table->text('summary');
                 $table->string('location');
-                $table->dateTime('completion_date');
+                $table->dateTime('completion_date')->nullable();
                 $table->string('gallery');
                 $table->boolean('featured');
                 $table->integer('status');
