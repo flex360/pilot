@@ -38,7 +38,7 @@ class Project extends Model implements HasMedia
         'title', 'summary', 'location', 'featured'
     ];
 
-    protected $mediaAttributes = ['featured_image', 'gallery'];
+    protected $mediaAttributes = ['featured_image'];
 
     public function getSummaryBackend()
     {
@@ -77,6 +77,26 @@ class Project extends Model implements HasMedia
         } else {
             return null;
         }
+    }
+
+    public function getGalleryAttribute($value)
+    {
+        $mediaItems = $this->getMedia('gallery');
+
+        if ($mediaItems->isEmpty()) {
+            $array = unserialize($value);
+
+            return is_array($array) ? $array : [];
+        }
+
+        return $mediaItems->transform(function ($item, $key) {
+            return [
+                'path' => $item->getUrl(),
+                'title' => $item->getCustomProperty('title'),
+                'credit' => $item->getCustomProperty('credit'),
+                'description' => $item->getCustomProperty('description'),
+            ];
+        })->toArray();
     }
 
     public function duplicate()

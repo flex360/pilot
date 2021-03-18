@@ -36,7 +36,7 @@ class Product extends Model implements HasMedia
         'name', 'price', 'short_description', 'full_description'
     ];
 
-    protected $mediaAttributes = ['featured_image', 'gallery'];
+    protected $mediaAttributes = ['featured_image'];
 
     public function getFullDescriptionBackend()
     {
@@ -51,6 +51,26 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsToMany(root_class(ProductCategoryFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
                     ->orderBy('title');
+    }
+
+    public function getGalleryAttribute($value)
+    {
+        $mediaItems = $this->getMedia('gallery');
+
+        if ($mediaItems->isEmpty()) {
+            $array = unserialize($value);
+
+            return is_array($array) ? $array : [];
+        }
+
+        return $mediaItems->transform(function ($item, $key) {
+            return [
+                'path' => $item->getUrl(),
+                'title' => $item->getCustomProperty('title'),
+                'credit' => $item->getCustomProperty('credit'),
+                'description' => $item->getCustomProperty('description'),
+            ];
+        })->toArray();
     }
 
     public function duplicate()
