@@ -27,12 +27,16 @@ class Tag extends Model
 
     public function posts()
     {
-        return $this->belongsToMany(Post::class, config('pilot.table_prefix') . 'post_tag');
+        return $this->belongsToMany(Post::class, config('pilot.table_prefix') . 'post_tag')
+                    ->where('status', 30)
+                    ->orderBy('published_on', 'desc');
     }
 
     public function events()
     {
-        return $this->belongsToMany(Event::class, config('pilot.table_prefix') . 'event_tag');
+        return $this->belongsToMany(Event::class, config('pilot.table_prefix') . 'event_tag')
+                    ->where('status', 30)
+                    ->orderBy('published_on', 'desc');
     }
 
     public function url()
