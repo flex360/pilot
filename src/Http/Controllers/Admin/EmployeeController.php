@@ -99,11 +99,13 @@ class EmployeeController extends DynamoController
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
                     $dynamo->applyScopes()
-                    ->clearIndexes()
-                    ->addIndexButton(function() {
-                        return '<a href="/pilot/department" class="btn btn-primary btn-sm">Departments</a>';
-                    })
-                    ->paginate(50)
+                    ->clearIndexes();
+                    if (config('pilot.plugins.employees.children.departments.enabled', true)) {
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/department" class="btn btn-primary btn-sm">Departments</a>';
+                        });
+                    }
+                    $dynamo->paginate(50)
                     ->indexTab(
                         IndexTab::make('Published', function ($query) {
                             return $query->where('status', 30)->whereNull('deleted_at');
