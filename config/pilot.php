@@ -465,6 +465,7 @@ return [
                     'target' => '_self',
                     'fields' => [
                         'title' => true,
+                        'short_description' => true,
                         'featured_image' => true,
                         'product_selector' => true,
                         'status' => true,

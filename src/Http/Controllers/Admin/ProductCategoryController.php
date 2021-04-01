@@ -38,6 +38,9 @@ class ProductCategoryController extends DynamoController
                             'class' => 'category-name-for-delete-modal',
                         ]);
                     }
+                    if (config('pilot.plugins.products.children.manage_product_categories.fields.short_description', true)) {
+                        $dynamo->text('short_description');
+                    }
                     if (config('pilot.plugins.products.children.manage_product_categories.fields.featured_image', true)) {
                         $dynamo->singleImage('featured_image', [
                             'help' => 'Upload photo. Once selected, hover over the image and select the edit icon (paper & pencil) to manage metadata title, photo credit, and description.',
