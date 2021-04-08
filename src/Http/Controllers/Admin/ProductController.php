@@ -64,8 +64,8 @@ class ProductController extends DynamoController
                     }
                     if (config('pilot.plugins.products.fields.categories', true)) {
                         $dynamo->hasManySimple('product_categories', [
-                            'nameField' => 'name',
-                            'modelClass' => ProductFacade::class,
+                            'nameField' => 'title',
+                            'modelClass' => ProductCategoryFacade::class,
                             'label' => 'Product Categories',
                             'help' => 'Categories must already exist. If they don\'t, please save this product as a draft without assigned categories
                                           and go to the <a href="/pilot/productcategory?view=published" target="_blank">Product Category Manager</a> to create the desired category.',
