@@ -260,6 +260,7 @@ return [
                 'start_date' => true,
                 'birth_date' => true,
                 'job_title' => true,
+                'contact_me_about' => true,
                 'office_phone' => true,
                 'cell_phone' => true,
                 'extension' => true,

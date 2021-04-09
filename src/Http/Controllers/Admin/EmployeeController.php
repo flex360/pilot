@@ -49,6 +49,9 @@ class EmployeeController extends DynamoController
                     if (config('pilot.plugins.employees.fields.job_title', true)) {
                         $dynamo->text('job_title');
                     }
+                    if (config('pilot.plugins.employees.fields.contact_me_about', true)) {
+                        $dynamo->text('contact_me_about');
+                    }
                     if (config('pilot.plugins.employees.fields.office_phone', true)) {
                         $dynamo->text('phone_number', [
                             'label' => 'Office Phone',
