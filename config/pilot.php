@@ -30,6 +30,12 @@ return [
             'fields' => [
                 'vertical_featured_image' => true, // if turned on, featured_image gets a new label 'Hoziontal Featured Imaged'
             ],
+            'pathToPageLayouts' => 'resources/views/layouts',
+            'pathToLayoutCleanup' => 'resources/views/',
+            'ignoredLayouts' => [
+                'layouts.template',
+                'layouts.master'
+            ],
             'children' => [
                 'manage_pages' => [
                     'name' => 'Manage Pages',

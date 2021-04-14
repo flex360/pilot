@@ -539,12 +539,12 @@ class Page extends Model implements HasMedia
     public function getLayoutList()
     {
         // get a list of all the layouts
-        $layouts = File::files(base_path('vendor/flex360/pilot/resources/views/layouts'));
+        $layouts = File::files(base_path(config('pilot.plugins.pages.pathToPageLayouts')));
 
         // clean up paths
         foreach ($layouts as $index => $layout) {
             // manipulate the path into a blade friendly form
-            $layout = str_replace(base_path('vendor/flex360/pilot/resources/views/'), '', $layout);
+            $layout = str_replace(base_path(config('pilot.plugins.pages.pathToLayoutCleanup')), '', $layout);
 
             $layout = str_replace('.blade.php', '', $layout);
 
@@ -559,7 +559,7 @@ class Page extends Model implements HasMedia
             $layouts[$layout] = ucfirst(substr($layout, strrpos($layout, '.') + 1));
 
             // remove any ignored layouts
-            $ignoredLayouts = ['layouts.template', 'layouts.master'];
+            $ignoredLayouts = config('pilot.plugins.pages.ignoredLayouts');
 
             // ignore home layout when not the root page
             if (!$this->isRoot()) {
