@@ -79,9 +79,6 @@ class PilotTakeoff extends Command
         // migrate the database
         $this->call('migrate');
 
-        //seed the database
-        $this->seedDatabase();
-
         $this->updateAuthConfig();
 
         $this->createUser();
@@ -89,6 +86,9 @@ class PilotTakeoff extends Command
         $this->addIgnitionVariablesToEnv();
 
         $this->vendorPublish();
+
+        //seed the database
+        $this->seedDatabase();
 
         // this will ensure the backendMiddleWare reruns and creates the new Pages
         $this->call('cache:clear');

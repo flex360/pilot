@@ -37,6 +37,7 @@ class PostController extends AdminController
 
         $scheduled = PostFacade::withoutGlobalScopes()->Scheduled()->get();
 
+
         $query = PostFacade::withoutGlobalScopes()
                       //->whereRaw('end >= NOW()')
                       ->whereNotIn('id', $draftedPost->pluck('id'))
@@ -44,9 +45,13 @@ class PostController extends AdminController
                       ->where('deleted_at', null)
                       ->orderBy('published_on', 'desc');
 
+
         $query = PostFacade::filter($query);
 
+        
+
         $posts = $query->paginate(20);
+
 
         $tags = Tag::orderBy('name', 'asc')->get();
 
