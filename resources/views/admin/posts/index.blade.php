@@ -91,7 +91,7 @@
                         <tr class="dynamo-index-row">
                             <td>{{ $post->published_on->format('n/j/Y g:i a') }}</td>
                             <td>{{ $post->title }}</td>
-                            <td>{{ $post->getSummary() }}</td>
+                            <td>{{ $post->getBackendSummary() }}</td>
                             <td>{{ $post->getStatus()->name }}</td>
                             <td class="dynamo-width-of-action-row">
                                 <div style="display: flex; gap: 5px;">

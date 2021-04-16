@@ -129,6 +129,20 @@ class Post extends Model implements HasMedia, PostContract
     }
 
     /**
+     * Gets summary of for backend view
+     *
+     * @return string
+     */
+    public function getBackendSummary()
+    {
+        if ($this->summary != null) {
+            return str_limit($this->summary, 255, '...');
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * Formats the published on date when it is accessed
      * @param string $value
      * @return string

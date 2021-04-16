@@ -217,7 +217,7 @@
 
                         {!! Form::label('summary', 'Summary') !!}
 
-                        {!! Form::textarea('summary', null, array('class' => 'form-control')) !!}
+                        {!! Form::textarea('summary', null, array('class' => 'form-control character-counter-not-limited', 'max-character' => 120)) !!}
 
                     </div>
                     @endif
