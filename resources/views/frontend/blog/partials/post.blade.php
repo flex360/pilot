@@ -50,7 +50,7 @@
                 </div>
                 
                 <div class="font-display text-xl lg:text-2xl xl:text-3xl w-full pt-2"><span class="">{{ ucwords($post->title) }}</span></div>
-                <p class="font-body font-light text-lg pt-2 px-5 md:px-0">{!! $post->getSummary() !!}</p>
+                <p class="font-body font-light text-lg pt-2 px-5 md:px-0">{!! $post->summary !!}</p>
                 <span class="ml-5">
                     <time class="font-body text-white font-light text-sm mt-0 md:mt-4 block md:hidden">
                         {{ $post->published_on->format('l, M j, Y') }}
