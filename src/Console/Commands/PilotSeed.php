@@ -95,6 +95,7 @@ class PilotSeed extends Command
             ['title' => 'Post Example (No Images)',
              'summary' => 'This is a meta description. Sit amet mattis vulputate enim nulla aliquet porttitor lacus luctus accumsan tortor sit amet mattis vulputate enim nulla aliquet porttitor lacus luctus accumsan tortor.',
              'body' => 'Example text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+             'fi_background_color' => '#ffffff',
              'horizontal_featured_image' => '',
              'vertical_featured_image' => '',
              'gallery' => '',
@@ -111,6 +112,7 @@ class PilotSeed extends Command
             ['title' => 'Post Example (No Meta Description)',
              'summary' => 'This is the post summary',
              'body' => 'Example text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+             'fi_background_color' => '#ffffff',
              'horizontal_featured_image' => '',
              'vertical_featured_image' => '',
              'gallery' => '',
@@ -149,6 +151,7 @@ class PilotSeed extends Command
              
              <p>Est ullamcorper eget nulla facilisi etiam dignissim. Hac habitasse platea dictumst vestibulum. Fringilla est ullamcorper eget nulla facilisi etiam. Urna molestie at elementum eu facilisis sed. Imperdiet massa tincidunt nunc pulvinar sapien et ligula. Lacinia quis vel eros donec ac odio. Nisl nunc mi ipsum faucibus. Mattis nunc sed blandit libero volutpat sed. Sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit. Tempor id eu nisl nunc mi ipsum faucibus vitae aliquet. Et tortor at risus viverra adipiscing at. Purus non enim praesent elementum facilisis leo vel.</p>
              ',
+             'fi_background_color' => '#ffffff',
              'horizontal_featured_image' => '',
              'vertical_featured_image' => '',
              'gallery' => '',
@@ -166,6 +169,7 @@ class PilotSeed extends Command
             ['title' => 'Post Example (Draft)',
              'summary' => 'This post is saved as a Draft and should not display on the front end. The tag "Should Not Display" also should not be displaying on the front-end.',
              'body' => 'Example text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+             'fi_background_color' => '#ffffff',
              'horizontal_featured_image' => '',
              'vertical_featured_image' => '',
              'gallery' => '',
