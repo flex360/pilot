@@ -3,9 +3,10 @@
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
 use Jzpeepz\Dynamo\Dynamo;
+use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Pilot\Resource;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\ResourceCategory as ResourceCategoryFacade;
 
 class ResourceCategoryController extends DynamoController

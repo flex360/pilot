@@ -2,16 +2,17 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Jzpeepz\Dynamo\Dynamo;
-use Jzpeepz\Dynamo\FieldGroup;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
-use Flex360\Pilot\Facades\Service as ServiceFacade;
-use Flex360\Pilot\Facades\Project as ProjectFacade;
-use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\IndexTab;
+use Jzpeepz\Dynamo\FieldGroup;
+use App\Http\Controllers\Controller;
+use Flex360\Pilot\Facades\Project as ProjectFacade;
+use Flex360\Pilot\Facades\Service as ServiceFacade;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
 
 class ProjectController extends DynamoController
 {

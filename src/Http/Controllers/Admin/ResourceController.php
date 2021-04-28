@@ -2,11 +2,12 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Jzpeepz\Dynamo\Dynamo;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
 use Flex360\Pilot\Pilot\ResourceCategory;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 
 class ResourceController extends DynamoController
 {

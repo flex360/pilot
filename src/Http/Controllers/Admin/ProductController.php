@@ -2,15 +2,16 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Jzpeepz\Dynamo\Dynamo;
-use Jzpeepz\Dynamo\FieldGroup;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
-use Flex360\Pilot\Facades\Product as ProductFacade;
-use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\IndexTab;
+use Jzpeepz\Dynamo\FieldGroup;
+use App\Http\Controllers\Controller;
+use Flex360\Pilot\Facades\Product as ProductFacade;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
 
 class ProductController extends DynamoController
 {

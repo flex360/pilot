@@ -2,12 +2,13 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Flex360\Pilot\Facades\Testimonial as TestimonialFacade;
 use Jzpeepz\Dynamo\Dynamo;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
 use Jzpeepz\Dynamo\FieldGroup as Group;
 use Flex360\Pilot\Scopes\TestimonialsWithMediaScope;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Flex360\Pilot\Facades\Testimonial as TestimonialFacade;
 
 class TestimonialController extends DynamoController
 {
