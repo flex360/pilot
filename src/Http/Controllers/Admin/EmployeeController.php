@@ -5,6 +5,7 @@ namespace Flex360\Pilot\Http\Controllers\Admin;
 use Jzpeepz\Dynamo\Dynamo;
 use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 
@@ -153,6 +154,7 @@ class EmployeeController extends DynamoController
                     ->addActionButton(function ($item) {
                         return '<a href="employee/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever. ( FLEX360 can bring it back for you )\')" class="btn btn-secondary btn-sm">Delete</a>';
                     })
+                    ->ignoredScopes([PublishedScope::class])
                     ->indexOrderBy('last_name');
 
 

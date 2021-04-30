@@ -8,7 +8,9 @@ use Jzpeepz\Dynamo\Dynamo;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\FieldGroup;
+use Flex360\Pilot\Scopes\   Scope;
 use App\Http\Controllers\Controller;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
@@ -47,7 +49,10 @@ class ProjectCategoryController extends DynamoController
                     }
                     if (config('pilot.plugins.projects.children.manage_project_categories.fields.project_selector', true)) {
                         $dynamo->hasMany('projects', [
-                            'options' => ProjectFacade::all()->pluck('title', 'id'),
+                            'options' => ProjectFacade::withoutGlobalScope(PublishedScope::class)->orderBy('title')->pluck('title', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->projects()->withoutGlobalScope(PublishedScope::class)->pluck('id')->toArray();
+                            },
                             'label' => 'Projects',
                             'class' => 'category-dual-list',
                             'id' => 'category-dual-list',
@@ -96,7 +101,7 @@ class ProjectCategoryController extends DynamoController
                     }
 
                     $dynamo->addIndex('count', 'Number of Project\'s in this category', function($item) {
-                        return $item->projects->count();
+                        return $item->projects()->withoutGlobalScope(PublishedScope::class)->count();
                     });
 
                     if (config('pilot.plugins.projects.children.manage_project_categories.fields.status', true)) {
@@ -113,6 +118,7 @@ class ProjectCategoryController extends DynamoController
                     ->addActionButton(function($item) {
                         return '<a href="projectcategory/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
                     })
+                    ->ignoredScopes([PublishedScope::class])
                     ->hideDelete()
                     ->addFormFooterButton(function() {
                         return '<a href="/pilot/testing" class="mt-3 btn btn-danger btn" data-toggle="modal" data-target="#relationships-manager-modal">Delete</a>';
@@ -123,6 +129,8 @@ class ProjectCategoryController extends DynamoController
                     } else {
                         $dynamo->indexOrderBy('name');
                     }
+
+                    $dynamo->ignoredScopes([PublishedScope::class]);
 
         return $dynamo;
     }
@@ -136,7 +144,7 @@ class ProjectCategoryController extends DynamoController
      */
     public function copy($id)
     {
-        $projectCategory = ProjectCategoryFacade::find($id);
+        $projectCategory = ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newProjectCategory = $projectCategory->duplicate();
 
@@ -154,7 +162,7 @@ class ProjectCategoryController extends DynamoController
     */
     public function destroy($id)
     {
-        $category = ProjectCategoryFacade::find($id);
+        $category = ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $category->delete();
 
@@ -176,7 +184,7 @@ class ProjectCategoryController extends DynamoController
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $catID) {
-            $cat = ProjectCategoryFacade::find($catID);
+            $cat = ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($catID);
 
             $cat->position = $position;
 
@@ -194,9 +202,9 @@ class ProjectCategoryController extends DynamoController
      */
     public function projects($id)
     {
-        $projectCategory = ProjectCategoryFacade::find($id);
+        $projectCategory = ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
         
-        $items = $projectCategory->projects()->orderBy(config('pilot.table_prefix') . 'project_' . config('pilot.table_prefix') . 'project_category.position')->get();
+        $items = $projectCategory->projects()->withoutGlobalScope(PublishedScope::class)->get();
 
         $dynamo = (new ProjectController)->getDynamo();
 
@@ -210,13 +218,13 @@ class ProjectCategoryController extends DynamoController
      */
     public function reorderProjectsWithinCategory($id)
     {
-        $projectCategory = ProjectCategoryFacade::find($id);
+        $projectCategory = ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $projectID) {
-            $project = ProjectFacade::find($projectID);
-            $project->project_categories()->updateExistingPivot($projectCategory->id, compact('position'));
+            $project = ProjectFacade::withoutGlobalScope(PublishedScope::class)->find($projectID);
+            $project->project_categories()->withoutGlobalScope(PublishedScope::class)->updateExistingPivot($projectCategory->id, compact('position'));
         }
 
         return $ids;

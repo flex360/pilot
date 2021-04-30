@@ -2,16 +2,17 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Jzpeepz\Dynamo\Dynamo;
-use Jzpeepz\Dynamo\FieldGroup;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
-use Flex360\Pilot\Facades\Faq as FaqFacade;
-use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
-use Jzpeepz\Dynamo\IndexTab;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Jzpeepz\Dynamo\IndexTab;
+use Jzpeepz\Dynamo\FieldGroup;
+use App\Http\Controllers\Controller;
+use Flex360\Pilot\Scopes\PublishedScope;
+use Flex360\Pilot\Facades\Faq as FaqFacade;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
 
 class FaqController extends DynamoController
 {
@@ -35,6 +36,9 @@ class FaqController extends DynamoController
                     ->addIndexButton(function () {
                         return '<a href="'. route('faq.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View FAQs</a>';
                     }); 
+                    if (config('pilot.plugins.faqs.fields.question', true)) {
+                        $dynamo->text('question');
+                    }
                     if (config('pilot.plugins.faqs.fields.uses_long_answers', false)) {
                         $dynamo->textarea('answer', [
                             'class' => 'wysiwyg-editor',
@@ -51,7 +55,11 @@ class FaqController extends DynamoController
                     if (config('pilot.plugins.faqs.fields.categories', true)) {
                         $dynamo->hasManySimple('faq_categories', [
                             'nameField' => 'question',
-                            'modelClass' => FaqFacade::class,
+                            'modelClass' => FaqCategoryFacade::class,
+                            'options' => FaqCategoryFacade::withoutGlobalScope(PublishedScope::class)->orderBy('name')->pluck('name', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->{$field->key}()->withoutGlobalScopes()->pluck('id')->toArray();
+                            },
                             'label' => 'FAQ Categories',
                             'help' => 'Categories must already exist. If they don\'t, please save a draft without assigned categories
                                           and go to the <a href="/pilot/faqcategory?view=published" target="_blank">FAQ Category Manager</a> to create the desired category.',
@@ -119,6 +127,7 @@ class FaqController extends DynamoController
                     ->addActionButton(function ($item) {
                         return '<a href="faq/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
                     })
+                    ->ignoredScopes([PublishedScope::class])
                     ->indexOrderBy('question');
 
 
@@ -135,7 +144,7 @@ class FaqController extends DynamoController
          */
         public function copy($id)
         {
-            $faq = FaqFacade::find($id);
+            $faq = FaqFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
             $newFaq = $faq->duplicate();
 
@@ -153,7 +162,7 @@ class FaqController extends DynamoController
         */
         public function destroy($id)
         {
-            $faq = FaqFacade::find($id);
+            $faq = FaqFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
             $faq->delete();
 

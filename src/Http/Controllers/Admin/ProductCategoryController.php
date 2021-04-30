@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Product as ProductFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
@@ -50,7 +51,10 @@ class ProductCategoryController extends DynamoController
                     }
                     if (config('pilot.plugins.products.children.manage_product_categories.fields.product_selector', true)) {
                         $dynamo->hasMany('products', [
-                            'options' => ProductFacade::all()->pluck('name', 'id'),
+                            'options' => ProductFacade::withoutGlobalScope(PublishedScope::class)->orderBy('name')->pluck('name', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->products()->withoutGlobalScope(PublishedScope::class)->pluck('id')->toArray();
+                            },
                             'label' => 'Products',
                             'class' => 'category-dual-list',
                             'id' => 'category-dual-list',
@@ -99,7 +103,7 @@ class ProductCategoryController extends DynamoController
                     }
 
                     $dynamo->addIndex('count', 'Number of Product\'s in this category', function($item) {
-                        return $item->products->count();
+                        return $item->products()->withoutGlobalScope(PublishedScope::class)->count();
                     });
 
                     if (config('pilot.plugins.products.children.manage_product_categories.fields.status', true)) {
@@ -115,6 +119,7 @@ class ProductCategoryController extends DynamoController
                     ->addActionButton(function($item) {
                         return '<a href="productcategory/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
                     })
+                    ->ignoredScopes([PublishedScope::class])
                     ->hideDelete()
                     ->addFormFooterButton(function() {
                         return '<a href="/pilot/testing" class="mt-3 btn btn-danger btn" data-toggle="modal" data-target="#relationships-manager-modal">Delete</a>';
@@ -139,7 +144,7 @@ class ProductCategoryController extends DynamoController
      */
     public function copy($id)
     {
-        $productCategory = ProductCategoryFacade::find($id);
+        $productCategory = ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newProductCategory = $productCategory->duplicate();
 
@@ -157,7 +162,7 @@ class ProductCategoryController extends DynamoController
     */
     public function destroy($id)
     {
-        $category = ProductCategoryFacade::find($id);
+        $category = ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $category->delete();
 
@@ -178,7 +183,7 @@ class ProductCategoryController extends DynamoController
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $catID) {
-            $cat = ProductCategoryFacade::find($catID);
+            $cat = ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($catID);
 
             $cat->position = $position;
 
@@ -196,9 +201,9 @@ class ProductCategoryController extends DynamoController
      */
     public function products($id)
     {
-        $productcategory = ProductCategoryFacade::find($id);
+        $productcategory = ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
         
-        $items = $productcategory->products()->orderBy(config('pilot.table_prefix') . 'product_' . config('pilot.table_prefix') . 'product_category.position')->get();
+        $items = $productcategory->products()->withoutGlobalScope(PublishedScope::class)->get();
 
         $dynamo = (new ProductController)->getDynamo();
 
@@ -212,13 +217,13 @@ class ProductCategoryController extends DynamoController
      */
     public function reorderProductsWithinCategory($id)
     {
-        $productcategory = ProductCategoryFacade::find($id);
+        $productcategory = ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $productID) {
-            $product = ProductFacade::find($productID);
-            $product->product_categories()->updateExistingPivot($productcategory->id, compact('position'));
+            $product = ProductFacade::withoutGlobalScope(PublishedScope::class)->find($productID);
+            $product->product_categories()->withoutGlobalScope(PublishedScope::class)->updateExistingPivot($productcategory->id, compact('position'));
         }
 
         return $ids;

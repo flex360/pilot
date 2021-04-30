@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Service as ServiceFacade;
 use Flex360\Pilot\Facades\ServiceCategory as ServiceCategoryFacade;
 
@@ -22,7 +23,7 @@ class ServiceController extends Controller
 
     public function categoryIndex($id, $slug)
     {
-        $category = ServiceCategoryFacade::find($id);
+        $category = ServiceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         mimic($category->name);
 
@@ -32,7 +33,7 @@ class ServiceController extends Controller
     // detail view shows this individual service
     public function detail($id, $slug)
     {
-        $service = ServiceFacade::find($id);
+        $service = ServiceFacade::withoutGlobalScope(PublishedScope::class)->find($id);
         
         mimic($service->title);
 

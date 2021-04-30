@@ -9,6 +9,8 @@ $(document).ready(function () {
     //if the first row of the table has the label "Sort" then we know sorting categories is enabled in the config file
     if (table.firstChild.firstChild.firstChild.innerText == 'Sort') {
         var sort = Sortable.create(list, {
+            animation: 350,
+            ghostClass: 'blue-background-class',
             onUpdate: function (evt) {
     
                 var ids = $('.dynamo-index-row').map(function () {

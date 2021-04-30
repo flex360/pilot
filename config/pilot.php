@@ -236,7 +236,10 @@ return [
                     'target' => '_self',
                     'fields' => [
                         'name' => true,
+                        'status' => true,
                         'resources_selector' => true,
+                        'resource_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
+                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
                     ],
                     'children' => null
                 ],
@@ -311,7 +314,7 @@ return [
                         'status' => true,
                         'slug' => true,
                         'summary' => true,
-                        'sort_employees_within_department' => true,
+                        'employee_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
                         'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
                     ],
                     'children' => null,
@@ -412,6 +415,9 @@ return [
                     'fields' => [
                         'name' => true,
                         'faq_selector' => true,
+                        'status' => true,
+                        'faq_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
+                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
                     ],
                     'children' => null
                 ],
@@ -616,8 +622,8 @@ return [
                         'featured_image' => true,
                         'service_selector' => true,
                         'status' => true,
-                        'service_sort_method' => 'manual_sort', // options include: manual_sort, alpha_sort
-                        'sort_method' => 'manual_sort' // options include: manual_sort, alpha_sort
+                        'service_sort_method' => 'alpha_sort', // options include: manual_sort, alpha_sort
+                        'sort_method' => 'alpha_sort' // options include: manual_sort, alpha_sort
                     ],
                     'children' => null
                 ],

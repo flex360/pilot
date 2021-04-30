@@ -6,6 +6,7 @@ use Jzpeepz\Dynamo\Dynamo;
 use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
 use Jzpeepz\Dynamo\FieldGroup as Group;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Scopes\TestimonialsWithMediaScope;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\Testimonial as TestimonialFacade;
@@ -141,6 +142,7 @@ class TestimonialController extends DynamoController
                             ->addActionButton(function ($item) {
                                 return '<a href="testimonial/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
                             })
+                            ->ignoredScopes([PublishedScope::class])
                             ->indexOrderBy('name');
 
         return $dynamo;
@@ -154,7 +156,7 @@ class TestimonialController extends DynamoController
      */
     public function copy($id)
     {
-        $testimonial = TestimonialFacade::find($id);
+        $testimonial = TestimonialFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newTestimonial = $testimonial->duplicate();
 
@@ -172,7 +174,7 @@ class TestimonialController extends DynamoController
      */
     public function destroy($id)
     {
-        $testimonial = TestimonialFacade::find($id);
+        $testimonial = TestimonialFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $testimonial->delete();
 

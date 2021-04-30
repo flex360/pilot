@@ -6,7 +6,7 @@ $(document).ready(function () {
     var table = document.querySelector("#dynamo-index");
     console.log(table.firstChild.firstChild.firstChild.innerText);
 
-    //if the first row of the table has the label "Sort" then we know sorting departments is enabled in the config file
+    //if the first row of the table has the label "Sort" then we know sorting categories is enabled in the config file
     if (table.firstChild.firstChild.firstChild.innerText == 'Sort') {
         var sort = Sortable.create(list, {
             animation: 350,
@@ -21,7 +21,7 @@ $(document).ready(function () {
     
                 console.log(ids.toArray());
     
-                $.post('/pilot/department/reorderDepartments', { ids: ids.toArray() })
+                $.post('/pilot/resourcecategory/reorderResourceCategories', { ids: ids.toArray() })
     
             }
         });

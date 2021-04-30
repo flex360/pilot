@@ -2,16 +2,18 @@
 
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
-use Flex360\Pilot\Facades\Department as DepartmentFacade;
-use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Jzpeepz\Dynamo\Dynamo;
 use Jzpeepz\Dynamo\FormTab;
 use Flex360\Pilot\Pilot\Tag;
 use Illuminate\Http\Request;
 use Flex360\Pilot\Pilot\Employee;
-use Flex360\Pilot\Pilot\Department;
-use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Pilot\Resource;
+use Flex360\Pilot\Pilot\Department;
+use Flex360\Pilot\Scopes\PublishedScope;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
+use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
 
 class DepartmentController extends DynamoController
 {
@@ -36,8 +38,11 @@ class DepartmentController extends DynamoController
                         }
                         if (config('pilot.plugins.employees.children.departments.fields.employees_selector', true)) {
                             $departmentDeatilsFormTab->hasMany('employees', [
-                                'options' => Employee::orderBy('first_name')->get()->pluck('fullName', 'id'),
-                                'class' => 'category-dual-list',
+                                'options' => EmployeeFacade::withoutGlobalScope(PublishedScope::class)->orderBy('first_name')->get()->pluck('fullName', 'id'),
+                                'value' => function ($item, $field) {
+                                    return $item->employees()->withoutGlobalScope(PublishedScope::class)->pluck('id')->toArray();
+                                },
+                                'class' => 'category-dual-list',    
                                 'id' => 'category-dual-list',
                                 'help' => 'Select the Employees/People that are a member of this department.',
                             ]);
@@ -55,7 +60,10 @@ class DepartmentController extends DynamoController
                         if (config('pilot.plugins.employees.children.departments.fields.resources_relationship', true)) {
                             $departmentDeatilsFormTab->hasMany('resources', [
                                 'modelClass' => 'Flex360\Pilot\Pilot\Resource',
-                                'options' => Resource::orderBy('title')->get()->pluck('title', 'id'),
+                                'options' => ResourceFacade::withoutGlobalScope(PublishedScope::class)->orderBy('title')->get()->pluck('title', 'id'),
+                                'value' => function ($item, $field) {
+                                    return $item->resources()->withoutGlobalScope(PublishedScope::class)->pluck('id')->toArray();
+                                },
                                 'class' => 'category-dual-list',
                                 'id' => 'category-dual-list',
                                 'help' => 'Select the resources that this department needs access to on a regular basis.<br> Resources will 
@@ -85,7 +93,7 @@ class DepartmentController extends DynamoController
                             }
                         }
                     
-        $dynamo = Dynamo::make(get_class(DepartmentFacade::getFacadeRoot()));
+                        $dynamo = Dynamo::make(get_class(DepartmentFacade::getFacadeRoot()));
                         //check if display_name is used, if so, use the dynamo alias function to change the name everywhere at once
                         if (config('pilot.plugins.employees.children.departments.display_name') != null) {
                             $dynamo->alias(Str::singular(config('pilot.plugins.employees.children.departments.display_name')));
@@ -129,13 +137,13 @@ class DepartmentController extends DynamoController
                         if (config('pilot.plugins.employees.children.departments.fields.name', true)) {
                             $dynamo->addIndex('name');
                         }
-                        if (config('pilot.plugins.employees.children.departments.fields.sort_employees_within_department', true)) {
+                        if (config('pilot.plugins.employees.children.departments.fields.employee_sort_method') == 'manual_sort') {
                             $dynamo->addIndex('id', 'Order Staff', function ($item) {
                                 return '<a href="' . route('admin.department.staff', ['id' => $item->id]) . '" class="btn btn-success">Order</a>';
                             });
                         }
                         $dynamo->addIndex('count', 'Number Of Employees In This Department', function ($item) {
-                            return $item->employees->count();
+                            return $item->employees()->withoutGlobalScope(PublishedScope::class)->count();
                         });
                         if (config('pilot.plugins.employees.children.departments.fields.status', true)) {
                             $dynamo->addIndex('test', 'Published?', function ($item) {
@@ -157,6 +165,8 @@ class DepartmentController extends DynamoController
                             $dynamo->indexOrderBy('name');
                         }
 
+                        $dynamo->ignoredScopes([PublishedScope::class]);
+
         return $dynamo;
     }
 
@@ -168,7 +178,7 @@ class DepartmentController extends DynamoController
     */
     public function copy($id)
     {
-        $department = DepartmentFacade::find($id);
+        $department = DepartmentFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newDepartment = $department->duplicate();
 
@@ -180,10 +190,8 @@ class DepartmentController extends DynamoController
 
     public function staffMembers($id)
     {
-        $department = DepartmentFacade::find($id);
-        //runs on 'pilot/department/{id}/staffMembers'
-        //list all staff members in Department{id}
-        $items = $department->employees()->orderBy(config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee.position')->get();
+        $department = DepartmentFacade::withoutGlobalScope(PublishedScope::class)->find($id);
+        $items = $department->employees()->withoutGlobalScope(PublishedScope::class)->get();
         $dynamo = (new EmployeeController)->getDynamo();
 
         return view('pilot::admin.dynamo.employees.reorder', compact('dynamo', 'items', 'department'));
@@ -199,7 +207,7 @@ class DepartmentController extends DynamoController
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $departmentID) {
-            $department = DepartmentFacade::find($departmentID);
+            $department = DepartmentFacade::withoutGlobalScope(PublishedScope::class)->find($departmentID);
 
             $department->position = $position;
 
@@ -215,16 +223,16 @@ class DepartmentController extends DynamoController
         //runs when user changes the order via drag and drop of the staff members in the departments
         //updates the position of that staff member within this department.
 
-        $department = DepartmentFacade::find($id);
+        $department = DepartmentFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         //$staffMemberID = $id;
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $staffMemberID) {
-            $staffMember = EmployeeFacade::find($staffMemberID);
+            $staffMember = EmployeeFacade::withoutGlobalScope(PublishedScope::class)->find($staffMemberID);
 
             //$staffMember->position = $position;
-            $staffMember->departments()->updateExistingPivot($department->id, compact('position'));
+            $staffMember->departments()->withoutGlobalScope(PublishedScope::class)->updateExistingPivot($department->id, compact('position'));
             //$staffMember->save();
         }
 

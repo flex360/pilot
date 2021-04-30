@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\IndexTab;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Flex360\Pilot\Facades\Service as ServiceFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
@@ -77,6 +78,10 @@ class ProjectController extends DynamoController
                         $dynamo->hasManySimple('project_categories', [
                             'nameField' => 'name',
                             'modelClass' => ProjectCategoryFacade::class,
+                            'options' => ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->orderBy('name')->pluck('name', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->{$field->key}()->withoutGlobalScopes()->pluck('id')->toArray();
+                            },
                             'label' => 'Project Categories',
                             'help' => 'Categories must already exist. If they don\'t, please save a draft without assigned categories
                                           and go to the <a href="/pilot/projectcategory" target="_blank">Project Category Manager</a> to create the desired category.',
@@ -86,6 +91,10 @@ class ProjectController extends DynamoController
                         $dynamo->hasManySimple('services', [
                             'nameField' => 'title',
                             'modelClass' => ServiceFacade::class,
+                            'options' => ServiceFacade::withoutGlobalScope(PublishedScope::class)->orderBy('title')->pluck('title', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->{$field->key}()->withoutGlobalScopes()->pluck('id')->toArray();
+                            },
                             'label' => 'Services',
                             'help' => 'Services must already exist. If they don\'t, please save this project as a draft without assigned services
                                           and go to the <a href="/pilot/service?view=published" target="_blank">Service Manager</a> to create the desired service.',
@@ -174,6 +183,7 @@ class ProjectController extends DynamoController
                     ->addActionButton(function ($item) {
                         return '<a href="project/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
                     })
+                    ->ignoredScopes([PublishedScope::class])
                     ->indexOrderBy('title');
 
         return $dynamo;
@@ -188,7 +198,7 @@ class ProjectController extends DynamoController
          */
         public function copy($id)
         {
-            $project = ProjectFacade::find($id);
+            $project = ProjectFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
             $newProject = $project->duplicate();
 
@@ -206,7 +216,7 @@ class ProjectController extends DynamoController
         */
         public function destroy($id)
         {
-            $project = ProjectFacade::find($id);
+            $project = ProjectFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
             $project->delete();
 

@@ -5,6 +5,7 @@ namespace Flex360\Pilot\Http\Controllers\Admin;
 use Jzpeepz\Dynamo\Dynamo;
 use Illuminate\Support\Str;
 use Jzpeepz\Dynamo\IndexTab;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Pilot\ResourceCategory;
 use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
@@ -126,6 +127,7 @@ class ResourceController extends DynamoController
                         ->addActionButton(function ($item) {
                             return '<a href="resource/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
                         })
+                        ->ignoredScopes([PublishedScope::class])
                         ->indexOrderBy('title');
 
 
@@ -143,7 +145,7 @@ class ResourceController extends DynamoController
      */
     public function copy($id)
     {
-        $resource = ResourceFacade::find($id);
+        $resource = ResourceFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newResource = $resource->duplicate();
 
@@ -161,7 +163,7 @@ class ResourceController extends DynamoController
      */
     public function destroy($id)
     {
-        $resource = ResourceFacade::find($id);
+        $resource = ResourceFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $resource->delete();
 

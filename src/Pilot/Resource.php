@@ -3,21 +3,22 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\ResourceCategory;
-use Flex360\Pilot\Facades\ResourceCategory as ResourceCategoryFacade;
 use Flex360\Pilot\Pilot\Department;
-use Flex360\Pilot\Facades\Department as DepartmentFacade;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\Models\Media;
+use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
+use Flex360\Pilot\Pilot\ResourceCategory;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Flex360\Pilot\Facades\ResourceCategory as ResourceCategoryFacade;
 
 class Resource extends Model implements HasMedia
 {
@@ -37,6 +38,11 @@ class Resource extends Model implements HasMedia
     ];
 
     protected $mediaAttributes = ['link'];
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
 
     public function resource_categories()
     {

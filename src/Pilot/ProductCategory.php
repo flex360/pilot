@@ -7,16 +7,17 @@ use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Facades\Product as ProductFacade;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
 
 class ProductCategory extends Model implements HasMedia
@@ -38,15 +39,19 @@ class ProductCategory extends Model implements HasMedia
 
     protected $mediaAttributes = ['featured_image'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
+
     public function products()
     {
         if (config('pilot.plugins.products.children.manage_product_categories.fields.product_sort_method') == 'manual_sort') {
             return $this->belongsToMany(root_class(ProductFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
-                        ->where('status', 30)
-                        ->orderBy('position');
+                        ->withPivot('position')
+                        ->orderBy(config('pilot.table_prefix') . 'product_' . config('pilot.table_prefix') . 'product_category.position');
         } else {
             return $this->belongsToMany(root_class(ProductFacade::class), $this->getPrefix() . 'product_' . config('pilot.table_prefix') . 'product_category')
-                        ->where('status', 30)
                         ->orderBy('name');
         }
     }
@@ -59,6 +64,7 @@ class ProductCategory extends Model implements HasMedia
 
         // append to the title to designate a copy
         $newModel->title .= ' (Copy)';
+        $newModel->status = 10;
 
         // copy media items
         foreach ($model->media as $media) {
@@ -68,8 +74,8 @@ class ProductCategory extends Model implements HasMedia
         $newModel->push();
 
         // copy all attached categories over to new model
-        foreach ($model->products as $product) {
-            $newModel->products()->attach($product);
+        foreach ($model->products()->withoutGlobalScope(PublishedScope::class)->get() as $product) {
+            $newModel->products()->withoutGlobalScope(PublishedScope::class)->attach($product);
         }
 
         return $newModel;

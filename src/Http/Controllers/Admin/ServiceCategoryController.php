@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Flex360\Pilot\Facades\Service as ServiceFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
@@ -49,7 +50,10 @@ class ServiceCategoryController extends DynamoController
                     }
                     if (config('pilot.plugins.services.children.manage_service_categories.fields.service_selector', true)) {
                         $dynamo->hasMany('services', [
-                            'options' => ServiceFacade::all()->pluck('title', 'id'),
+                            'options' => ServiceFacade::withoutGlobalScope(PublishedScope::class)->orderBy('title')->pluck('title', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->services()->withoutGlobalScope(PublishedScope::class)->pluck('id')->toArray();
+                            },
                             'label' => 'Services',
                             'class' => 'category-dual-list',
                             'id' => 'category-dual-list',
@@ -89,7 +93,7 @@ class ServiceCategoryController extends DynamoController
                     }
 
                     $dynamo->addIndex('count', 'Number of Services\'s in this category', function($item) {
-                        return $item->services->count();
+                        return $item->services()->withoutGlobalScope(PublishedScope::class)->count();
                     });
                     if (config('pilot.plugins.services.children.manage_service_categories.fields.status', true)) {
                         $dynamo->addIndex('test', 'Published?', function ($item) {
@@ -114,6 +118,8 @@ class ServiceCategoryController extends DynamoController
                     } else {
                         $dynamo->indexOrderBy('name');
                     }
+
+                    $dynamo->ignoredScopes([PublishedScope::class]);
                     
 
         return $dynamo;
@@ -128,7 +134,7 @@ class ServiceCategoryController extends DynamoController
      */
     public function copy($id)
     {
-        $serviceCategory = ServiceCategoryFacade::find($id);
+        $serviceCategory = ServiceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newServiceCategory = $serviceCategory->duplicate();
 
@@ -146,7 +152,7 @@ class ServiceCategoryController extends DynamoController
     */
     public function destroy($id)
     {
-        $category = ServiceCategoryFacade::find($id);
+        $category = ServiceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $category->delete();
 
@@ -167,7 +173,7 @@ class ServiceCategoryController extends DynamoController
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $catID) {
-            $cat = ServiceCategoryFacade::find($catID);
+            $cat = ServiceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($catID);
 
             $cat->position = $position;
 
@@ -185,9 +191,9 @@ class ServiceCategoryController extends DynamoController
      */
     public function services($id)
     {
-        $serviceCategory = ServiceCategoryFacade::find($id);
+        $serviceCategory = ServiceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
         
-        $items = $serviceCategory->services()->orderBy(config('pilot.table_prefix') . 'service_' . config('pilot.table_prefix') . 'service_category.position')->get();
+        $items = $serviceCategory->services()->withoutGlobalScope(PublishedScope::class)->get();
 
         $dynamo = (new ServiceController)->getDynamo();
 
@@ -201,12 +207,12 @@ class ServiceCategoryController extends DynamoController
      */
     public function reorderServicesWithinCategory($id)
     {
-        $serviceCategory = ServiceCategoryFacade::find($id);
+        $serviceCategory = ServiceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $ids = request()->input('ids');
 
         foreach ($ids as $position => $serviceID) {
-            $service = ServiceFacade::find($serviceID);
+            $service = ServiceFacade::withoutGlobalScope(PublishedScope::class)->find($serviceID);
             $service->service_categories()->updateExistingPivot($serviceCategory->id, compact('position'));
         }
 

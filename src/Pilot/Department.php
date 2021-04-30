@@ -5,19 +5,20 @@ namespace Flex360\Pilot\Pilot;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Flex360\Pilot\Pilot\Employee;
-use Flex360\Pilot\Facades\Employee as EmployeeFacade;
-use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
+use Flex360\Pilot\Facades\Resource as ResourceFacade;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Department extends Model implements HasMedia
 {
@@ -38,6 +39,11 @@ class Department extends Model implements HasMedia
 
     protected $mediaAttributes = ['featured_image'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -53,11 +59,10 @@ class Department extends Model implements HasMedia
     {
         if (config('pilot.plugins.employees.children.departments.fields.sort_method') == 'manual_sort') {
             return $this->belongsToMany(root_class(EmployeeFacade::class), $this->getPrefix() . 'department_' . config('pilot.table_prefix') . 'employee')
-                        ->where('status', 30)
-                        ->orderBy('position');
+                            ->withPivot('position')
+                            ->orderBy(config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee.position');
         } else {
             return $this->belongsToMany(root_class(EmployeeFacade::class), $this->getPrefix() . 'department_' . config('pilot.table_prefix') . 'employee')
-                        ->where('status', 30)
                         ->orderBy('first_name');
         }
     }
@@ -103,8 +108,8 @@ class Department extends Model implements HasMedia
         $newModel->push();
 
         // copy all attached employees over to new model
-        foreach ($model->employees as $cat) {
-            $newModel->employees()->attach($cat);
+        foreach ($model->employees()->withoutGlobalScope(PublishedScope::class)->get() as $cat) {
+            $newModel->employees()->withoutGlobalScope(PublishedScope::class)->attach($cat);
         }
 
         // copy all attached tags over to new model
@@ -113,8 +118,8 @@ class Department extends Model implements HasMedia
         }
 
         // copy all attached resources over to new model
-        foreach ($model->resources as $cat) {
-            $newModel->resources()->attach($cat);
+        foreach ($model->resources()->withoutGlobalScope(PublishedScope::class)->get() as $cat) {
+            $newModel->resources()->withoutGlobalScope(PublishedScope::class)->attach($cat);
         }
 
         return $newModel;

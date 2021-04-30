@@ -2,19 +2,20 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Project;
-use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Illuminate\Support\Str;
+use Flex360\Pilot\Facades\Project as ProjectFacade;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class ProjectCategory extends Model implements HasMedia
 {
@@ -35,15 +36,19 @@ class ProjectCategory extends Model implements HasMedia
 
     protected $mediaAttributes = ['featured_image'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
+
     public function projects()
     {
         if (config('pilot.plugins.projects.children.manage_project_categories.fields.project_sort_method') == 'manual_sort') {
             return $this->belongsToMany(root_class(ProjectFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'project_category')
-                        ->where('status', 30)
-                        ->orderBy('position');
+                        ->withPivot('position')
+                        ->orderBy(config('pilot.table_prefix') . 'project_' . config('pilot.table_prefix') . 'project_category.position');
         } else {
             return $this->belongsToMany(root_class(ProjectFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'project_category')
-                        ->where('status', 30)
                         ->orderBy('title');
         }
     }
@@ -63,12 +68,13 @@ class ProjectCategory extends Model implements HasMedia
 
         // append to the title to designate a copy
         $newModel->name .= ' (Copy)';
+        $newModel->status = 10;
 
         $newModel->push();
 
         // copy all attached categories over to new model
-        foreach ($model->projects as $project) {
-            $newModel->projects()->attach($project);
+        foreach ($model->projects()->withoutGlobalScope(PublishedScope::class)->get() as $project) {
+            $newModel->projects()->withoutGlobalScope(PublishedScope::class)->attach($project);
         }
 
         return $newModel;

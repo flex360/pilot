@@ -5,20 +5,21 @@ namespace Flex360\Pilot\Pilot;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
-use Flex360\Pilot\Pilot\Department;
-use Flex360\Pilot\Facades\Department as DepartmentFacade;
 use Illuminate\Support\Facades\DB;
+use Flex360\Pilot\Pilot\Department;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
-use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
 
 class Employee extends Model implements HasMedia
 {
@@ -39,6 +40,11 @@ class Employee extends Model implements HasMedia
     ];
 
     protected $mediaAttributes = ['photo'];
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
 
     public function departments()
     {

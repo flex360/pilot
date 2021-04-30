@@ -13,11 +13,11 @@ $(document).ready(function () {
 
             console.log(ids.toArray());
 
-            var id = $("#productcategoryID").val();
+            var id = $("#categoryId").val();
 
             console.log(id);
 
-            $.post('/pilot/product-category-products/' + id + '/products/reorderProductsWithinCategory', { ids: ids.toArray() });
+            $.post('/pilot/resourcecategory/' + id + '/resources/reorderResourcesWithinCategory', { ids: ids.toArray() });
 
             console.log('reordered');
 

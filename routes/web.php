@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
+
 Route::middleware(['web', 'pilot.global'])->namespace('Flex360\Pilot\Http\Controllers')->group(function () {
     Route::get('/', 'SiteController@index');
 

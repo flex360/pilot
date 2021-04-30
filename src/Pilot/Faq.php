@@ -7,16 +7,17 @@ use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Flex360\Pilot\Facades\Faq as FaqFacade;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
-use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Flex360\Pilot\Facades\Faq as FaqFacade;
 use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
 
 class Faq extends Model implements HasMedia
@@ -35,6 +36,11 @@ class Faq extends Model implements HasMedia
     protected $emptyStrings = [
         'question', 'answer'
     ];
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
 
     public function getShortAnswerBackend()
     {

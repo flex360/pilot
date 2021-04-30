@@ -114,6 +114,9 @@ class Pilot
                     Route::get('resource/{id}/delete', 'Admin\ResourceController@destroy')
                         ->name('resource.destroy');
                     Route::resource('resource', 'Admin\ResourceController');
+                    Route::get('/resourcecategory-resources/{id}/', 'Admin\ResourceCategoryController@resources')->name('resourcecategory.resource');
+                    Route::post('/resourcecategory/{id}/resources/reorderResourcesWithinCategory', 'Admin\ResourceCategoryController@reorderResourcesWithinCategory')->name('resourcecategory.reorderResources');
+                    Route::post('/resourcecategory/reorderResourceCategories', 'Admin\ResourceCategoryController@reorderResourceCategories')->name('resourcecategory.reorder');
                     Route::get('resourcecategory/{id}/copy', 'Admin\ResourceCategoryController@copy')->name('resourceCategory.copy');
                     Route::get('resourcecategory/{id}/delete', 'Admin\ResourceCategoryController@destroy')
                         ->name('resourceCategory.destroy');
@@ -147,12 +150,15 @@ class Pilot
 
                 // Backend Routes for Standard FAQ & FAQ Categories Modules
                 if (config('pilot.plugins.faqs.enabled', false)) {
-                    Route::get('/faqcategory/{id}/faqs', 'Admin\FaqCategoryController@faqs')
+                    Route::get('/faqcategory-faqs/{id}/', 'Admin\FaqCategoryController@faqs')
                     ->name('faqcategory.faqs');
                     Route::post(
                         '/faqcategory/{faqcategory}/faqs/reorderFaqsWithinCategory',
                         'Admin\FaqCategoryController@reorderFaqsWithinCategory'
                     )->name('faqcategoryFaqs.reorder');
+                    Route::get('/faqcategory/{id}/copy', 'Admin\FaqCategoryController@copy')
+                        ->name('faqcategory.copy');
+                    Route::post('/faqcategory/reorderFaqCategories', 'Admin\FaqCategoryController@reorderFaqCategories')->name('faqcategory.reorder');
                     Route::resource('faqcategory', 'Admin\FaqCategoryController');
                     Route::get('/faq/{id}/copy', 'Admin\FaqController@copy')
                         ->name('faq.copy');
@@ -164,7 +170,7 @@ class Pilot
 
                 // Backend Routes for Standard Product & Product Categories Modules
                 if (config('pilot.plugins.products.enabled', false)) {
-                    Route::get('/productcategory/{id}/products', 'Admin\ProductCategoryController@products')
+                    Route::get('/productcategory-products/{id}/', 'Admin\ProductCategoryController@products')
                     ->name('productcategory.products');
                     Route::post(
                         '/product-category-products/{productcategory}/products/reorderProductsWithinCategory',
@@ -184,7 +190,7 @@ class Pilot
 
                 // Backend Routes for Standard Projects & Project Categories Modules, combined as the Portfolio module
                 if (config('pilot.plugins.projects.enabled', false)) {
-                    Route::get('/projectcategory/{id}/projects', 'Admin\ProjectCategoryController@projects')
+                    Route::get('/projectcategory-projects/{id}/', 'Admin\ProjectCategoryController@projects')
                     ->name('projectcategory.projects');
                     Route::post(
                         '/project-category-projects/{projectcategory}/projects/reorderProjectsWithinCategory',
@@ -204,7 +210,7 @@ class Pilot
 
                 // Backend Routes for Standard Service & Service Categories Modules, combined as Services module
                 if (config('pilot.plugins.services.enabled', false)) {
-                    Route::get('/servicecategory/{id}/services', 'Admin\ServiceCategoryController@services')
+                    Route::get('/servicecategory-services/{id}/', 'Admin\ServiceCategoryController@services')
                     ->name('servicecategory.services');
                     Route::post(
                         '/service-category-services/{servicecategory}/services/reorderServicesWithinCategory',

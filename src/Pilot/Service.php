@@ -7,17 +7,18 @@ use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Flex360\Pilot\Facades\Service as ServiceFacade;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\ServiceCategory as ServiceCategoryFacade;
 
 class Service extends Model implements HasMedia
@@ -39,6 +40,11 @@ class Service extends Model implements HasMedia
 
     protected $mediaAttributes = ['icon', 'featured_image'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
+
     public function getDescriptionBackend()
     {
         if ($this->description != null) {
@@ -51,14 +57,12 @@ class Service extends Model implements HasMedia
     public function service_categories()
     {
         return $this->belongsToMany(root_class(ServiceCategoryFacade::class), $this->getPrefix() . 'service_' . config('pilot.table_prefix') . 'service_category')
-                    ->where('status', 30)
                     ->orderBy('name');
     }
 
     public function projects()
     {
         return $this->belongsToMany(root_class(ProjectFacade::class), $this->getPrefix() . 'project_' . config('pilot.table_prefix') . 'service')
-                    ->where('status', 30)
                     ->orderBy('title');
     }
 

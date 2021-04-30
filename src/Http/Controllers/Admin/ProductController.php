@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\IndexTab;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Product as ProductFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
 use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
@@ -67,6 +68,10 @@ class ProductController extends DynamoController
                         $dynamo->hasManySimple('product_categories', [
                             'nameField' => 'title',
                             'modelClass' => ProductCategoryFacade::class,
+                            'options' => ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->orderBy('title')->pluck('title', 'id'),
+                            'value' => function ($item, $field) {
+                                return $item->{$field->key}()->withoutGlobalScopes()->pluck('id')->toArray();
+                            },
                             'label' => 'Product Categories',
                             'help' => 'Categories must already exist. If they don\'t, please save this product as a draft without assigned categories
                                           and go to the <a href="/pilot/productcategory?view=published" target="_blank">Product Category Manager</a> to create the desired category.',
@@ -142,6 +147,7 @@ class ProductController extends DynamoController
                     ->addActionButton(function ($item) {
                         return '<a href="product/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')"  class="btn btn-secondary btn-sm">Delete</a>';
                     })
+                    ->ignoredScopes([PublishedScope::class])
                     ->indexOrderBy('name');
 
         return $dynamo;
@@ -156,7 +162,7 @@ class ProductController extends DynamoController
          */
         public function copy($id)
         {
-            $product = ProductFacade::find($id);
+            $product = ProductFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
             $newProduct = $product->duplicate();
 
@@ -174,7 +180,7 @@ class ProductController extends DynamoController
         */
         public function destroy($id)
         {
-            $product = ProductFacade::find($id);
+            $product = ProductFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
             $product->delete();
 

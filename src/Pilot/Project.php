@@ -8,6 +8,7 @@ use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -39,6 +40,11 @@ class Project extends Model implements HasMedia
     ];
 
     protected $mediaAttributes = ['featured_image'];
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
 
     public function getSummaryBackend()
     {

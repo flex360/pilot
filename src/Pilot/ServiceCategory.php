@@ -2,19 +2,20 @@
 
 namespace Flex360\Pilot\Pilot;
 
+use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Service;
-use Flex360\Pilot\Facades\Service as ServiceFacade;
 use Illuminate\Database\Eloquent\Model;
+use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\PresentableTrait;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
-use Illuminate\Support\Str;
+use Flex360\Pilot\Facades\Service as ServiceFacade;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class ServiceCategory extends Model implements HasMedia
 {
@@ -35,15 +36,19 @@ class ServiceCategory extends Model implements HasMedia
 
     protected $mediaAttributes = ['featured_image'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
+
     public function services()
     {
         if (config('pilot.plugins.services.children.manage_service_categories.fields.service_sort_method') == 'manual_sort') {
             return $this->belongsToMany(root_class(ServiceFacade::class), $this->getPrefix() . 'service_' . config('pilot.table_prefix') . 'service_category')
-                        ->where('status', 30)
-                        ->orderBy('position');
+                        ->withPivot('position')
+                        ->orderBy(config('pilot.table_prefix') . 'service_' . config('pilot.table_prefix') . 'service_category.position');
         } else {
             return $this->belongsToMany(root_class(ServiceFacade::class), $this->getPrefix() . 'service_' . config('pilot.table_prefix') . 'service_category')
-                        ->where('status', 30)
                         ->orderBy('title');
         }
     }
@@ -63,12 +68,13 @@ class ServiceCategory extends Model implements HasMedia
 
         // append to the title to designate a copy
         $newModel->name .= ' (Copy)';
+        $newModel->status = 10;
 
         $newModel->push();
 
         // copy all attached categories over to new model
-        foreach ($model->services as $service) {
-            $newModel->services()->attach($service);
+        foreach ($model->services()->withoutGlobalScope(PublishedScope::class)->get() as $service) {
+            $newModel->services()->withoutGlobalScope(PublishedScope::class)->attach($service);
         }
 
         return $newModel;
