@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Product as ProductFacade;
 use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
 
@@ -22,7 +23,7 @@ class ProductController extends Controller
 
     public function categoryIndex($id, $slug)
     {
-        $category = ProductCategoryFacade::find($id);
+        $category = ProductCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         mimic($category->title);
 
@@ -32,7 +33,7 @@ class ProductController extends Controller
     // detail view shows this individual product
     public function detail($id, $slug)
     {
-        $product = ProductFacade::find($id);
+        $product = ProductFacade::withoutGlobalScope(PublishedScope::class)->find($id);
         
         mimic($product->name);
 

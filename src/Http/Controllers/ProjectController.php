@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
 
@@ -22,7 +23,7 @@ class ProjectController extends Controller
 
     public function categoryIndex($id, $slug)
     {
-        $category = ProjectCategoryFacade::find($id);
+        $category = ProjectCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         mimic($category->name);
 
@@ -32,7 +33,7 @@ class ProjectController extends Controller
     // detail view shows this individual project
     public function detail($id, $slug)
     {
-        $project = ProjectFacade::find($id);
+        $project = ProjectFacade::withoutGlobalScope(PublishedScope::class)->find($id);
         
         mimic($project->title);
 

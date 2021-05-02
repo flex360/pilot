@@ -2,6 +2,7 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
+use Flex360\Pilot\Scopes\PublishedScope;
 use Flex360\Pilot\Facades\Faq as FaqFacade;
 use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
 
@@ -31,8 +32,10 @@ class FaqController extends Controller
     }
     
     // detail view shows this individual faq
-    public function detail(FaqFacade $faq, $slug)
+    public function detail($id, $slug)
     {
+        $faq = FaqFacade::withoutGlobalScope(PublishedScope::class)->find($id);
+        
         mimic($faq->question);
 
         return view('pilot::frontend.faqs.faqDetail', compact('faq'));

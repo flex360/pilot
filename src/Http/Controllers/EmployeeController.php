@@ -2,9 +2,11 @@
 
 namespace Flex360\Pilot\Http\Controllers;
 
-use Flex360\Pilot\Facades\Employee as EmployeeFacade;
-use Flex360\Pilot\Facades\Page as PageFacade;
 use Flex360\Pilot\Pilot\Department;
+use Flex360\Pilot\Scopes\PublishedScope;
+use Flex360\Pilot\Facades\Page as PageFacade;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
 
 class EmployeeController extends Controller
 {
@@ -30,8 +32,10 @@ class EmployeeController extends Controller
      *
      * @return View
      */
-    public function departmentLandingPage(Department $department)
+    public function departmentLandingPage($id, $slug)
     {
+        $department = DepartmentFacade::withoutGlobalScope(PublishedScope::class)->find($id);
+
         //get all resource categories, order by name
         $employees = $department->employees();
         $tags = $department->tags();
