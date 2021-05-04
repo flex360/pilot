@@ -102,6 +102,7 @@ class AnnoucementController extends DynamoController
                     ->addActionButton(function ($item) {
                         return '<a href="annoucement/' . $item->id . '/delete" onclick="return confirm(\'Are you sure you want to delete this? This action cannot be undone and will be deleted forever.\')" class="btn btn-secondary btn-sm">Delete</a>';
                     })
+                    ->applyScopes()
                     ->indexOrderBy('headline');
 
 
