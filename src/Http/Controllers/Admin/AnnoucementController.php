@@ -8,8 +8,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Jzpeepz\Dynamo\FieldGroup;
 use App\Http\Controllers\Controller;
-use Flex360\Pilot\Facades\Annoucement as AnnoucementFacade;
 use Jzpeepz\Dynamo\Http\Controllers\DynamoController;
+use Flex360\Pilot\Facades\Annoucement as AnnoucementFacade;
 
 class AnnoucementController extends DynamoController
 {
@@ -116,7 +116,7 @@ class AnnoucementController extends DynamoController
     */
     public function activate($id)
     {
-        $annoucement = Annoucement::find($id);
+        $annoucement = AnnoucementFacade::find($id);
         $annoucement->status = 1;
         $annoucement->save();
 
@@ -133,7 +133,7 @@ class AnnoucementController extends DynamoController
     */
     public function copy($id)
     {
-        $annoucement = Annoucement::find($id);
+        $annoucement = AnnoucementFacade::find($id);
 
         $newAnnoucement = $annoucement->duplicate();
 
@@ -151,7 +151,7 @@ class AnnoucementController extends DynamoController
     */
     public function destroy($id)
     {
-        $annoucement = Annoucement::find($id);
+        $annoucement = AnnoucementFacade::find($id);
 
         $annoucement->delete();
 
@@ -168,7 +168,7 @@ class AnnoucementController extends DynamoController
     */
     public function deactivate()
     {
-        $annoucements = Annoucement::all();
+        $annoucements = AnnoucementFacade::all();
 
         foreach ($annoucements as $annoucement) {
             $annoucement->status = false;
