@@ -57,7 +57,7 @@ class Department extends Model implements HasMedia
 
     public function employees()
     {
-        if (config('pilot.plugins.employees.children.departments.fields.sort_method') == 'manual_sort') {
+        if (config('pilot.plugins.employees.children.departments.fields.employee_sort_method') == 'manual_sort') {
             return $this->belongsToMany(root_class(EmployeeFacade::class), $this->getPrefix() . 'department_' . config('pilot.table_prefix') . 'employee')
                             ->withPivot('position')
                             ->orderBy(config('pilot.table_prefix') . 'department_' . config('pilot.table_prefix') . 'employee.position');

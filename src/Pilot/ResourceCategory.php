@@ -38,7 +38,7 @@ class ResourceCategory extends Model implements HasMedia
 
     public function resources()
     {
-        if (config('pilot.plugins.resources.children.resource_category.fields.sort_method') == 'manual_sort') {
+        if (config('pilot.plugins.resources.children.resource_category.fields.resource_sort_method') == 'manual_sort') {
             return $this->belongsToMany(root_class(ResourceFacade::class), $this->getPrefix() . 'resource_' . config('pilot.table_prefix') . 'resource_category')
                         ->withPivot('position')
                         ->orderBy(config('pilot.table_prefix') . 'resource_' . config('pilot.table_prefix') . 'resource_category.position');
