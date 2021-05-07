@@ -9,7 +9,7 @@ return [
 
     'layout' => 'pilot::layouts.admin.master',
 
-    'controller_namespace' => '\App\Http\Controllers\Admin',
+    'controller_namespace' => 'Admin',
 
     'controller_path' => app_path('/Http/Controllers/Admin'),
 
