@@ -36,6 +36,11 @@ class ResourceCategory extends Model implements HasMedia
 
     protected $mediaAttributes = [];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PublishedScope);
+    }
+
     public function resources()
     {
         if (config('pilot.plugins.resources.children.resource_category.fields.resource_sort_method') == 'manual_sort') {

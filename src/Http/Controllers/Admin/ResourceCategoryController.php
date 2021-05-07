@@ -110,7 +110,7 @@ class ResourceCategoryController extends DynamoController
         return $dynamo;
     }
 
-        /**
+    /**
     *  Reorder ProjectCategories
     *
     * @param  int  $id
