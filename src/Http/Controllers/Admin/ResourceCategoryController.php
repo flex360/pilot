@@ -133,7 +133,7 @@ class ResourceCategoryController extends DynamoController
 
     public function resources($id)
     {
-        $resourceCategory = ResourceCategoryFacade::find($id);
+        $resourceCategory = ResourceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $items = $resourceCategory->resources()->withoutGlobalScope(PublishedScope::class)->get();
         $dynamo = (new ResourceController)->getDynamo();
@@ -143,7 +143,7 @@ class ResourceCategoryController extends DynamoController
 
     public function reorderResourcesWithinCategory($id)
     {
-        $resourceCategory = ResourceCategoryFacade::find($id);
+        $resourceCategory = ResourceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $ids = request()->input('ids');
 
@@ -163,7 +163,7 @@ class ResourceCategoryController extends DynamoController
      */
     public function copy($id)
     {
-        $cat = ResourceCategoryFacade::find($id);
+        $cat = ResourceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $newCat = $cat->duplicate();
 
@@ -181,7 +181,7 @@ class ResourceCategoryController extends DynamoController
      */
     public function destroy($id)
     {
-        $category = ResourceCategoryFacade::find($id);
+        $category = ResourceCategoryFacade::withoutGlobalScope(PublishedScope::class)->find($id);
 
         $category->delete();
 
