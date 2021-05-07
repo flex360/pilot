@@ -539,12 +539,12 @@ class Page extends Model implements HasMedia
     public function getLayoutList()
     {
         // get a list of all the layouts
-        $layouts = File::files(base_path(config('pilot.plugins.pages.pathToPageLayouts')));
+        $layouts = File::files(base_path(config('pilot.plugins.pages.pathToPageLayouts', 'vendor/flex360/pilot/resources/views/layouts')));
 
         // clean up paths
         foreach ($layouts as $index => $layout) {
             // manipulate the path into a blade friendly form
-            $layout = str_replace(base_path(config('pilot.plugins.pages.pathToLayoutCleanup')), '', $layout);
+            $layout = str_replace(base_path(config('pilot.plugins.pages.pathToLayoutCleanup', 'vendor/flex360/pilot/resources/views/')), '', $layout);
 
             $layout = str_replace('.blade.php', '', $layout);
 

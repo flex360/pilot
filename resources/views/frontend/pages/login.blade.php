@@ -1,3 +1,6 @@
+@extends('layouts.internal')
+
+@section('content')
 <div class="text-center">
 
     <p>Enter your password below to access this page.</p>
@@ -21,3 +24,5 @@
     </form>
 
 </div>
+
+@endsection

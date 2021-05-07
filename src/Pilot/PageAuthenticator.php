@@ -32,7 +32,6 @@ class PageAuthenticator
 
     public function getPage()
     {
-
         $page = $this->page;
 
         if (! $this->valid()) {
@@ -40,7 +39,7 @@ class PageAuthenticator
 
             $page->block_2 = '';
 
-            $page->body = view('frontend.pages.login', compact('page'))->render();
+            $page->body = view('pilot::frontend.pages.login', compact('page'))->render();
         }
 
         return $page;
