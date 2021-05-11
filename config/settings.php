@@ -17,6 +17,7 @@
 //      If its a header, give it a type of 'header'            //
 //      If its a text field, give it a type of 'text'          //
 //      If its a textarea field, give it a type of 'textarea'  //
+//      if its a wysiwyg field, give it type of 'wysiwyg'      //
 //      --label, is the header text if type is header, is the  //
 //               input label otherwise                         //
 //                                                             //

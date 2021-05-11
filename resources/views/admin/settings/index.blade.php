@@ -44,7 +44,7 @@
 
                     @if ($field['type'] == 'header')
                         <h4 style="margin-bottom: 20px;">{{ $field['label'] }}</h4>
-                    @elseif (in_array($field['type'], ['text', 'textarea', 'select']))
+                    @elseif (in_array($field['type'], ['text', 'textarea', 'select', 'wysiwyg']))
                     <div class="form-group">
                         <label for="{{ $field['id'] }}" title=""{{ $configSetting['key'] . '.' . $field['id'] }}>
                             {!! $field['label'] !!}
@@ -66,6 +66,8 @@
                             {!! Form::text($field['id'], $setting->getFieldValueById($field['id']), array('class' => 'form-control')) !!}
                         @elseif ($field['type'] == 'textarea')
                             {!! Form::textarea($field['id'], $setting->getFieldValueById($field['id']) , array('class' => 'form-control ' . $field['id'])) !!}
+                        @elseif ($field['type'] == 'wysiwyg')
+                            {!! Form::textarea($field['id'], $setting->getFieldValueById($field['id']) , array('class' => 'form-control wysiwyg-editor ' . $field['id'])) !!}
                         @endif
                     </div>
                     @endif
