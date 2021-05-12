@@ -33,7 +33,7 @@
     "dependencies": {
         "flatpickr": "^4.6.6",
         "animate.css": "^3.7.0",
-        "codemirror": "^5.55.0",
+        "codemirror": "^5.58.2",
         "compressorjs": "^1.0.5",
         "froala-editor": "^3.1.1-2",
         "imagemin": "^6.1.0",
