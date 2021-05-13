@@ -22,13 +22,15 @@
     </head>
 
     <body>
+        <a href="#content" class="skip-to-content-link">Skip to content</a>
         {!! PilotSetting::get('tracking.body_top') !!}
 
         <div id="app" v-cloak>
 
             @include(PilotView::locate('partials.header'))
-
+            <div id="content">
             @yield('template-content')
+            </div>
 
             @include(PilotView::locate('partials.footer'))
 
