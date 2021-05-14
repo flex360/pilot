@@ -744,9 +744,11 @@ class Page extends Model implements HasMedia
 
         //loop thru menu Items and see if the page id matches this page id
         foreach ($menus as $menu) {
-            foreach (json_decode($menu->items) as $item) {
-                if ($item->page == $this->id) {
-                    return true;
+            if ($menu->items != null) {
+                foreach (json_decode($menu->items) as $item) {
+                    if ($item->page == $this->id) {
+                        return true;
+                    }
                 }
             }
         }
