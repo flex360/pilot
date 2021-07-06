@@ -97,7 +97,7 @@
                                 For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 1600:640px for quality.
                             </div>
 
-                            <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'horizontal_featured_image', 'options' => ['maxWidth' => 1600]]); ?>
+                            <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'horizontal_featured_image', 'options' => ['maxWidth' => 2000]]); ?>
 
                             @include('dynamo::bootstrap4.partials.fields.singleImage', ['display' => true, 'field' => $field])
 
@@ -119,7 +119,7 @@
                                 For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 1600:640px for quality.
                             </div>
 
-                            <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'vertical_featured_image', 'options' => ['maxWidth' => 1600]]); ?>
+                            <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'vertical_featured_image', 'options' => ['maxWidth' => 2000]]); ?>
 
                             @include('dynamo::bootstrap4.partials.fields.singleImage', ['display' => true, 'field' => $field])
 
