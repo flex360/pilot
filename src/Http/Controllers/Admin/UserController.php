@@ -54,7 +54,7 @@ class UserController extends AdminController
      */
     public function store()
     {
-        $item = User::create(request()->except('fake_username_remembered', 'fake_password_remembered'));
+        $item = User::create(request()->except('fake_username_remembered', 'fake_password_remembered', 'password'));
 
         $password = request()->input('password');
         if (!empty($password)) {
@@ -101,7 +101,7 @@ class UserController extends AdminController
     public function update($id)
     {
         $item = User::find($id);
-        $item->fill(request()->except('fake_username_remembered', 'fake_password_remembered'));
+        $item->fill(request()->except('fake_username_remembered', 'fake_password_remembered', 'password'));
         $item->save();
 
         $password = request()->input('password');
