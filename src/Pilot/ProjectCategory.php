@@ -100,7 +100,10 @@ class ProjectCategory extends Model implements HasMedia
 
     public function url()
     {
-        return route('project.index');
+        return route('projectCategory.index', [
+            'id' => $this->id,
+            'slug' => $this->getSlug(),
+        ]);
     }
 
     public function getSlug()
