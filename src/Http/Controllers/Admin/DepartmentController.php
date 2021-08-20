@@ -31,7 +31,7 @@ class DepartmentController extends DynamoController
                         }
                         if (config('pilot.plugins.employees.children.departments.fields.featured_image', true)) {
                             $departmentDeatilsFormTab->singleImage('featured_image', [
-                                'maxWidth' => 1000,
+                                'maxWidth' => 2000,
                                 'label' => 'Featured Image',
                                 'help' => 'Upload featured image. Once selected, hover over the image and select the edit icon (paper & pencil) to manage metadata title, photo credit, and description.',
                             ]);

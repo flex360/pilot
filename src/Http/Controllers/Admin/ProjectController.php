@@ -44,7 +44,7 @@ class ProjectController extends DynamoController
                     if (config('pilot.plugins.projects.fields.featured_image', true)) {
                         $dynamo->singleImage('featured_image', [
                             'help' => 'Upload photo. Once selected, hover over the image and select the edit icon (paper & pencil) to manage metadata title, photo credit, and description.',
-                            'maxWidth' => 1000,
+                            'maxWidth' => 2000,
                         ]);
                     }
                     if (config('pilot.plugins.projects.fields.image_background_swatch_picker', true)) {
