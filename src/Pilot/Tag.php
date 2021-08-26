@@ -3,11 +3,11 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Post;
 use Flex360\Pilot\Pilot\Event;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Flex360\Pilot\Facades\Post as PostFacade;
+use Flex360\Pilot\Facades\Event as EventFacade;
 class Tag extends Model
 {
     use SoftDeletes;
@@ -27,14 +27,14 @@ class Tag extends Model
 
     public function posts()
     {
-        return $this->belongsToMany(Post::class, config('pilot.table_prefix') . 'post_tag')
+        return $this->belongsToMany(root_class(PostFacade::class), config('pilot.table_prefix') . 'post_tag')
                     ->where('status', 30)
                     ->orderBy('published_on', 'desc');
     }
 
     public function events()
     {
-        return $this->belongsToMany(Event::class, config('pilot.table_prefix') . 'event_tag')
+        return $this->belongsToMany(root_class(EventFacade::class), config('pilot.table_prefix') . 'event_tag')
                     ->where('status', 30)
                     ->orderBy('published_on', 'desc');
     }
