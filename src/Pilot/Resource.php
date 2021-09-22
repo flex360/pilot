@@ -126,4 +126,9 @@ class Resource extends Model implements HasMedia
     {
         return Str::slug($this->title);
     }
+
+    public function isTelephoneLink()
+    {
+        return substr($this->link, 0, 4) == 'tel:';
+    }
 }

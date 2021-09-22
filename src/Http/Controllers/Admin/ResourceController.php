@@ -48,7 +48,11 @@ class ResourceController extends DynamoController
                                             
                                             <strong>Need to link to a webpage or a document from <span style="text-decoration: underline;">external</span> website?</strong><br> <i>--Enter the entire web address.
                                             Example: If you were linking to an article on a news site, you would enter
-                                            "https://newsWebsite.com/article/4/name-of-article"</i>',
+                                            "https://newsWebsite.com/article/4/name-of-article"</i><br>
+                                            
+                                            <strong>Need to link to a phone number?</strong><br> <i>--Enter the phone number is this format: tel:555-555-5555.
+                                            Example: If you wanted to have a clickable link to your Customer Support number, you would enter
+                                            "tel:555-555-5555"</i>',
                             ]);
                         }
                         if (config('pilot.plugins.resources.fields.categories', true)) {
