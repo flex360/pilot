@@ -27,7 +27,7 @@ class AddPositionToResourcesAndCategoriesTable extends Migration
         $resourceCategoryTable = (new ResourceCategory())->getTable();
         if (Schema::hasTable($resourceCategoryTable) && !Schema::hasColumn($resourceCategoryTable, 'position')) {
             Schema::table($resourceCategoryTable, function (Blueprint $table) {
-                $table->integer('status')->default(10)->after('name');
+                $table->integer('status')->default(30)->after('name');
                 $table->integer('position')->default(0)->after('status');
             });
         }

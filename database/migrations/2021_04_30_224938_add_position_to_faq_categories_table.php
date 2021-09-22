@@ -19,7 +19,7 @@ class AddPositionToFaqCategoriesTable extends Migration
         $faqCategoryTable = (new FaqCategory())->getTable();
         if (Schema::hasTable($faqCategoryTable) && !Schema::hasColumn($faqCategoryTable, 'position')) {
             Schema::table($faqCategoryTable, function (Blueprint $table) {
-                $table->integer('status')->default(10)->after('name');
+                $table->integer('status')->default(30)->after('name');
                 $table->integer('position')->default(0)->after('status');
             });
         }
