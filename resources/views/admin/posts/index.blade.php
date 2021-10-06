@@ -7,6 +7,7 @@
         @if (PilotSetting::has('news') && isset(config('settings')['news']))
             <a href="{{ route('admin.setting.default', ['setting'=>'news']) }}" class="btn btn-warning btn-sm"><i class="fas fa-cogs"></i> Settings</a>
         @endif
+        <a href="{{ route('blog') }}" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View</a>
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#tags-modal"><i class="fa fa-tags"></i> Manage Tags</button>
         <a href="{{ route('admin.post.create') }}" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add News</a>
     </div>
