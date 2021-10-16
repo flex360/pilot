@@ -27,7 +27,7 @@ class TestimonialController extends DynamoController
                              *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                              ************************************************************************************/
                             $dynamo->addIndexButton(function () {
-                                return '<a href="/testimonials" target="_blank" class="btn btn-secondary btn-sm"><i class="fa fa-eye"></i> View Testimonials</a>';
+                                return '<a href="/testimonials" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Testimonials</a>';
                             });
 
                             //create custom info group

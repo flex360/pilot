@@ -109,6 +109,9 @@ class EmployeeController extends DynamoController
                             return '<a href="/pilot/department" class="btn btn-primary btn-sm">Departments</a>';
                         });
                     }
+                    $dynamo->addIndexButton(function() {
+                        return '<a href="' . route('employee.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Employees</a>';
+                    });
                     $dynamo->paginate(50)
                     ->indexTab(
                         IndexTab::make('Published', function ($query) {

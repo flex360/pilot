@@ -30,6 +30,9 @@ class ResourceController extends DynamoController
                         $dynamo->addIndexButton(function () {
                             return '<a href="/pilot/resourcecategory?view=all" class="btn btn-primary btn-sm">Resource Categories</a>';
                         });
+                        $dynamo->addIndexButton(function () {
+                            return '<a href="' . route('resource.index') .'" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View Resources</a>';
+                        });
                         if (config('pilot.plugins.resources.fields.title', true)) {
                             $dynamo->text('title');
                         }
