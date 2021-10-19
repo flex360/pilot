@@ -111,10 +111,21 @@ class Resource extends Model implements HasMedia
 
     public function url()
     {
-        return route('resource.index', [
-            'resource' => $this->id,
-            'slug' => $this->getSlug(),
-        ]);
+        if ($this->resource_categories->isNotEmpty()) {
+            $cat = $this->resource_categories()->first();
+        }
+
+        if (isset($cat)) {
+            return route('resource.index', [
+                'cat' => $cat->id,
+            ]) . '#cat-' . $cat->id;
+        } else {
+            return route('resource.index', [
+                'resource' => $this->id,
+                'slug' => $this->getSlug(),
+            ]);
+        }
+        
     }
 
     public function getUrlAttribute($value)

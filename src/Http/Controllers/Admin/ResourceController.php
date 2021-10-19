@@ -128,6 +128,13 @@ class ResourceController extends DynamoController
                         }
                         
                         $dynamo->addIndex('updated_at', 'Last Edited')
+                        ->addActionButton(function($item) {
+                            if (method_exists($item, 'url')) {
+                                return '<a href="'.$item->url().'" target="_blank"  class="btn btn-secondary btn-sm">View</a>';
+                            } else {
+                                return null;
+                            }
+                        })
                         ->addActionButton(function ($item) {
                             return '<a href="resource/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
                         })

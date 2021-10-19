@@ -118,9 +118,15 @@ class FaqController extends DynamoController
                         });
                     }
                     $dynamo->addIndex('updated_at', 'Last Edited')
-                    // ->addActionButton(function($item) {
-                    //     return '<a href="'.$item->url().'" target="_blank"  class="btn btn-secondary btn-sm">View</a>';
-                    // })
+                    ->addActionButton(function($item) {
+                        if (method_exists($item, 'getCategoryUrl') && $item->faq_categories->isNotEmpty()) {
+                            return '<a href="'.$item->getCategoryUrl($item->faq_categories()->first()->id).'" target="_blank"  class="btn btn-secondary btn-sm">View</a>';
+                        } else if (method_exists($item, 'url')) {
+                            return '<a href="'.$item->url().'" target="_blank"  class="btn btn-secondary btn-sm">View</a>';
+                        } else {
+                            return null;
+                        }
+                    })
                     ->addActionButton(function($item) {
                         return '<a href="faq/' . $item->id . '/copy"  class="btn btn-secondary btn-sm">Copy</a>';
                     })
