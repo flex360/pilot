@@ -97,6 +97,7 @@
                             <td class="dynamo-width-of-action-row">
                                 <div style="display: flex; gap: 5px;">
                                     <a href="{{ route('admin.post.edit', $post->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                    <a href="{{ $post->url() }}" target="_blank" class="btn btn-secondary btn-sm">View</a>
                                     <a href="{{ route('admin.post.copy', $post->id) }}" class="btn btn-secondary btn-sm">Copy</a>
                                     <a href="/pilot/post/{{ $post->id }}/delete" onclick="return confirm('Are you sure you want to delete this? This action cannot be undone and will be deleted forever. ( FLEX360 can bring it back for you )')" class="btn btn-secondary btn-sm">Delete</a>
                                 </div>
