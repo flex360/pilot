@@ -37,7 +37,7 @@
                         <div class="form-group" v-if="item.type == 'page'">
                             <label for="">Page</label>
                             <select class="form-control" v-model="item.page" required>
-                                <option v-for="(page, index) in pages" :value="index" :key="index">{{ page }}</option>
+                                <option v-for="(page, index) in pages" :value="page.id" :key="page.id">{{ page.name }}</option>
                             </select>
                         </div>
 
