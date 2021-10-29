@@ -6,13 +6,17 @@ use Flex360\Pilot\Pilot\UrlHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Annoucement extends Model
 {
-    use SoftDeletes, 
+    use SoftDeletes,
         HasEmptyStringAttributes,
-        PilotTablePrefix;
+        PilotTablePrefix,
+        SupportsMultipleSites,
+        PilotModuleCommon;
 
     protected $table = 'annoucements';
 

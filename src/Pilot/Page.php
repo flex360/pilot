@@ -31,7 +31,7 @@ class Page extends Model implements HasMedia
         PilotTablePrefix,
         HasMediaAttributes {
             HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
-        }
+    }
 
     public static $current = null;
 
@@ -112,8 +112,8 @@ class Page extends Model implements HasMedia
             Cache::forget('site-nav-view-' . $site->id);
 
             // clear the page root cache just in case
-            Cache::forget('page-root');
-            Cache::forget('pilot-learn-root');
+            Cache::forget('page-root_' . $site->id);
+            Cache::forget('pilot-learn-root_' . $site->id);
         });
 
         Page::deleted(function () {
@@ -121,7 +121,7 @@ class Page extends Model implements HasMedia
             $site = Site::getCurrent();
             Cache::forget('site-nav-' . $site->id);
             Cache::forget('site-nav-view-' . $site->id);
-            Cache::forget('pilot-learn-root');
+            Cache::forget('pilot-learn-root_' . $site->id);
         });
     }
 
@@ -144,7 +144,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        $root = Cache::rememberForever('page-root', function () use ($site) {
+        $root = Cache::rememberForever('page-root_' . $site->id, function () use ($site) {
             return Page::where('site_id', '=', $site->id)->where('level', '=', 0)->first();
         });
 
@@ -734,7 +734,7 @@ class Page extends Model implements HasMedia
 
     /**
      *  Check if the page is being used by any MenuBuilders
-     * 
+     *
      * return Boolean
      */
     public function usedByMenu()

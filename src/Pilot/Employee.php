@@ -16,17 +16,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Flex360\Pilot\Pilot\Traits\Publishable;
 
 class Employee extends Model implements HasMedia
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon, Publishable  {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -35,16 +39,11 @@ class Employee extends Model implements HasMedia
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'photo', 'first_name', 'last_name', 'start_date', 'birth_date', 'job_title', 'phone_number', 'cell_number', 'extension',
-        'email', 'office_location',
+        'photo', 'first_name', 'last_name', 'job_title', 'phone_number', 'cell_number', 'extension',
+        'email', 'office_location', 'contact_me_about', 'bio',
     ];
 
     protected $mediaAttributes = ['photo'];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new PublishedScope);
-    }
 
     public function departments()
     {
@@ -96,7 +95,7 @@ class Employee extends Model implements HasMedia
         if (!empty($value)) {
             $this->attributes['start_date'] = Carbon::createFromFormat('m-d-Y', $value);
         } else {
-            $this->attributes['start_date'] = '';
+            $this->attributes['start_date'] = null;
         }
     }
 
@@ -126,7 +125,7 @@ class Employee extends Model implements HasMedia
         if (!empty($value)) {
             $this->attributes['birth_date'] = Carbon::createFromFormat('m-d-Y', $value);
         } else {
-            $this->attributes['birth_date'] = '';
+            $this->attributes['birth_date'] = null;
         }
     }
 

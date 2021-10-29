@@ -6,6 +6,7 @@ use Closure;
 use Flex360\Pilot\Pilot\Page;
 use Flex360\Pilot\Pilot\Site;
 use Flex360\Pilot\Pilot\Asset;
+use Flex360\Pilot\Pilot\Post;
 use Illuminate\Support\Facades\Cache;
 
 class BeforeBackendMiddleware
@@ -42,7 +43,7 @@ class BeforeBackendMiddleware
         $site->initLearnPages();
 
         // share learn pages
-        $learnRoot = Cache::rememberForever('pilot-learn-root', function () {
+        $learnRoot = Cache::rememberForever('pilot-learn-root_' . $site->id, function () {
             return Page::findByPath('/learn');
         });
 

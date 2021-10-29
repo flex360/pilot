@@ -2,27 +2,30 @@
 
 namespace Flex360\Pilot\Pilot;
 
-use Flex360\Pilot\Contracts\Post as PostContract;
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
-use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Contracts\Post as PostContract;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
+use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Post extends Model implements HasMedia, PostContract
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon  {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -34,7 +37,7 @@ class Post extends Model implements HasMedia, PostContract
 
     protected $emptyStrings = [
         'title', 'body', 'summary', 'horizontal_featured_image', 'vertical_featured_image', 'gallery',
-        'external_link', 'author'
+        'external_link', 'author', 'fi_background_color'
     ];
 
     protected $mediaAttributes = ['horizontal_featured_image', 'vertical_featured_image'];
@@ -282,5 +285,15 @@ class Post extends Model implements HasMedia, PostContract
         }
 
         return $query;
+    }
+
+    public function scopeOrderBySticky($query)
+    {
+        return $query->orderBy('sticky', 'desc');
+    }
+
+    public function scopeSticky($query)
+    {
+        return $query->where('sticky', 1);
     }
 }

@@ -9,23 +9,27 @@ use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Flex360\Pilot\Scopes\PublishedScope;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Flex360\Pilot\Pilot\Traits\Publishable;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Flex360\Pilot\Facades\Resource as ResourceFacade;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 
 class Department extends Model implements HasMedia
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon, Publishable  {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -38,11 +42,6 @@ class Department extends Model implements HasMedia
     ];
 
     protected $mediaAttributes = ['featured_image'];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new PublishedScope);
-    }
 
     public static function boot()
     {

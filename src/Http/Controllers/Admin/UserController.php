@@ -3,6 +3,7 @@
 namespace Flex360\Pilot\Http\Controllers\Admin;
 
 use Flex360\Pilot\Pilot\Role;
+use Flex360\Pilot\Pilot\Site;
 use Flex360\Pilot\Pilot\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +21,12 @@ class UserController extends AdminController
      */
     public function index()
     {
-        $items = User::all();
+        if (Auth::user()->isSuperAdmin()) {
+            $items = User::all();
+        } else {
+            $currentSite = Site::getCurrent();
+            $items = User::where('site_id', $currentSite->id)->get();
+        }
 
         return view('pilot::admin.' . static::$viewFolder . '.index', compact('items'));
     }
@@ -43,8 +49,10 @@ class UserController extends AdminController
 
         $excludedRoleKeys = Auth::user()->hasRole('super') ? [] : ['super'];
         $roles = Role::whereNotIn('key', $excludedRoleKeys)->pluck('name', 'id');
+        $sites = Site::pluck('name', 'id');
+        $sites = array_merge(["" => "All Websites"], $sites->toArray());
 
-        return view('pilot::admin.' . static::$viewFolder . '.form', compact('item', 'formOptions', 'model', 'roles'));
+        return view('pilot::admin.' . static::$viewFolder . '.form', compact('item', 'formOptions', 'model', 'roles', 'sites'));
     }
 
     /**
@@ -88,8 +96,10 @@ class UserController extends AdminController
 
         $excludedRoleKeys = Auth::user()->hasRole('super') ? [] : ['super'];
         $roles = Role::whereNotIn('key', $excludedRoleKeys)->pluck('name', 'id');
+        $sites = Site::pluck('name', 'id');
+        $sites = array_merge(["" => "All Websites"], $sites->toArray());
 
-        return view('pilot::admin.' . static::$viewFolder . '.form', compact('item', 'formOptions', 'model', 'roles'));
+        return view('pilot::admin.' . static::$viewFolder . '.form', compact('item', 'formOptions', 'model', 'roles', 'sites'));
     }
 
     /**

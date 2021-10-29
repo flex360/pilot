@@ -14,19 +14,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Facades\Project as ProjectFacade;
 use Flex360\Pilot\Facades\Service as ServiceFacade;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\ServiceCategory as ServiceCategoryFacade;
+use Flex360\Pilot\Pilot\Traits\Publishable;
 
 class Service extends Model implements HasMedia
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon, Publishable  {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -35,15 +39,10 @@ class Service extends Model implements HasMedia
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $emptyStrings = [
-        'title', 'subservices', 'description'
+        'title', 'subservices', 'description', 'icon', 'featured_image',
     ];
 
     protected $mediaAttributes = ['icon', 'featured_image'];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new PublishedScope);
-    }
 
     public function getDescriptionBackend()
     {
@@ -76,7 +75,7 @@ class Service extends Model implements HasMedia
         $newModel->title .= ' (Copy)';
 
          // copy media items
-         foreach ($model->media as $media) {
+        foreach ($model->media as $media) {
             $media->copyTo($newModel);
         }
 
@@ -157,5 +156,4 @@ class Service extends Model implements HasMedia
     {
         return Str::slug($this->title);
     }
-
 }

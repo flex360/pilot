@@ -18,6 +18,13 @@ class EventController extends AdminController
     public function __construct(MediaHandler $mediaHandler)
     {
         $this->fileHandler = $mediaHandler->get();
+
+        // To dynamically set notification of how many drafts there are.
+        $draftsCount = EventFacade::getDraftCount();
+        view()->share('draftsCount', $draftsCount);
+
+        $tags = Tag::orderBy('name', 'asc')->get();
+        view()->share('tags', $tags);
     }
 
     /**
@@ -27,138 +34,62 @@ class EventController extends AdminController
      */
     public function index()
     {
-        $draftedEvents = EventFacade::withoutGlobalScopes()
-                             ->draft()
-                             ->where('deleted_at', null)
-                             ->orderBy('start', 'desc')
-                             ->get();
-        //To dynamically set notification of how many drafts there are.
-        $draftsCount = $draftedEvents->count();
-
-        $scheduled = EventFacade::withoutGlobalScopes()->scheduled()->get();
-
-        $query = EventFacade::withoutGlobalScopes()
-                     //->whereRaw('end >= NOW()')
-                     ->whereNotIn('id', $draftedEvents->pluck('id'))
-                     ->whereNotIn('id', $scheduled->pluck('id'))
-                     ->where('deleted_at', null)
-                     ->orderBy('start', 'desc');
-
-        $query = EventFacade::filter($query);
-
-        $events = $query->paginate(20);
+        $events = EventFacade::whereNot('draft')
+            ->whereNot('scheduled')
+            ->pilotIndex()
+            ->orderByStartDate()
+            ->paginate(20);
 
         $view = 'published';
 
-        $tags = Tag::orderBy('name', 'asc')->get();
-
-        return view('pilot::admin.events.index', compact('events', 'tags', 'draftsCount', 'view'));
+        return view('pilot::admin.events.index', compact('events', 'view'));
     }
 
     public function indexOfScheduled()
     {
-        $draftedEvents = EventFacade::withoutGlobalScopes()
-                             ->draft()
-                             ->where('deleted_at', null)
-                             ->orderBy('start', 'desc')
-                             ->get();
-        //To dynamically set notification of how many drafts there are.
-        $draftsCount = $draftedEvents->count();
-
-        $query = EventFacade::withoutGlobalScopes()
-                                 ->scheduled()
-                                 ->where('deleted_at', null)
-                                 ->orderBy('start', 'desc');
-
-        $query = EventFacade::filter($query);
-
-        $events = $query->paginate(20);
-
-        $tags = Tag::orderBy('name', 'asc')->get();
+        $events = EventFacade::scheduled()
+            ->pilotIndex()
+            ->orderByStartDate()
+            ->paginate(20);
 
         $view = 'scheduled';
 
-        return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.events.index', compact('events', 'view'));
     }
 
     public function indexOfDrafts()
     {
-        $draftedEvents = EventFacade::withoutGlobalScopes()
-                             ->draft()
-                             ->where('deleted_at', null)
-                             ->orderBy('start', 'desc')
-                             ->get();
-
-        //To dynamically set notification of how many drafts there are.
-        $draftsCount = $draftedEvents->count();
-
-        $query = EventFacade::withoutGlobalScopes()
-                             ->draft()
-                             ->where('deleted_at', null)
-                             ->orderBy('start', 'desc');
-
-        $query = EventFacade::filter($query);
-
-        $events = $query->paginate(20);
-
-        $tags = Tag::orderBy('name', 'asc')->get();
+        $events = EventFacade::draft()
+            ->pilotIndex()
+            ->orderByStartDate()
+            ->paginate(20);
 
         $view = 'drafts';
 
-        return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.events.index', compact('events', 'view'));
     }
 
     public function indexOfAll()
     {
-        $draftedEvents = EventFacade::withoutGlobalScopes()
-                               ->draft()
-                               ->where('deleted_at', null)
-                               ->orderBy('start', 'desc')
-                              ->get();
-
-        //To dynamically set notification of how many drafts there are.
-        $draftsCount = $draftedEvents->count();
-
-        $query = EventFacade::withoutGlobalScopes()
-                               ->where('deleted_at', null)
-                               ->orderBy('start', 'desc');
-
-        $query = EventFacade::filter($query);
-
-        $events = $query->paginate(20);
-
-        $tags = Tag::orderBy('name', 'asc')->get();
+        $events = EventFacade::pilotIndex()
+            ->orderByStartDate()
+            ->paginate(20);
 
         $view = 'all';
 
-        return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.events.index', compact('events', 'view'));
     }
 
     public function indexOfPast()
     {
-        $draftedEvents = EventFacade::withoutGlobalScopes()
-                              ->draft()
-                              ->where('deleted_at', null)
-                              ->orderBy('start', 'desc')
-                              ->get();
-
-        //To dynamically set notification of how many drafts there are.
-        $draftsCount = $draftedEvents->count();
-
-        $query = EventFacade::withoutGlobalScopes()
-                              ->past()
-                              ->where('deleted_at', null)
-                              ->orderBy('start', 'desc');
-
-        $query = EventFacade::filter($query);
-
-        $events = $query->paginate(20);
-
-        $tags = Tag::orderBy('name', 'asc')->get();
+        $events = EventFacade::past()
+            ->pilotIndex()
+            ->orderByStartDate()
+            ->paginate(20);
 
         $view = 'past';
 
-        return view('pilot::admin.events.index', compact('events', 'draftsCount', 'tags', 'view'));
+        return view('pilot::admin.events.index', compact('events', 'view'));
     }
 
     /**
@@ -234,7 +165,7 @@ class EventController extends AdminController
      */
     public function edit($id)
     {
-        $item = EventFacade::withoutGlobalScopes()->find($id);
+        $item = EventFacade::withoutGlobalScopes()->belongsToSite()->find($id);
 
         $tags = Tag::orderBy('name', 'asc')->pluck('name', 'id');
 
@@ -270,7 +201,7 @@ class EventController extends AdminController
             return redirect()->back()->withInput();
         }
 
-        $item = EventFacade::withoutGlobalScopes()->find($id);
+        $item = EventFacade::withoutGlobalScopes()->belongsToSite()->find($id);
 
         $data = $request->except('image', 'gallery', 'tags');
 
@@ -303,7 +234,7 @@ class EventController extends AdminController
             return redirect()->route('admin.auth.denied');
         }
 
-        $event = EventFacade::withoutGlobalScopes()->find($id);
+        $event = EventFacade::withoutGlobalScopes()->belongsToSite()->find($id);
 
         $event->tags()->detach();
 
@@ -317,7 +248,7 @@ class EventController extends AdminController
 
     public function copy($id)
     {
-        $event = EventFacade::withoutGlobalScopes()->find($id);
+        $event = EventFacade::withoutGlobalScopes()->belongsToSite()->find($id);
 
         $newEvent = $event->duplicate();
 

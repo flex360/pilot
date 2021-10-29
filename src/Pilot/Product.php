@@ -14,18 +14,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Facades\Product as ProductFacade;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
+use Flex360\Pilot\Pilot\Traits\Publishable;
 
 class Product extends Model implements HasMedia
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon, Publishable  {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -38,11 +42,6 @@ class Product extends Model implements HasMedia
     ];
 
     protected $mediaAttributes = ['featured_image'];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new PublishedScope);
-    }
 
     public function getFullDescriptionBackend()
     {
@@ -89,7 +88,7 @@ class Product extends Model implements HasMedia
         $newModel->name .= ' (Copy)';
 
          // copy media items
-         foreach ($model->media as $media) {
+        foreach ($model->media as $media) {
             $media->copyTo($newModel);
         }
 
@@ -141,5 +140,4 @@ class Product extends Model implements HasMedia
     {
         return Str::slug($this->name);
     }
-
 }

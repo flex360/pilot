@@ -5,12 +5,14 @@ namespace Flex360\Pilot\Pilot;
 use Illuminate\Support\Str;
 use Flex360\Pilot\Pilot\Event;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Flex360\Pilot\Facades\Post as PostFacade;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Flex360\Pilot\Facades\Event as EventFacade;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
+
 class Tag extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, SupportsMultipleSites;
 
     protected $table = 'tags';
 

@@ -6,7 +6,14 @@ trait HasTablePrefix
 {
     public function getTable()
     {
-        return $this->getPrefix() . parent::getTable();
+        $table = parent::getTable();
+
+        // fix for weird bug when using "Where Not" package
+        if (substr($table, 0, 10) == 'where_not_') {
+            return $table;
+        }
+        
+        return $this->getPrefix() . $table;
     }
 
     public function setTable($table)

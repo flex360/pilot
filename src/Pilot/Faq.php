@@ -15,17 +15,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\FaqCategory as FaqCategoryFacade;
+use Flex360\Pilot\Pilot\Traits\Publishable;
 
 class Faq extends Model implements HasMedia
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon, Publishable  {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -36,11 +40,6 @@ class Faq extends Model implements HasMedia
     protected $emptyStrings = [
         'question', 'answer'
     ];
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new PublishedScope);
-    }
 
     public function getShortAnswerBackend()
     {
@@ -122,5 +121,4 @@ class Faq extends Model implements HasMedia
             'faq' => $this->id,
         ]) . '#cat-' . $categoryId . '-faq-' . $this->id;
     }
-
 }

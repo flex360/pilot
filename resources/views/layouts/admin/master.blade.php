@@ -323,14 +323,16 @@
 
                         <!-- Second half of the sidebar modules -->
                             <div class="pilot-sidebar-lower">
-                            @php
+                            <?php
                                 $learnNav = PilotNavItem::make('<i class="fa fa-graduation-cap" style="margin-right: 7px;"></i> Learn', '', 'admin.learn.*', null, '_blank');
-                                foreach($learnPages as $learnPage) {
-                                    $learnNav->addChildren(
-                                        PilotNavItem::make($learnPage->title, $learnPage->url(), null, null, '_blank')
-                                    );
+                                if (isset($learnPages)) {
+                                    foreach($learnPages as $learnPage) {
+                                        $learnNav->addChildren(
+                                            PilotNavItem::make($learnPage->title, $learnPage->url(), null, null, '_blank')
+                                        );
+                                    }
                                 }
-                            @endphp
+                            ?>
     
                             {!! PilotNav::create(
                                 PilotNavItem::make('<i class="fa fa-cogs" style="margin-right: 7px;"></i> Settings', route('admin.setting.index'), 'admin.setting.*'),

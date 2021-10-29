@@ -67,6 +67,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasRole('super', 'admin');
     }
 
+    public function isSuperAdmin()
+    {
+        return $this->hasRole('super');
+    }
+
     public function canEditUser(User $user)
     {
         if ($this->hasRole('super')) {

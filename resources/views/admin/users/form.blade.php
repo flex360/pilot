@@ -37,6 +37,15 @@
                 {!! Form::select('role_id', $roles, null, array('class' => 'form-control')) !!}
             </div>
 
+            @if (Auth::user()->isSuperAdmin())
+                <div class="form-group">
+                    {!! Form::label('site_id', 'Website') !!}
+                    {!! Form::select('site_id', $sites, null, array('class' => 'form-control')) !!}
+                </div>
+            @else
+                <input type="hidden" name="site_id" value="{{ $currentSite->id }}">
+            @endif
+
             <button class="btn btn-primary">Save</button>
             <a class="form-cancel" href="{{ route('admin.user.index') }}">Cancel</a>
 

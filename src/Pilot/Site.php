@@ -152,7 +152,7 @@ class Site extends Model implements HasMedia
         self::saved(function ($site) {
             Cache::forget('sites');
             Cache::forget('custom_css_' . $site->id);
-            Cache::forget('page-root');
+            Cache::forget('page-root_' . $site->id);
         });
 
         self::deleted(function ($site) {
@@ -170,7 +170,11 @@ class Site extends Model implements HasMedia
         $site = Config::get('site');
 
         if (empty($site)) {
-            $site = Site::firstOrNew();
+            $site = Site::setCurrent();
+
+            if (empty($site)) {
+                $site = Site::firstOrNew();
+            }
         }
 
         return $site;
@@ -421,11 +425,16 @@ class Site extends Model implements HasMedia
         return request()->is('pilot') || request()->is('pilot/*');
     }
 
+    public static function isNotBackend()
+    {
+        return !self::isBackend();
+    }
+
     public function initLearnPages()
     {
         if (self::isBackend()) {
             // $learnPage = Page::where('title', 'CMS Guides')->first();
-            $learnPage = Cache::rememberForever('pilot-learn-root', function () {
+            $learnPage = Cache::rememberForever('pilot-learn-root_' . $this->id, function () {
                 
                 return Page::findByPath('/learn');
             });
@@ -529,5 +538,11 @@ class Site extends Model implements HasMedia
              ->width(300)
              ->height(300)
              ->nonQueued();
+    }
+
+    public static function cacheKey($key)
+    {
+        $site = self::getCurrent();
+        return $key . '_' . $site->id;
     }
 }

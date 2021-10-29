@@ -15,17 +15,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PresentableTrait;
+use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
+use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
+use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
-use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
-use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 
 class Event extends Model implements HasMedia
 {
-    use PresentableTrait, HasMediaTrait, 
+    use PresentableTrait, HasMediaTrait,
         SoftDeletes, HasMediaAttributes,
         SocialMetadataTrait, UserHtmlTrait,
-        HasEmptyStringAttributes, PilotTablePrefix  {
+        HasEmptyStringAttributes, PilotTablePrefix,
+        SupportsMultipleSites, PilotModuleCommon {
         HasMediaAttributes::registerMediaConversions insteadof HasMediaTrait;
     }
 
@@ -327,5 +330,11 @@ class Event extends Model implements HasMedia
     public function hasGallery()
     {
         return ! empty($this->gallery);
+    }
+
+    public function scopeOrderByStartDate($query, $direction = 'desc')
+    {
+        return $query->reorder()
+            ->orderBy('start', $direction);
     }
 }

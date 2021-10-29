@@ -36,6 +36,7 @@ use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
 use Flex360\Pilot\Http\Middleware\BeforeBackendMiddleware;
 use Flex360\Pilot\Http\Middleware\PilotModuleEnabledMiddleware;
 use Flex360\Pilot\Pilot\Contracts\Post as PostContract;
+use ProtoneMedia\LaravelEloquentWhereNot\WhereNot;
 
 class PilotServiceProvider extends ServiceProvider
 {
@@ -139,5 +140,7 @@ class PilotServiceProvider extends ServiceProvider
         ]);
 
         MediaHandler::register();
+
+        WhereNot::addMacro();
     }
 }
