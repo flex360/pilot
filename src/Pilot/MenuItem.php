@@ -58,4 +58,19 @@ class MenuItem
 
         return $descendants;
     }
+
+    public function shouldBeExpanded()
+    {
+        if ($this->url == request()->server('REQUEST_URI')) {
+            return true;
+        } elseif ($this->hasChildren()) {
+            foreach ($this->children as $child) {
+                if ($child->shouldBeExpanded()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
