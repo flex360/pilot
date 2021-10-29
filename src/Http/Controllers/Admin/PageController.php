@@ -233,7 +233,18 @@ class PageController extends AdminController
 
     public function selectList()
     {
-        return PageFacade::selectList();
+        $pageArray = PageFacade::selectList();
+
+        $jsonArray = [];
+
+        foreach ($pageArray as $id => $page) {
+            $jsonArray[] = [
+                'id' => $id,
+                'name' => $page,
+            ];
+        }
+
+        return response()->json($jsonArray);
     }
 
     public function updateParent(Page $page, $newParentPageId)
