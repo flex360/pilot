@@ -8,11 +8,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 
 class Menu extends Model
 {
     // use App\Pilot\Crud\CrudableTrait;
-    use HasEmptyStringAttributes;
+    use HasEmptyStringAttributes, SupportsMultipleSites;
 
     protected $table = 'menus';
 
