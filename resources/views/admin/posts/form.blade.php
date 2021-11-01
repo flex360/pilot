@@ -116,7 +116,7 @@
                             </label>
 
                             <div class="help-block">
-                                For the entire image to display, it needs to be a 5:2 ratio. We recommend minimum 800:1600px for quality.
+                                For the entire image to display, it needs to be a 1:2 ratio. We recommend minimum 800:1600px for quality.
                             </div>
 
                             <?php $field = \Jzpeepz\Dynamo\DynamoField::make(['key' => 'vertical_featured_image', 'options' => ['maxWidth' => 2000]]); ?>
