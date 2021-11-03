@@ -35,7 +35,7 @@ class AddSiteIdToDefaultModuleTables extends Migration
         
         foreach ($tables as $moduleTable) {
             Schema::table($moduleTable, function (Blueprint $table) {
-                $table->unsignedInteger('site_id')->nullable()->after('id');
+                $table->unsignedInteger('site_id')->nullable()->after('id')->default(1);
             });
         }
     }

@@ -2,13 +2,6 @@
 
 namespace Flex360\Pilot\Providers;
 
-use Flex360\Pilot\View\Components\Admin\Input;
-use Flex360\Pilot\View\Components\Admin\Panel;
-use Flex360\Pilot\View\Components\Admin\TabContent;
-use Flex360\Pilot\View\Components\Admin\Table;
-use Flex360\Pilot\View\Components\Admin\TabPane;
-use Flex360\Pilot\View\Components\Img;
-use Flex360\Pilot\Console\Commands\FixMedia;
 use Flex360\Pilot\Pilot\Nav;
 use Flex360\Pilot\Pilot\Tag;
 use Flex360\Pilot\Pilot\Page;
@@ -24,19 +17,27 @@ use Flex360\Pilot\Pilot\Setting;
 use Flex360\Pilot\Pilot\PageType;
 use Flex360\Pilot\Pilot\UrlHelper;
 use Flex360\Pilot\Pilot\MediaHandler;
+use Flex360\Pilot\View\Components\Img;
 use Illuminate\Support\ServiceProvider;
+use Flex360\Pilot\Console\Commands\FixMedia;
+use Flex360\Pilot\Console\Commands\PilotSeed;
 use Flex360\Pilot\Console\Commands\SyncForms;
 use Flex360\Pilot\Pilot\Forms\Wufoo\WufooForm;
+use Flex360\Pilot\View\Components\Admin\Input;
+use Flex360\Pilot\View\Components\Admin\Panel;
+use Flex360\Pilot\View\Components\Admin\Table;
 use Flex360\Pilot\Console\Commands\PilotTakeoff;
+use Flex360\Pilot\View\Components\Admin\TabPane;
 use Flex360\Pilot\Console\Commands\PilotMakeUser;
-use Flex360\Pilot\Console\Commands\PilotSeed;
 use Flex360\Pilot\Console\Commands\SyncNewsFeeds;
+use ProtoneMedia\LaravelEloquentWhereNot\WhereNot;
 use Flex360\Pilot\Http\Middleware\BeforeMiddleware;
+use Flex360\Pilot\View\Components\Admin\TabContent;
+use Flex360\Pilot\Console\Commands\SetDefaultSiteId;
 use Flex360\Pilot\Http\Middleware\AuthenticateAdmin;
+use Flex360\Pilot\Pilot\Contracts\Post as PostContract;
 use Flex360\Pilot\Http\Middleware\BeforeBackendMiddleware;
 use Flex360\Pilot\Http\Middleware\PilotModuleEnabledMiddleware;
-use Flex360\Pilot\Pilot\Contracts\Post as PostContract;
-use ProtoneMedia\LaravelEloquentWhereNot\WhereNot;
 
 class PilotServiceProvider extends ServiceProvider
 {
@@ -97,6 +98,7 @@ class PilotServiceProvider extends ServiceProvider
                 FixMedia::class,
                 PilotMakeUser::class,
                 PilotTakeoff::class,
+                SetDefaultSiteId::class,
                 PilotSeed::class,
                 SyncForms::class,
                 SyncNewsFeeds::class,
