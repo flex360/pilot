@@ -17,6 +17,6 @@ class PublishedScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where('status', 30);
+        $builder->where($model->statusColumn, 30);
     }
 }
