@@ -381,7 +381,7 @@ class Page extends Model implements HasMedia
         $children = $this->children;
 
         if ($selectList === null) {
-            $selectList = \Flex360\Pilot\Pilot\Page::selectList();
+            $selectList = PageFacade::selectList();
         }
 
         foreach ($children as $child) {
