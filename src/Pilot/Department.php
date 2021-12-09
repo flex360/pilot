@@ -22,6 +22,8 @@ use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 use Flex360\Pilot\Facades\Resource as ResourceFacade;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Department as DepartmentFacade;
+use Flex360\Pilot\Facades\Tag as TagFacade;
 
 class Department extends Model implements HasMedia
 {
@@ -68,7 +70,7 @@ class Department extends Model implements HasMedia
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, config('pilot.table_prefix') . 'department_tag')->orderBy('name');
+        return $this->belongsToMany(TagFacade::class, config('pilot.table_prefix') . 'department_tag')->orderBy('name');
     }
 
     public function resources()

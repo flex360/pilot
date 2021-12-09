@@ -7,7 +7,6 @@ use Flex360\Pilot\Pilot\Department;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Flex360\Pilot\Scopes\PublishedScope;
-use Flex360\Pilot\Pilot\ResourceCategory;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Flex360\Pilot\Pilot\Traits\UserHtmlTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;

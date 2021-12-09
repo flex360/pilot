@@ -131,7 +131,7 @@ class Service extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Service::getStatuses();
+        $status = ServiceFacade::getStatuses();
 
         return (object) array(
             'id' => $this->status,

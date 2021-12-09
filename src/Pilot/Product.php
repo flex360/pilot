@@ -115,7 +115,7 @@ class Product extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Product::getStatuses();
+        $status = ProductFacade::getStatuses();
 
         return (object) array(
             'id' => $this->status,

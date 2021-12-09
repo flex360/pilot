@@ -21,6 +21,7 @@ use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\ProductCategory as ProductCategoryFacade;
+use Flex360\Pilot\Facades\ProjectCategory as ProjectCategoryFacade;
 use Flex360\Pilot\Pilot\Traits\Publishable;
 
 class ProductCategory extends Model implements HasMedia
@@ -90,7 +91,7 @@ class ProductCategory extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \ProjectCategory::getStatuses();
+        $status = ProjectCategoryFacade::getStatuses();
 
         return (object) array(
             'id' => $this->status,

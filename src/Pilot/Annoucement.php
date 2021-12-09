@@ -9,6 +9,7 @@ use Flex360\Pilot\Pilot\Traits\PilotTablePrefix;
 use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Annoucement as AnnoucementFacade;
 
 class Annoucement extends Model
 {
@@ -28,10 +29,10 @@ class Annoucement extends Model
     {
         parent::boot();
 
-        Annoucement::saving(function ($annoucement) {
+        AnnoucementFacade::saving(function ($annoucement) {
             // if Annoucement is being activated
             if ($annoucement->status == "1" && $annoucement->getOriginal('status') == 0) {
-                Annoucement::whereRaw('1=1')->update([
+                AnnoucementFacade::whereRaw('1=1')->update([
                     'status' => 0
                 ]);
             }

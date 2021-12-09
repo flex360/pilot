@@ -3,7 +3,6 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Tag;
 use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\Models\Media;
@@ -21,6 +20,8 @@ use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use Flex360\Pilot\Facades\Tag as TagFacade;
+use Flex360\Pilot\Facades\Event as EventFacade;
 
 class Event extends Model implements HasMedia
 {
@@ -53,7 +54,7 @@ class Event extends Model implements HasMedia
 
         static::addGlobalScope(new ActiveEventScope);
 
-        Event::saving(function ($event) {
+        EventFacade::saving(function ($event) {
             // reformat start and end date
             $event->start = date('Y-m-d H:i:s', strtotime($event->start));
             $event->end = date('Y-m-d H:i:s', strtotime($event->end));
@@ -62,7 +63,7 @@ class Event extends Model implements HasMedia
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, $this->getPrefix() . 'event_tag');
+        return $this->belongsToMany(TagFacade::class, $this->getPrefix() . 'event_tag');
     }
 
     /**
@@ -127,7 +128,7 @@ class Event extends Model implements HasMedia
         // convert an non numeric tags into real tags
         foreach ($tags as $index => $tag) {
             if (! is_numeric($tag)) {
-                $newTag = Tag::create(['name' => $tag]);
+                $newTag = TagFacade::create(['name' => $tag]);
                 $tags[$index] = $newTag->id;
             }
         }

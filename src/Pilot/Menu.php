@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
+use Flex360\Pilot\Facades\Menu as MenuFacade;
 
 class Menu extends Model
 {
@@ -55,7 +56,7 @@ class Menu extends Model
         $menu = static::where('slug', $slug)->first();
 
         if (empty($menu)) {
-            $menu = new Menu;
+            $menu = new MenuFacade;
             $menu->slug = $slug;
             return $menu;
         }

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Site as SiteFacade;
 
 class Site extends Model implements HasMedia
 {
@@ -170,10 +171,10 @@ class Site extends Model implements HasMedia
         $site = Config::get('site');
 
         if (empty($site)) {
-            $site = Site::setCurrent();
+            $site = SiteFacade::setCurrent();
 
             if (empty($site)) {
-                $site = Site::firstOrNew();
+                $site = SiteFacade::firstOrNew();
             }
         }
 

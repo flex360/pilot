@@ -150,7 +150,7 @@ class Project extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \Project::getStatuses();
+        $status = ProjectFacade::getStatuses();
 
         return (object) array(
             'id' => $this->status,

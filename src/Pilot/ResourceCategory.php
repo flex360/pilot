@@ -16,6 +16,7 @@ use Flex360\Pilot\Pilot\Traits\PilotModuleCommon;
 use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Facades\Resource as ResourceFacade;
+use Flex360\Pilot\Facades\ResourceCategory as ResourceCategoryFacade;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\Publishable;
@@ -89,7 +90,7 @@ class ResourceCategory extends Model implements HasMedia
 
     public function getStatus()
     {
-        $status = \ResourceCategory::getStatuses();
+        $status = ResourceCategoryFacade::getStatuses();
 
         return (object) array(
             'id' => $this->status,

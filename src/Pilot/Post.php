@@ -18,6 +18,8 @@ use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Post as PostFacade;
+use Flex360\Pilot\Facades\Tag as TagFacade;
 
 class Post extends Model implements HasMedia, PostContract
 {
@@ -51,8 +53,8 @@ class Post extends Model implements HasMedia, PostContract
     {
         parent::boot();
 
-        Post::saving(function ($post) {
-            // $realPost = Post::find($post->id);
+        PostFacade::saving(function ($post) {
+            // $realPost = PostFacade::find($post->id);
             //
             // // reformat published date
             // $post->published_on = date('Y-m-d H:i:s', strtotime($post->published_on));
@@ -84,7 +86,7 @@ class Post extends Model implements HasMedia, PostContract
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, $this->getPrefix() . 'post_tag');
+        return $this->belongsToMany(TagFacade::class, $this->getPrefix() . 'post_tag');
     }
 
     public function duplicate()
@@ -187,7 +189,7 @@ class Post extends Model implements HasMedia, PostContract
         // convert an non numeric tags into real tags
         foreach ($tags as $index => $tag) {
             if (!is_numeric($tag)) {
-                $newTag = Tag::create(['name' => $tag]);
+                $newTag = TagFacade::create(['name' => $tag]);
                 $tags[$index] = $newTag->id;
             }
         }
@@ -257,7 +259,7 @@ class Post extends Model implements HasMedia, PostContract
 
     public static function latest($limit = 10)
     {
-        return Post::whereRaw('published_on <= NOW()')
+        return PostFacade::whereRaw('published_on <= NOW()')
                     ->where('status', 30)
                     ->orderBy('published_on', 'desc')
                     ->limit($limit)

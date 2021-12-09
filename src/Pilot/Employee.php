@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Illuminate\Support\Facades\DB;
-use Flex360\Pilot\Pilot\Department;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Flex360\Pilot\Scopes\PublishedScope;
@@ -23,6 +22,7 @@ use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\Department as DepartmentFacade;
 use Flex360\Pilot\Pilot\Traits\Publishable;
+use Flex360\Pilot\Facades\Employee as EmployeeFacade;
 
 class Employee extends Model implements HasMedia
 {

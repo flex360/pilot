@@ -4,6 +4,7 @@ namespace Flex360\Pilot\Pilot;
 
 use Image;
 use Illuminate\Support\Str;
+use Flex360\Pilot\Facades\Asset as AssetFacade;
 
 class Asset
 {
@@ -110,7 +111,7 @@ class Asset
 
             $file->move($uploadPath, $newFilename);
 
-            $img = Asset::manipulateImage($uploadPath.'/'.$newFilename);
+            $img = AssetFacade::manipulateImage($uploadPath.'/'.$newFilename);
 
             $paths[] = array('path' => $publicPath . $newFilename);
         }

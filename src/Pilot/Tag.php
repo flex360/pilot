@@ -3,9 +3,9 @@
 namespace Flex360\Pilot\Pilot;
 
 use Illuminate\Support\Str;
-use Flex360\Pilot\Pilot\Event;
 use Illuminate\Database\Eloquent\Model;
 use Flex360\Pilot\Facades\Post as PostFacade;
+use Flex360\Pilot\Facades\Tag as TagFacade;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Flex360\Pilot\Facades\Event as EventFacade;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
@@ -22,7 +22,7 @@ class Tag extends Model
     {
         parent::boot();
 
-        Tag::saving(function ($tag) {
+        TagFacade::saving(function ($tag) {
             //
         });
     }
