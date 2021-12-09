@@ -11,9 +11,14 @@ trait Publishable
         static::addGlobalScope(new PublishedScope);
 
         static::saving(function ($model) {
-            if (empty($model->status)) {
-                $model->status = 10;
+            if (empty($model->{$model->statusColumn})) {
+                $model->{$model->statusColumn} = 10;
             }
         });
+    }
+
+    public function getStatusColumnAttribute($value)
+    {
+        return 'status';
     }
 }
