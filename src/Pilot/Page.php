@@ -19,6 +19,7 @@ use Flex360\Pilot\Pilot\Traits\HasMediaAttributes;
 use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
+use Flex360\Pilot\Facades\Page as PageFacade;
 
 class Page extends Model implements HasMedia
 {
@@ -67,7 +68,7 @@ class Page extends Model implements HasMedia
     {
         parent::boot();
 
-        Page::saving(function ($page) {
+        PageFacade::saving(function ($page) {
             // check to make sure parent is not itself
             if ($page->parent_id == $page->id) {
                 $page->parent_id = $page->getOriginal('parent_id');
@@ -80,7 +81,7 @@ class Page extends Model implements HasMedia
             // if slug has changed, regenerate paths
             $dirty = $page->getDirty();
             if (isset($dirty['slug'])) {
-                Page::saved(function ($page) {
+                PageFacade::saved(function ($page) {
                     $descendants = $page->getDescendants();
                     foreach ($descendants as $descendant) {
                         $descendant->path = $descendant->getPath();
@@ -116,7 +117,7 @@ class Page extends Model implements HasMedia
             Cache::forget('pilot-learn-root_' . $site->id);
         });
 
-        Page::deleted(function () {
+        PageFacade::deleted(function () {
             // clear cache of the navigation
             $site = Site::getCurrent();
             Cache::forget('site-nav-' . $site->id);
@@ -145,7 +146,7 @@ class Page extends Model implements HasMedia
         $site = Site::getCurrent();
 
         $root = Cache::rememberForever('page-root_' . $site->id, function () use ($site) {
-            return Page::where('site_id', '=', $site->id)->where('level', '=', 0)->first();
+            return PageFacade::where('site_id', '=', $site->id)->where('level', '=', 0)->first();
         });
 
         return empty($root) ? new Page : $root;
@@ -155,7 +156,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        $root = Page::where('site_id', '=', $site->id)->where('level', '=', 0)->with('children', 'type')->first();
+        $root = PageFacade::where('site_id', '=', $site->id)->where('level', '=', 0)->with('children', 'type')->first();
 
         return empty($root) ? new Page : $root;
     }
@@ -290,7 +291,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        $query = Page::where('site_id', '=', $site->id)->where('parent_id', '=', $this->id);
+        $query = PageFacade::where('site_id', '=', $site->id)->where('parent_id', '=', $this->id);
 
         if ($status != 'all') {
             $query = $query->where('status', $status);
@@ -305,7 +306,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        $pages = Page::where('site_id', '=', $site->id)
+        $pages = PageFacade::where('site_id', '=', $site->id)
                 ->where('parent_id', '=', $this->id)
                 ->orderBy('position', 'ASC')
                 ->orderBy('id', 'ASC');
@@ -321,7 +322,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        return $this->hasMany(Page::class, 'parent_id')
+        return $this->hasMany(PageFacade::class, 'parent_id')
                 ->with('children', 'type')
                 ->where('site_id', '=', $site->id)
                 ->orderBy('position', 'ASC')
@@ -352,7 +353,7 @@ class Page extends Model implements HasMedia
 
         // include root page if ancestors is empty
         if (empty($ancestors)) {
-            $ancestors[] = Page::getRoot();
+            $ancestors[] = PageFacade::getRoot();
         }
 
         return $ancestors;
@@ -380,7 +381,7 @@ class Page extends Model implements HasMedia
         $children = $this->children;
 
         if ($selectList === null) {
-            $selectList = \Flex360\Pilot\Pilot\Page::selectList();
+            $selectList = \Flex360\Pilot\Pilot\PageFacade::selectList();
         }
 
         foreach ($children as $child) {
@@ -435,7 +436,7 @@ class Page extends Model implements HasMedia
         if (!isset($this->parent_id) || empty($this->parent_id)) {
             return null;
         } else {
-            return Page::find($this->parent_id);
+            return PageFacade::find($this->parent_id);
         }
     }
 
@@ -634,11 +635,11 @@ class Page extends Model implements HasMedia
 
         // handle specifying a page by id
         if (is_numeric($data)) {
-            $page = Page::find($data);
+            $page = PageFacade::find($data);
         } else {
             // otherwise, find by the current path
             $path = '/' . request()->path();
-            $page = Page::findByPath($path);
+            $page = PageFacade::findByPath($path);
         }
 
         if (empty($page) || $override) {
@@ -647,7 +648,7 @@ class Page extends Model implements HasMedia
                 $data = array_merge($oldData, $data);
             }
 
-            $newPage = new Page;
+            $newPage = new PageFacade;
             $newPage->fill($data);
             $page = $newPage;
         }
@@ -679,7 +680,7 @@ class Page extends Model implements HasMedia
 
         $path = '/' . request()->path();
 
-        $query = Page::where('site_id', '=', Site::getCurrent()->id)
+        $query = PageFacade::where('site_id', '=', Site::getCurrent()->id)
                     ->where('path', 'LIKE', $path);
 
         // account for page status for non-admin users
