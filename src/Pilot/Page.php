@@ -322,7 +322,7 @@ class Page extends Model implements HasMedia
     {
         $site = Site::getCurrent();
 
-        return $this->hasMany(PageFacade::class, 'parent_id')
+        return $this->hasMany(Page::class, 'parent_id')
                 ->with('children', 'type')
                 ->where('site_id', '=', $site->id)
                 ->orderBy('position', 'ASC')
@@ -648,7 +648,7 @@ class Page extends Model implements HasMedia
                 $data = array_merge($oldData, $data);
             }
 
-            $newPage = new PageFacade;
+            $newPage = new Page;
             $newPage->fill($data);
             $page = $newPage;
         }
