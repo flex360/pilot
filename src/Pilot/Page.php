@@ -20,6 +20,8 @@ use Flex360\Pilot\Pilot\Traits\SocialMetadataTrait;
 use Spatie\MediaLibrary\Models\Media as SpatieMedia;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Facades\Page as PageFacade;
+use Flex360\Pilot\Facades\Menu as MenuFacade;
+use Flex360\Pilot\Facades\Site as SiteFacade;
 
 class Page extends Model implements HasMedia
 {
@@ -75,7 +77,7 @@ class Page extends Model implements HasMedia
             }
 
             // set site for page
-            $site = Site::getCurrent();
+            $site = SiteFacade::getCurrent();
             $page->site_id = isset($site->id) ? $site->id : null;
 
             // if slug has changed, regenerate paths
@@ -119,7 +121,7 @@ class Page extends Model implements HasMedia
 
         PageFacade::deleted(function () {
             // clear cache of the navigation
-            $site = Site::getCurrent();
+            $site = SiteFacade::getCurrent();
             Cache::forget('site-nav-' . $site->id);
             Cache::forget('site-nav-view-' . $site->id);
             Cache::forget('pilot-learn-root_' . $site->id);
@@ -128,7 +130,7 @@ class Page extends Model implements HasMedia
 
     public function menus()
     {
-        return $this->belongsToMany('Flex360\Pilot\Pilot\Menu');
+        return $this->belongsToMany(root_class(MenuFacade::class));
     }
 
     public function blocks()
@@ -143,7 +145,7 @@ class Page extends Model implements HasMedia
 
     public static function getRoot()
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
 
         $root = Cache::rememberForever('page-root_' . $site->id, function () use ($site) {
             return PageFacade::where('site_id', '=', $site->id)->where('level', '=', 0)->first();
@@ -154,7 +156,7 @@ class Page extends Model implements HasMedia
 
     public static function getAdminRoot()
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
 
         $root = PageFacade::where('site_id', '=', $site->id)->where('level', '=', 0)->with('children', 'type')->first();
 
@@ -164,7 +166,7 @@ class Page extends Model implements HasMedia
     public function initRoot()
     {
         if (!$this->exists) {
-            $site = Site::getCurrent();
+            $site = SiteFacade::getCurrent();
 
             $this->title = 'Home';
             $this->slug = '/';
@@ -180,7 +182,7 @@ class Page extends Model implements HasMedia
 
     public function url()
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
         if ($this->isRedirect()) {
             $link = $this->link;
             if ($link[0] == '/') {
@@ -289,7 +291,7 @@ class Page extends Model implements HasMedia
 
     public function hasChildren($status = 'all')
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
 
         $query = PageFacade::where('site_id', '=', $site->id)->where('parent_id', '=', $this->id);
 
@@ -304,7 +306,7 @@ class Page extends Model implements HasMedia
 
     public function getChildren($status = 'all')
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
 
         $pages = PageFacade::where('site_id', '=', $site->id)
                 ->where('parent_id', '=', $this->id)
@@ -320,7 +322,7 @@ class Page extends Model implements HasMedia
 
     public function children()
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
 
         return $this->hasMany(Page::class, 'parent_id')
                 ->with('children', 'type')
@@ -413,7 +415,7 @@ class Page extends Model implements HasMedia
 
     public static function getNav($status = 'publish')
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
         $root = self::getRoot();
 
         $navClosure = function () use ($root, $site, $status) {
@@ -605,7 +607,7 @@ class Page extends Model implements HasMedia
 
     public static function findByPath($path)
     {
-        $site = Site::getCurrent();
+        $site = SiteFacade::getCurrent();
 
         // create a key that combines the site id and path
         $key = $site->id . '||' . $path;
@@ -680,7 +682,7 @@ class Page extends Model implements HasMedia
 
         $path = '/' . request()->path();
 
-        $query = PageFacade::where('site_id', '=', Site::getCurrent()->id)
+        $query = PageFacade::where('site_id', '=', SiteFacade::getCurrent()->id)
                     ->where('path', 'LIKE', $path);
 
         // account for page status for non-admin users

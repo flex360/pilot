@@ -63,7 +63,7 @@ class Event extends Model implements HasMedia
 
     public function tags()
     {
-        return $this->belongsToMany(TagFacade::class, $this->getPrefix() . 'event_tag');
+        return $this->belongsToMany(root_class(TagFacade::class), $this->getPrefix() . 'event_tag');
     }
 
     /**

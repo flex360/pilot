@@ -86,7 +86,7 @@ class Post extends Model implements HasMedia, PostContract
 
     public function tags()
     {
-        return $this->belongsToMany(TagFacade::class, $this->getPrefix() . 'post_tag');
+        return $this->belongsToMany(root_class(TagFacade::class), $this->getPrefix() . 'post_tag');
     }
 
     public function duplicate()

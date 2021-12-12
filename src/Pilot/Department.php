@@ -70,7 +70,7 @@ class Department extends Model implements HasMedia
 
     public function tags()
     {
-        return $this->belongsToMany(TagFacade::class, config('pilot.table_prefix') . 'department_tag')->orderBy('name');
+        return $this->belongsToMany(root_class(TagFacade::class), config('pilot.table_prefix') . 'department_tag')->orderBy('name');
     }
 
     public function resources()

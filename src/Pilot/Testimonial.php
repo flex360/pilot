@@ -21,6 +21,7 @@ use Flex360\Pilot\Scopes\TestimonialsWithMediaScope;
 use Flex360\Pilot\Pilot\Traits\SupportsMultipleSites;
 use Flex360\Pilot\Pilot\Traits\HasEmptyStringAttributes;
 use Flex360\Pilot\Pilot\Traits\Publishable;
+use Flex360\Pilot\Facades\Site as SiteFacade;
 
 class Testimonial extends Model implements HasMedia
 {
@@ -44,7 +45,7 @@ class Testimonial extends Model implements HasMedia
 
     protected static function booted()
     {
-        if (Site::isNotBackend()) {
+        if (SiteFacade::isNotBackend()) {
             static::addGlobalScope(new TestimonialsWithMediaScope);
         }
     }
