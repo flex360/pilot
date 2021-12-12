@@ -11,7 +11,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = PageFacade::published()
+        $posts = PostFacade::published()
                 ->orderBy('sticky', 'desc')
                 ->orderBy('published_on', 'desc')
                 ->paginate(12);
