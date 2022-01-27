@@ -56,7 +56,7 @@ class Menu extends Model
         $menu = static::where('slug', $slug)->first();
 
         if (empty($menu)) {
-            $menu = new MenuFacade;
+            $menu = new static;
             $menu->slug = $slug;
             return $menu;
         }
