@@ -36,6 +36,8 @@ class Nav
 
     public function items()
     {
-        return $this->items;
+        return $this->items->filter(function ($item) {
+            return ! $item->hidden;
+        });
     }
 }

@@ -15,6 +15,7 @@ class NavItem
     public $sidebarPosition;
     public $linkTarget;
     private $id;
+    public $hidden = false;
 
     public function __construct($name, $url, $routePattern = null, $sidebarPosition = null, $linkTarget = '_self')
     {
@@ -86,5 +87,11 @@ class NavItem
     public function id()
     {
         return $this->id;
+    }
+
+    public function hide($hide = true)
+    {
+        $this->hidden = $hide;
+        return $this;
     }
 }
