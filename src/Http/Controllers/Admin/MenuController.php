@@ -22,12 +22,7 @@ class MenuController extends AdminController
     {
         mimic('Menu Manager');
 
-        if (config('pilot.multisite', false)) {
-            $items = MenuFacade::where('site_id', '=', $this->site->id)->get();
-        } else {
-            $items = MenuFacade::all();
-            // $items = collect();
-        }
+        $items = MenuFacade::all();
 
         return view('pilot::admin.menus.index', compact('items'));
     }
