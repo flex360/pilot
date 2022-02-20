@@ -23,9 +23,9 @@ class MenuController extends AdminController
         mimic('Menu Manager');
 
         if (config('pilot.multisite', false)) {
-            $items = Menu::where('site_id', '=', $this->site->id)->get();
+            $items = MenuFacade::where('site_id', '=', $this->site->id)->get();
         } else {
-            $items = Menu::all();
+            $items = MenuFacade::all();
             // $items = collect();
         }
 
@@ -40,7 +40,7 @@ class MenuController extends AdminController
      */
     public function edit($id)
     {
-        $item = Menu::find($id);
+        $item = MenuFacade::find($id);
 
         mimic($item->name . ' Menu');
 
@@ -60,7 +60,7 @@ class MenuController extends AdminController
      */
     public function update($id)
     {
-        $item = Menu::find($id);
+        $item = MenuFacade::find($id);
         $item->fill(request()->except('flex_data', 'page_id'));
         $item->save();
 
@@ -87,7 +87,7 @@ class MenuController extends AdminController
      */
     public function reorder($id)
     {
-        $menu = Menu::find($id);
+        $menu = MenuFacade::find($id);
 
         $menu->reorder(request()->input('ids'));
 
@@ -96,7 +96,7 @@ class MenuController extends AdminController
 
     public function items($id)
     {
-        $menu = Menu::findOrFail($id);
+        $menu = MenuFacade::findOrFail($id);
 
         $items = json_decode($menu->items);
 
