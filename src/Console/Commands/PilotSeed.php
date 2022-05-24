@@ -187,7 +187,7 @@ class PilotSeed extends Command
             ]
         );
 
-        $post = Post::find(3);
+        $post = Post::withoutGlobalScopes()->find(3);
         //featured image
         $post->addMedia(public_path('pilot-assets/img/FLEX360_learn.jpg'))->preservingOriginal()->toMediaCollection('horizontal_featured_image');
 
