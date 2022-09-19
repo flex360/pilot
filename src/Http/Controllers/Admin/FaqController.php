@@ -30,10 +30,12 @@ class FaqController extends DynamoController
                      *  Pilot plugin: FAQ form view                                                    *
                      *  Check the plugins 'fields' array and attach the fields to the dynamo object    *
                      ************************************************************************************/
-                    $dynamo->addIndexButton(function() {
-                        return '<a href="/pilot/faqcategory" class="btn btn-primary btn-sm">FAQ Categories</a>';
-                    })
-                    ->addIndexButton(function () {
+                    if (config('pilot.plugins.faqs.fields.categories', true)) {
+                        $dynamo->addIndexButton(function() {
+                            return '<a href="/pilot/faqcategory" class="btn btn-primary btn-sm">FAQ Categories</a>';
+                        });
+                    }
+                    $dynamo->addIndexButton(function () {
                         return '<a href="'. route('faq.index') . '" target="_blank" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> View FAQs</a>';
                     }); 
                     if (config('pilot.plugins.faqs.fields.question', true)) {
